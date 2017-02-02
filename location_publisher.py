@@ -49,6 +49,7 @@ if __name__ == "__main__":
                     result, mid = client.publish("{0}/x".format(userdata[CAMERA_NAME]),
                                                  payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
                     prev_value = x_loc
+
             except BaseException as e:
                 logging.error("Failusre in publish_locations() [e]".format(e))
                 traceback.print_exc()
