@@ -45,10 +45,10 @@ if __name__ == "__main__":
         while True:
             try:
                 x_loc = locations.get_x()
-                if x_loc is not None and abs(x_loc - prev_value) > 1:
+                if x_loc is not None and abs(x_loc[0] - prev_value) > 1:
                     result, mid = client.publish("{0}/x".format(userdata[CAMERA_NAME]),
                                                  payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
-                    prev_value = x_loc
+                    prev_value = x_loc[0]
 
             except BaseException as e:
                 logging.error("Failusre in publish_locations() [e]".format(e))
