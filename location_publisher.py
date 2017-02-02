@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 
 import logging
+import time
+import traceback
 from logging import info
 from threading import Thread
 
@@ -40,10 +42,15 @@ if __name__ == "__main__":
 
     def publish_locations(client, userdata):
         while True:
-            x_loc = locations.get_x()
-            if x_loc is not None:
-                result, mid = client.publish("{0}/x".format(userdata[CAMERA_NAME]),
-                                             payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
+            try:
+                x_loc = locations.get_x()
+                if x_loc is not None:
+                    result, mid = client.publish("{0}/x".format(userdata[CAMERA_NAME]),
+                                                 payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
+            except BaseException as e:
+                logging.error("Failusre in publish_locations() [e]".format(e))
+                traceback.print_exc()
+                time.sleep(1)
 
 
     # Setup MQTT client
