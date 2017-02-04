@@ -39,12 +39,15 @@ def on_message(client, userdata, msg):
     if msg.topic == LIDAR_FRONT_LEFT:
         with lock:
             val_lidar_front_left = val
+
     elif msg.topic == LIDAR_FRONT_RIGHT:
         with lock:
             val_lidar_front_right = val
+
     elif msg.topic == CAMERA_1:
         with lock:
             val_camera_1 = val
+
 
             # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
             # int.from_bytes() requires python3: https://docs.python.org/3/library/stdtypes.html#int.from_bytes
