@@ -11,7 +11,6 @@ import dothat.lcd as lcd
 import dothat.touch as nav
 import paho.mqtt.client as paho
 from common_constants import LOGGING_ARGS
-from common_constants import TOPIC
 from common_utils import mqtt_broker_info
 
 val_lidar_front_left = None
@@ -81,14 +80,10 @@ if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--mqtt", required=True, help="MQTT broker hostname")
-    parser.add_argument("-t", "--topic", required=True, help="MQTT topic")
     args = vars(parser.parse_args())
 
     # Setup logging
     logging.basicConfig(**LOGGING_ARGS)
-
-    # Create userdata dictionary
-    userdata = {TOPIC: args["topic"]}
 
     # Initialize MQTT client
     client = paho.Client(userdata=userdata)
