@@ -14,7 +14,7 @@ global total_sum
 global total_count
 
 
-TOLERANCE_THRESH = 15
+TOLERANCE_THRESH = 5
 
 
 def on_connect(client, userdata, flags, rc):
