@@ -43,3 +43,79 @@ be forked with a trailing `&`:
 ```bash
 python2 ~pi/git/object-tracking/object_tracker.py --bgr "174, 56, 5" --width 400 --flip &> ~pi/git/FRC-2017/logs/object-tracker.out &
 ```
+
+## Setting up remote repos on a Raspi
+
+### FRC-2017 Repo
+
+Setup a bare repo and a source directory:
+
+```bash
+cd git
+
+mkdir FRC-2017
+mkdir FRC-2017.git
+git init --bare FRC-2017.git
+```
+
+Edit *FRC-2017.git/hooks/post-receive* and put this into it: 
+
+```bash
+#!/bin/sh
+git --work-tree=/home/pi/git/FRC-2017 --git-dir=/home/pi/git/FRC-2017.git checkout -f
+echo "*** Updated FRC-2017 ***" >&2
+```
+
+Make *post-receive* executable:
+```bash
+chmod +x FRC-2017.git/hooks/post-receive
+```
+Adjust the git config on your Mac (change raspiXX to your raspi hostname):
+
+```bash
+cd FRC-2017
+git remote add raspiXX pi@raspiXX.local:/home/pi/git/FRC-2017.git
+```
+
+Push to the Raspi:
+```bash
+git push raspiXX master
+```
+
+### common-robotics Repo
+
+Setup a bare repo and a source directory:
+
+```bash
+cd git
+
+mkdir common-robotics
+mkdir common-robotics.git
+git init --bare common-robotics.git
+```
+
+Edit *common-robotics.git/hooks/post-receive* and put this into it: 
+
+```bash
+#!/bin/sh
+git --work-tree=/home/pi/git/common-robotics --git-dir=/home/pi/git/common-robotics.git checkout -f
+echo "*** Updated common-robotics.git ***" >&2
+```
+
+Make *post-receive* executable:
+```bash
+chmod +x common-robotics.git/hooks/post-receive
+```
+
+Adjust the git config on your Mac (change raspiXX to your raspi hostname):
+
+```bash
+cd common-robotics
+git remote add raspiXX pi@raspiXX.local:/home/pi/git/common-robotics.git
+```
+
+Push to the Raspi:
+```bash
+cd common-robotics
+git push raspiXX master
+```
