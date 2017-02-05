@@ -85,6 +85,8 @@ if __name__ == "__main__":
     # Setup logging
     logging.basicConfig(**LOGGING_ARGS)
 
+    userdata = {}
+
     # Initialize MQTT client
     client = paho.Client(userdata=userdata)
 
