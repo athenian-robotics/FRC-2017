@@ -48,6 +48,9 @@ def fetch_data(mm):
         if mm < 0:  # out of range, get fresh data so it doesn't mess with averages
             total_sum = 0
             total_count = 0
+            client.publish("{}/mm".format(userdata["topic"]),
+                           payload=str(mm).encode("utf-8"),
+                           qos=0)
             # continue
         elif (total_sum + total_count == 0) or abs((total_sum / total_count) - mm) < TOLERANCE_THRESH:
             total_sum += mm
