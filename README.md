@@ -119,3 +119,41 @@ Push to the Raspi:
 cd common-robotics
 git push raspiXX master
 ```
+
+### object-tracking Repo
+
+Setup a bare repo and a source directory:
+
+```bash
+cd git
+
+mkdir object-tracking
+mkdir object-tracking.git
+git init --bare object-tracking.git
+```
+
+Edit *object-tracking.git/hooks/post-receive* and put this into it: 
+
+```bash
+#!/bin/sh
+git --work-tree=/home/pi/git/object-tracking --git-dir=/home/pi/git/object-tracking.git checkout -f
+echo "*** Updated object-tracking.git ***" >&2
+```
+
+Make *post-receive* executable:
+```bash
+chmod +x object-tracking.git/hooks/post-receive
+```
+
+Adjust the git config on your Mac (change raspiXX to your raspi hostname):
+
+```bash
+cd object-tracking
+git remote add raspiXX pi@raspiXX.local:/home/pi/git/object-tracking.git
+```
+
+Push to the Raspi:
+```bash
+cd object-tracking
+git push raspiXX master
+```
