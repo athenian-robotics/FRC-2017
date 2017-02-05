@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 
 import logging
+import time
+import traceback
 from logging import info
 from threading import Thread
 
@@ -35,15 +37,23 @@ if __name__ == "__main__":
 
 
     def on_publish(client, userdata, mid):
-        print("Published message id: {0}".format(mid))
+        info("Published message id: {0}".format(mid))
 
 
     def publish_locations(client, userdata):
+        prev_value = -1
         while True:
-            x_loc = locations.get_x()
-            if x_loc is not None:
-                result, mid = client.publish("{0}/x".format(userdata[CAMERA_NAME]),
-                                             payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
+            try:
+                x_loc = locations.get_x()
+                if x_loc is not None and abs(x_loc[0] - prev_value) > 1:
+                    result, mid = client.publish("{0}/x".format(userdata[CAMERA_NAME]),
+                                                 payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
+                    prev_value = x_loc[0]
+
+            except BaseException as e:
+                logging.error("Failusre in publish_locations() [e]".format(e))
+                traceback.print_exc()
+                time.sleep(1)
 
 
     # Setup MQTT client
