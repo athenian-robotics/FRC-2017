@@ -20,6 +20,10 @@ TOLERANCE_THRESH = 15
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code: {0}".format(rc))
     serial_reader = SerialReader()
+    global total_sum
+    global total_count
+    total_sum = 0
+    total_count = 0
     serial_reader.start(fetch_data, userdata["port"])
 
 
