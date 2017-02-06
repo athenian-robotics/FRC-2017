@@ -45,7 +45,7 @@ def fetch_data(mm):
     mm = int(mm)
     try:
 
-        if mm < 0:  # out of range, get fresh data so it doesn't mess with averages
+        if mm < 0 or mm == 8191:  # out of range, get fresh data so it doesn't mess with averages
             total_sum = 0
             total_count = 0
             client.publish("{}/mm".format(userdata["topic"]),
