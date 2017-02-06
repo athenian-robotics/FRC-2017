@@ -49,7 +49,7 @@ def fetch_data(mm):
             total_sum = 0
             total_count = 0
             client.publish("{}/mm".format(userdata["topic"]),
-                           payload=str(mm).encode("utf-8"),
+                           payload="-1".encode("utf-8"),
                            qos=0)
             # continue
         elif (total_sum + total_count == 0) or abs((total_sum / total_count) - mm) < TOLERANCE_THRESH:
