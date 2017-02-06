@@ -18,7 +18,7 @@ TOLERANCE_THRESH = 5
 
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code: {0}".format(rc))
+    logging.info("Connected with result code: {0}".format(rc))
     serial_reader = SerialReader()
     global total_sum
     global total_count
@@ -28,11 +28,11 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_disconnect(client, userdata, rc):
-    print("Disconnected with result code: {0}".format(rc))
+    logging.info("Disconnected with result code: {0}".format(rc))
 
 
 def on_publish(client, userdata, mid):
-    print("Published value to {0} with message id {1}".format(userdata["topic"], mid))
+    logging.info("Published value to {0} with message id {1}".format(userdata["topic"], mid))
 
 
 def fetch_data(mm):
