@@ -32,7 +32,7 @@ def on_disconnect(client, userdata, rc):
 
 
 def on_publish(client, userdata, mid):
-    logging.info("Published value to {0} with message id {1}".format(userdata["topic"], mid))
+    logging.debug("Published value to {0} with message id {1}".format(userdata["topic"], mid))
 
 
 def fetch_data(mm):
@@ -113,4 +113,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
 
-    print("Exiting...")
+    logging.info("Exiting...")
