@@ -14,11 +14,14 @@ from common_utils import mqtt_broker_info
 # default sensor
 selected_sensor = "camera"
 
-# topics
-LIDAR_FRONT_LEFT = "lidar_l/mm"
-LIDAR_FRONT_RIGHT = "lidar_r/mm"
-CAMERA_1_VALUE = "Camera-1/value"
-CAMERA_1_ALIGNMENT = "Camera-1/alignment"
+# Constants
+LIDAR_FRONT_LEFT = "lidar_left"
+LIDAR_FRONT_RIGHT = "lidar_right"
+CAMERA_1_VALUE = "camera-gear-front/x"
+CAMERA_1_ALIGNMENT = "camera-gear-front/alignment"
+NOT_SEEN = "not_seen"
+NOT_ALIGNED = "not_aligned"
+ALIGNED = "aligned"
 
 # lcd initialization
 lcd.clear()
@@ -78,11 +81,11 @@ def on_message(client, userdata, msg):
     elif msg.topic == CAMERA_1_ALIGNMENT:
         print("Camera Alignment: " + val)
         if selected_sensor == "camera":
-            if val == "not_seen":
+            if val == NOT_SEEN:
                 backlight.rgb(255, 0, 0)
-            elif val == "not_aligned":
+            elif val == NOT_ALIGNED:
                 backlight.rgb(0, 0, 255)
-            elif val == "aligned":
+            elif val == ALIGNED:
                 backlight.rgb(0, 255, 0)
 
 
