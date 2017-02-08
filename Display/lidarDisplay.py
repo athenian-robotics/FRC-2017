@@ -15,8 +15,8 @@ from common_utils import mqtt_broker_info
 selected_sensor = "camera"
 
 # Constants
-LIDAR_FRONT_LEFT = "lidar_left"
-LIDAR_FRONT_RIGHT = "lidar_right"
+LIDAR_FRONT_LEFT = "lidar/left"
+LIDAR_FRONT_RIGHT = "lidar/right"
 CAMERA_1_VALUE = "camera-gear-front/x"
 CAMERA_1_ALIGNMENT = "camera-gear-front/alignment"
 NOT_SEEN = "not_seen"
