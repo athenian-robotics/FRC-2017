@@ -157,3 +157,10 @@ Push to the Raspi:
 cd object-tracking
 git push raspiXX master
 ```
+
+## Topic names 
+"camera-gear-front/x" - topic for camera center position and screen width (int, int)
+"camera-gear-front/alignment" - topic for camera relative to object (String)
+"lidar-left" - topic for left lidar distance (int) 
+"lidar-right" - topic for right lidar distance (int)
+"mqtt-turtle.local" - mqtt hostname
