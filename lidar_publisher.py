@@ -42,16 +42,22 @@ def fetch_data(mm):
     global client
     global userdata
 
-    mm = int(mm)
-    try:
+    # Values sometimes get compacted together, take the later value if that happens since it's newer
+    if "\r" in mm:
+        mm = mm.split("\r")[1]
 
-        if mm < 0 or mm == 8191:  # out of range, get fresh data so it doesn't mess with averages
+    try:
+        mm = int(mm)
+    except ValueError:
+        return
+
+    try:
+        if 0 < mm < 2000:  # out of range, get fresh data so it doesn't mess with averages
             total_sum = 0
             total_count = 0
-            client.publish("lidar/{}/mm".format(userdata["topic"]),
+            client.publish("{}/mm".format(userdata["topic"]),
                            payload="-1".encode("utf-8"),
                            qos=0)
-            # continue
         elif (total_sum + total_count == 0) or abs((total_sum / total_count) - mm) < TOLERANCE_THRESH:
             total_sum += mm
             total_count += 1
@@ -85,7 +91,7 @@ if __name__ == "__main__":
     setup_logging()
 
     # Create userdata dictionary
-    userdata = {"topic": args["device"], "port": port}
+    userdata = {"topic": "lidar/" + args["device"], "port": port}
 
     # Initialize MQTT client
     client = paho.Client(userdata=userdata)
