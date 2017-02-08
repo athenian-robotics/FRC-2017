@@ -83,7 +83,7 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     # Setup logging
-    setup_logging(args["loglevel"])
+    setup_logging(level=args["loglevel"])
 
     # Initialize MQTT client
     client = paho.Client(userdata=userdata)

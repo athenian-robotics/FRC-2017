@@ -13,7 +13,7 @@ if __name__ == "__main__":
     args = setup_cli_args(cli.grpc_host, cli.mqtt_host, cli.camera_name)
 
     # Setup logging
-    setup_logging(args["loglevel"])
+    setup_logging(level=args["loglevel"])
 
     # Determine MQTT server details
     mqtt_hostname, mqtt_port = mqtt_broker_info(args["mqtt_host"])

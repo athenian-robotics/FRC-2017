@@ -8,7 +8,6 @@ from threading import Lock
 import paho.mqtt.client as paho
 from constants import TOPIC
 from utils import mqtt_broker_info
-from utils import setup_logging
 
 val_lidar_front_left = None
 val_lidar_front_right = None
@@ -61,7 +60,7 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     # Setup logging
-    setup_logging(args["loglevel"])
+    setup_logginglevel = (args["loglevel"])
 
     # Create userdata dictionary
     userdata = {TOPIC: args["topic"]}
