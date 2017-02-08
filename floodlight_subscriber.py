@@ -59,13 +59,13 @@ def run_display():
 
 if __name__ == "__main__":
     # Parse CLI args
-    args = setup_cli_args(cli.mqtt)
+    args = setup_cli_args(cli.mqtt_host)
 
     # Setup logging
     logging.basicConfig(**LOGGING_ARGS)
 
     # Create MQTT connection
-    hostname, port = mqtt_broker_info(args["mqtt"])
+    hostname, port = mqtt_broker_info(args["mqtt_host"])
     mqtt_conn = MqttConnection(hostname, port, userdata={HOSTNAME: hostname, PORT: port})
     mqtt_conn.client.on_connect = on_connect
     mqtt_conn.client.on_disconnect = on_disconnect
