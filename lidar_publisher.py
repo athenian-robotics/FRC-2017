@@ -4,11 +4,11 @@ import argparse
 import logging
 import socket
 import time
-import paho.mqtt.client as paho
 
-from common_constants import LOGGING_ARGS
-from common_utils import mqtt_broker_info
+import paho.mqtt.client as paho
 from serial_reader import SerialReader
+from utils import mqtt_broker_info
+from utils import setup_logging
 
 global total_sum
 global total_count
@@ -81,10 +81,8 @@ if __name__ == "__main__":
 
     port = args["serial"]
 
-    # Init connection to serial port
-
     # Setup logging
-    logging.basicConfig(**LOGGING_ARGS)
+    setup_logging()
 
     # Create userdata dictionary
     userdata = {"topic": args["device"], "port": port}

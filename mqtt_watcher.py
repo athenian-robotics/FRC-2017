@@ -5,8 +5,8 @@ import logging
 import socket
 
 import paho.mqtt.client as paho
-from common_constants import LOGGING_ARGS
-from common_utils import mqtt_broker_info
+from utils import mqtt_broker_info
+from utils import setup_logging
 
 
 def on_connect(client, userdata, flags, rc):
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     # Setup logging
-    logging.basicConfig(**LOGGING_ARGS)
+    setup_logging(args["loglevel"])
 
     # Determine MQTT broker details
     mqtt_hostname, mqtt_port = mqtt_broker_info(args["mqtt"])

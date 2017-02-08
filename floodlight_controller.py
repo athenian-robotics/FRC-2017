@@ -2,16 +2,13 @@
 
 import argparse
 import json
-import logging
 import sys
 from logging import info
 
-import blinkt
-
-from common_constants import LOGGING_ARGS
-from common_utils import is_python3
-from common_utils import mqtt_broker_info
 from mqtt_connection import MqttConnection
+from utils import is_python3
+from utils import mqtt_broker_info
+from utils import setup_logging
 
 if is_python3():
     import tkinter as tk
@@ -27,7 +24,7 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     # Setup logging
-    logging.basicConfig(**LOGGING_ARGS)
+    setup_logging()
 
 
     # Define MQTT callbacks
