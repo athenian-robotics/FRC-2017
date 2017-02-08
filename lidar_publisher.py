@@ -32,7 +32,7 @@ def on_disconnect(client, userdata, rc):
 
 
 def on_publish(client, userdata, mid):
-    logging.info("Published value to {0} with message id {1}".format(userdata["topic"], mid))
+    logging.debug("Published value to {0} with message id {1}".format(userdata["topic"], mid))
 
 
 def fetch_data(mm):
@@ -48,7 +48,7 @@ def fetch_data(mm):
         if mm < 0 or mm == 8191:  # out of range, get fresh data so it doesn't mess with averages
             total_sum = 0
             total_count = 0
-            client.publish("{}/mm".format(userdata["topic"]),
+            client.publish("lidar/{}/mm".format(userdata["topic"]),
                            payload="-1".encode("utf-8"),
                            qos=0)
             # continue
@@ -75,8 +75,8 @@ if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--mqtt", required=True, help="MQTT broker hostname")
-    parser.add_argument("-s", "--serial", required=True, help="Serial port", default="ttyACM0")
-    parser.add_argument("-d", "--device", required=True, help="Device name (lidar_l or lidar_r")
+    parser.add_argument("-s", "--serial", required=True, help="Serial port", default="/dev/ttyACM0")
+    parser.add_argument("-d", "--device", required=True, help="Device ('left' or 'right'")
     args = vars(parser.parse_args())
 
     port = args["serial"]
@@ -113,4 +113,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
 
-    print("Exiting...")
+    logging.info("Exiting...")
