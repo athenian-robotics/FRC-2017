@@ -75,7 +75,7 @@ if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--mqtt", required=True, help="MQTT broker hostname")
-    parser.add_argument("-s", "--serial", required=True, help="Serial port", default="ttyACM0")
+    parser.add_argument("-s", "--serial", required=True, help="Serial port", default="/dev/ttyACM0")
     parser.add_argument("-d", "--device", required=True, help="Device ('left' or 'right'")
     args = vars(parser.parse_args())
 
