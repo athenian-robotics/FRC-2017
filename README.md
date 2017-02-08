@@ -44,6 +44,21 @@ be forked with a trailing `&`:
 python2 ~pi/git/object-tracking/object_tracker.py --bgr "174, 56, 5" --width 400 --flip &> ~pi/git/FRC-2017/logs/object-tracker.out &
 ```
 
+## Listening to MQTT traffic
+
+Listen to all user msgs with:
+
+```bash
+$ mosquitto_sub -h mqtt.local -t "#"
+```
+
+Listen to all system msgs with:
+
+```bash
+$ mosquitto_sub -h mqtt.local -t "\$SYS/#"
+```
+
+
 ## Setting up remote repos on a Raspi
 
 ### FRC-2017 Repo
