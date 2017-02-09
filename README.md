@@ -164,3 +164,9 @@ git push raspiXX master
 * "lidar/left" - topic for left lidar distance (int) 
 * "lidar/right" - topic for right lidar distance (int)
 * "mqtt-turtle.local" - mqtt hostname
+
+## Raspi Names
+* 10 = lidar-gear-right - repos: common-robotics, FRC-2017 
+* 11 = camera-gear - repos: common-robotics, FRC-2017, object-tracker
+* 12 = mqtt-turtle - repos: none
+* 21 = lidar-gear-left - repos: common-robotics, FRC-2017
