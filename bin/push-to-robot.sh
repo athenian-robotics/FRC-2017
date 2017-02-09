@@ -6,11 +6,11 @@ git push camera-gear master
 git push lidar-gear-left master
 git push lidar-gear-right master
 
-# Push FCR-2017 repo
+# Push FRC-2017 repo
 cd ~/git/FRC-2017
 git push camera-gear master
 git push lidar-gear-left master
-git push lidar-gear-rightg master
+git push lidar-gear-right master
 
 # Push object-tracking repo
 cd ~/git/object-tracking
