@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 source ~pi/.profile
 workon py2cv3
