@@ -20,3 +20,4 @@ git push camera-gear master
 ssh pi@camera-gear sudo reboot now
 ssh pi@lidar-gear-left sudo reboot now
 ssh pi@lidar-gear-right sudo reboot now
+
