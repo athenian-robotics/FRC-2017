@@ -2,12 +2,11 @@
 
 import argparse
 import logging
-import socket
 import time
 
-import paho.mqtt.client as paho
+from mqtt_connection import MqttConnection
 from serial_reader import SerialReader
-from utils import mqtt_broker_info
+from utils import mqtt_broker_info, sleep
 from utils import setup_logging
 
 global total_sum
@@ -16,10 +15,10 @@ global total_count
 
 TOLERANCE_THRESH = 5
 
+serial_reader = SerialReader()
 
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
-    serial_reader = SerialReader()
     global total_sum
     global total_count
     total_sum = 0
@@ -93,28 +92,24 @@ if __name__ == "__main__":
     # Create userdata dictionary
     userdata = {"topic": "lidar/" + args["device"], "port": port}
 
-    # Initialize MQTT client
-    client = paho.Client(userdata=userdata)
+    # Determine MQTT broker details
+    hostname, port = mqtt_broker_info(args["mqtt"])
+
+    mqtt_conn = MqttConnection(hostname, port, userdata=userdata)
+    mqtt_conn.client.on_connect = on_connect
+    mqtt_conn.client.on_disconnect = on_disconnect
+    mqtt_conn.client.on_publish = on_publish
+    mqtt_conn.connect()
 
     # Add client to userdata
     userdata["client"] = client
 
-    # Setup MQTT callbacks
-    client.on_connect = on_connect
-    client.on_disconnect = on_disconnect
-    client.on_publish = on_publish
-
-    # Determine MQTT broker details
-    mqtt_hostname, mqtt_port = mqtt_broker_info(args["mqtt"])
-
     try:
-        # Connect to MQTT broker
-        logging.info("Connecting to MQTT broker {0}:{1}...".format(mqtt_hostname, mqtt_port))
-        client.connect(mqtt_hostname, port=mqtt_port, keepalive=60)
-        client.loop_forever()
-    except socket.error:
-        logging.error("Cannot connect to MQTT broker {0}:{1}".format(mqtt_hostname, mqtt_port))
+        sleep()
     except KeyboardInterrupt:
         pass
+    finally:
+        mqtt_conn.disconnect()
+        serial_reader.stop()
 
-    logging.info("Exiting...")
+    print("Exiting...")
