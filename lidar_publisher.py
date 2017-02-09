@@ -17,6 +17,7 @@ TOLERANCE_THRESH = 5
 
 serial_reader = SerialReader()
 
+
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
     global total_sum
@@ -34,19 +35,18 @@ def on_publish(client, userdata, mid):
     logging.debug("Published value to {0} with message id {1}".format(userdata["topic"], mid))
 
 
-def fetch_data(mm):
+def fetch_data(mm_str):
     # Using globals to keep running averages in check
     global total_count
     global total_sum
-    global client
     global userdata
 
     # Values sometimes get compacted together, take the later value if that happens since it's newer
-    if "\r" in mm:
-        mm = mm.split("\r")[1]
+    if "\r" in mm_str:
+        mm_str = mm_str.split("\r")[1]
 
     try:
-        mm = int(mm)
+        mm = int(mm_str)
     except ValueError:
         return
 
@@ -95,13 +95,13 @@ if __name__ == "__main__":
     # Determine MQTT broker details
     hostname, port = mqtt_broker_info(args["mqtt"])
 
-    mqtt_conn = MqttConnection(hostname, port, userdata=userdata)
-    mqtt_conn.client.on_connect = on_connect
-    mqtt_conn.client.on_disconnect = on_disconnect
-    mqtt_conn.client.on_publish = on_publish
-    mqtt_conn.connect()
+    mqtt_client = MqttConnection(hostname, port, userdata=userdata)
+    mqtt_client.client.on_connect = on_connect
+    mqtt_client.client.on_disconnect = on_disconnect
+    mqtt_client.client.on_publish = on_publish
+    mqtt_client.connect()
 
-    # Add client to userdata
+    client = mqtt_client.client
     userdata["client"] = client
 
     try:
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     finally:
-        mqtt_conn.disconnect()
+        client.disconnect()
         serial_reader.stop()
 
     print("Exiting...")
