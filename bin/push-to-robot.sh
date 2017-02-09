@@ -20,4 +20,5 @@ git push camera-gear master
 ssh pi@camera-gear.local sudo reboot now
 ssh pi@lidar-gear-left.local sudo reboot now
 ssh pi@lidar-gear-right.local sudo reboot now
+ssh pi@mqtt-turtle.local sudo reboot now
 
