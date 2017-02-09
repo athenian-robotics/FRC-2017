@@ -52,7 +52,7 @@ def fetch_data(mm):
         return
 
     try:
-        if 0 < mm < 2000:  # out of range, get fresh data so it doesn't mess with averages
+        if mm < 0 or mm > 2000:  # out of range, get fresh data so it doesn't mess with averages
             total_sum = 0
             total_count = 0
             client.publish("{}/mm".format(userdata["topic"]),
