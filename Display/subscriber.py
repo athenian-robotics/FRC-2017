@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import argparse
-import logging
-import socket
 from threading import Lock
 
-import paho.mqtt.client as paho
+import cli_args  as cli
 from constants import TOPIC
-from utils import mqtt_broker_info
+from mqtt_connection import MqttConnection
+from utils import setup_logging
+from utils import sleep
 
 val_lidar_front_left = None
 val_lidar_front_right = None
@@ -55,36 +55,26 @@ def on_message(client, userdata, msg):
 if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--mqtt", required=True, help="MQTT broker hostname")
+    cli.mqtt_host(parser),
     parser.add_argument("-t", "--topic", required=True, help="MQTT topic")
+    cli.verbose(parser),
     args = vars(parser.parse_args())
 
     # Setup logging
-    setup_logginglevel = (args["loglevel"])
+    setup_logging(level=args["loglevel"])
 
-    # Create userdata dictionary
-    userdata = {TOPIC: args["topic"]}
-
-    # Initialize MQTT client
-    client = paho.Client(userdata=userdata)
-
-    # Setup MQTT callbacks
-    client.on_connect = on_connect
-    client.on_message = on_message
-
-    # Determine MQTT broker details
-    mqtt_hostname, mqtt_port = mqtt_broker_info(args["mqtt"])
+    # Setup MQTT client
+    mqtt_conn = MqttConnection(args["mqtt_host"],
+                               userdata={TOPIC: args["topic"]},
+                               on_connect=on_connect,
+                               on_message=on_message)
+    mqtt_conn.connect()
 
     try:
-        # Connect to MQTT broker
-        logging.info("Connecting to MQTT broker {0}:{1}...".format(mqtt_hostname, mqtt_port))
-        client.connect(mqtt_hostname, port=mqtt_port, keepalive=60)
-        client.loop_forever()
-    except socket.error:
-        logging.error("Cannot connect to MQTT broker {0}:{1}".format(mqtt_hostname, mqtt_port))
+        sleep()
     except KeyboardInterrupt:
         pass
     finally:
-        client.disconnect()
+        mqtt_conn.disconnect()
 
     print("Exiting...")

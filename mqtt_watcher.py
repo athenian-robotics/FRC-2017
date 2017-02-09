@@ -2,9 +2,10 @@
 
 import argparse
 
+import cli_args  as cli
 from mqtt_connection import MqttConnection
-from utils import mqtt_broker_info, sleep
 from utils import setup_logging
+from utils import sleep
 
 
 def on_connect(client, userdata, flags, rc):
@@ -24,19 +25,16 @@ def on_message(client, userdata, msg):
 if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--mqtt", default="mqtt-turtle.local", help="MQTT broker hostname [mqtt-turtle.local]")
+    cli.mqtt_host(parser),
     args = vars(parser.parse_args())
 
     # Setup logging
     setup_logging()
 
-    # Determine MQTT broker details
-    hostname, port = mqtt_broker_info(args["mqtt"])
-
-    mqtt_conn = MqttConnection(hostname, port)
-    mqtt_conn.client.on_connect = on_connect
-    mqtt_conn.client.on_disconnect = on_disconnect
-    mqtt_conn.client.on_message = on_message
+    mqtt_conn = MqttConnection(args["mqtt_host"],
+                               on_connect=on_connect,
+                               on_disconnect=on_disconnect,
+                               on_message=on_message)
     mqtt_conn.connect()
 
     try:

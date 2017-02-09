@@ -8,7 +8,6 @@ import blinkt
 import cli_args  as cli
 from cli_args import setup_cli_args
 from mqtt_connection import MqttConnection
-from utils import mqtt_broker_info
 from utils import setup_logging
 
 HOSTNAME = "hostname"
@@ -63,13 +62,12 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args["loglevel"])
 
-    # Create MQTT connection
-    hostname, port = mqtt_broker_info(args["mqtt_host"])
-    mqtt_conn = MqttConnection(hostname, port, userdata={HOSTNAME: hostname, PORT: port})
-    mqtt_conn.client.on_connect = on_connect
-    mqtt_conn.client.on_disconnect = on_disconnect
-    mqtt_conn.client.on_subscribe = on_subscribe
-    mqtt_conn.client.on_message = on_message
+    mqtt_conn = MqttConnection(args["mqtt_host"],
+                               userdata={},
+                               on_connect=on_connect,
+                               on_disconnect=on_disconnect,
+                               on_subscribe=on_subscribe,
+                               on_message=on_message)
     mqtt_conn.connect()
 
     try:

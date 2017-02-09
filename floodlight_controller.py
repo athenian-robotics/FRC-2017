@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-import argparse
 import json
 import sys
 from logging import info
 
+import cli_args as cli
 from mqtt_connection import MqttConnection
 from utils import is_python3
-from utils import mqtt_broker_info
 from utils import setup_logging
 
 if is_python3():
@@ -19,12 +18,10 @@ COMMAND_TOPIC = "roborio/status/floodlight"
 
 if __name__ == "__main__":
     # Parse CLI args
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--mqtt", required=True, help="MQTT broker hostname")
-    args = vars(parser.parse_args())
+    args = cli.setup_cli_args(cli.mqtt_host, cli.verbose)
 
     # Setup logging
-    setup_logging()
+    setup_logging(level=args["loglevel"])
 
 
     # Define MQTT callbacks
@@ -41,10 +38,10 @@ if __name__ == "__main__":
 
 
     # Create MQTT connection
-    mqtt_conn = MqttConnection(*mqtt_broker_info(args["mqtt"]))
-    mqtt_conn.client.on_connect = on_connect
-    mqtt_conn.client.on_disconnect = on_disconnect
-    mqtt_conn.client.on_publish = on_publish
+    mqtt_conn = MqttConnection(args["mqtt_host"],
+                               on_connect=on_connect,
+                               on_disconnect=on_disconnect,
+                               on_publish=on_publish)
     mqtt_conn.connect()
 
 
