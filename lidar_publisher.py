@@ -2,7 +2,6 @@
 
 import argparse
 import logging
-import time
 
 from mqtt_connection import MqttConnection
 from serial_reader import SerialReader
@@ -35,41 +34,34 @@ def on_publish(client, userdata, mid):
     logging.debug("Published value to {0} with message id {1}".format(userdata["topic"], mid))
 
 
+OUT_OF_RANGE = "-1".encode("utf-8")
+
 def fetch_data(mm_str):
     # Using globals to keep running averages in check
     global total_count
     global total_sum
     global userdata
 
+    TOPIC = "{}/mm".format(userdata["topic"])
+
     # Values sometimes get compacted together, take the later value if that happens since it's newer
     if "\r" in mm_str:
         mm_str = mm_str.split("\r")[1]
 
-    try:
-        mm = int(mm_str)
-    except ValueError:
-        return
+    mm = int(mm_str)
 
-    try:
-        if mm < 0 or mm > 2000:  # out of range, get fresh data so it doesn't mess with averages
-            total_sum = 0
-            total_count = 0
-            client.publish("{}/mm".format(userdata["topic"]),
-                           payload="-1".encode("utf-8"),
-                           qos=0)
-        elif (total_sum + total_count == 0) or abs((total_sum / total_count) - mm) < TOLERANCE_THRESH:
-            total_sum += mm
-            total_count += 1
-        else:
-            client.publish("{}/mm".format(userdata["topic"]),
-                           payload=str(mm).encode("utf-8"),
-                           qos=0)
-            total_sum = 0 + mm
-            total_count = 1
+    if mm < 0 or mm > 2000:  # out of range, get fresh data so it doesn't mess with averages
+        total_sum = 0
+        total_count = 0
+        client.publish(TOPIC, payload=OUT_OF_RANGE, qos=0)
+    elif (total_sum + total_count == 0) or abs((total_sum / total_count) - mm) < TOLERANCE_THRESH:
+        total_sum += mm
+        total_count += 1
+    else:
+        client.publish(TOPIC, payload=str(mm).encode("utf-8"), qos=0)
+        total_sum = 0 + mm
+        total_count = 1
 
-    except BaseException as e:
-        print(e.__class__.__name__, e)
-        time.sleep(1)
 
 
 if __name__ == "__main__":
