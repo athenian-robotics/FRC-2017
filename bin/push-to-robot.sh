@@ -17,7 +17,7 @@ cd ~/git/object-tracking
 git push camera-gear master
 
 # Reboot machines
-ssh pi@camera-gear sudo reboot now
-ssh pi@lidar-gear-left sudo reboot now
-ssh pi@lidar-gear-right sudo reboot now
+ssh pi@camera-gear.local sudo reboot now
+ssh pi@lidar-gear-left.local sudo reboot now
+ssh pi@lidar-gear-right.local sudo reboot now
 
