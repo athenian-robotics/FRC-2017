@@ -22,7 +22,7 @@ CAMERA_1_ALIGNMENT = "camera-gear-front/alignment"
 NOT_SEEN = "not_seen"
 NOT_ALIGNED = "not_aligned"
 ALIGNED = "aligned"
-
+w
 # lcd initialization
 lcd.clear()
 backlight.rgb(255, 255, 255)
