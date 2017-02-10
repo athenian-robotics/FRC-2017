@@ -2,7 +2,7 @@
 
 # Reboot robot Raspis
 echo "Rebooting robot Raspis"
-ssh pi@camera-gear.local sudo reboot now
-ssh pi@lidar-gear-left.local sudo reboot now
-ssh pi@lidar-gear-right.local sudo reboot now
-ssh pi@mqtt-turtle.local sudo reboot now
+ssh -o StrictHostKeyChecking=no pi@camera-gear.local sudo reboot now
+ssh -o StrictHostKeyChecking=no pi@lidar-gear-left.local sudo reboot now
+ssh -o StrictHostKeyChecking=no pi@lidar-gear-right.local sudo reboot now
+ssh -o StrictHostKeyChecking=no pi@mqtt-turtle.local sudo reboot now
