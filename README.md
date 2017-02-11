@@ -201,13 +201,12 @@ Host mqtt-turtle, mqtt-turtle.local
 ```
 
 ## Topic names 
-| Name                 | Topic Description                                     |
-|:--------------------:|:------------------------------------------------------|
-|camera/gear/x         | camera center position and screen width (int, int)    |
-|camera/gear/alignment | camera relative to object (String)                    |
-|lidar/left            | left lidar distance (int)                             |
-|lidar/right           | right lidar distance (int)                            |
-|lidar/left            | left lidar distance (int)                             |
+| Name                 | Topic Description                                       |
+|:--------------------:|:--------------------------------------------------------|
+|camera/gear/x         | camera center position and screen width (String:String) |
+|camera/gear/alignment | camera relative to object (String)                      |
+|lidar/left/mm         | left lidar distance (String)                            |
+|lidar/right/mm        | right lidar distance (String)                           |
 
 ## Raspi Names
 
