@@ -1,43 +1,42 @@
 #!/usr/bin/env python2
 
-import signal
-from threading import Lock
-
-import cli_args  as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
 import dothat.touch as nav
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
+import cli_args  as cli
 
-val_lidar_front_left = None
-val_lidar_front_right = None
-val_camera_1 = None
-
+# default sensor
 selected_sensor = "camera"
+
+# Constants
+LIDAR_FRONT_LEFT = "lidar/left"
+LIDAR_FRONT_RIGHT = "lidar/right"
+CAMERA_1_VALUE = "camera/gear/x"
+CAMERA_1_ALIGNMENT = "camera/gear/alignment"
+NOT_SEEN = "not_seen"
+NOT_ALIGNED = "not_aligned"
+ALIGNED = "aligned"
+
+# lcd initialization
+lcd.clear()
+backlight.rgb(255, 255, 255)
+lcd.set_contrast(45)
 lcd.clear()
 lcd.set_cursor_position(0, 0)
 lcd.write("Camera")
 lcd.set_cursor_position(0, 2)
 lcd.write("null")
 
-LIDAR_FRONT_LEFT = "Lidar-Front-Left/data"
-LIDAR_FRONT_RIGHT = "Lidar-Front-Right/data"
-CAMERA_1 = "Camera-1/value"
-
-lock = Lock()
-
-lcd.clear()
-backlight.rgb(255, 255, 255)
-lcd.set_contrast(45)
-
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code: {0}".format(rc))
-    client.subscribe("Lidar-Front-Left/data")
-    client.subscribe("Lidar-Front-Right/data")
-    client.subscribe("Camera-1/value")
+    client.subscribe(LIDAR_FRONT_LEFT)
+    client.subscribe(LIDAR_FRONT_RIGHT)
+    client.subscribe(CAMERA_1_VALUE)
+    client.subscribe(CAMERA_1_ALIGNMENT)
 
 
 def on_subscribe(client, userdata, mid, granted_qos):
@@ -48,29 +47,47 @@ def on_message(client, userdata, msg):
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
     print("{0} : {1}".format(msg.topic, val))
+
     if msg.topic == LIDAR_FRONT_LEFT:
-        with lock:
-            val_lidar_front_left = val
+        print("Lidar L: " + val)
+        if selected_sensor == "lidar_left":
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Lidar Left")
+            lcd.set_cursor_position(0, 2)
+            lcd.write(val + " mm")
 
     elif msg.topic == LIDAR_FRONT_RIGHT:
-        with lock:
-            val_lidar_front_right = val
+        print("Lidar R: " + val)
+        if selected_sensor == "lidar_right":
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Lidar Right")
+            lcd.set_cursor_position(0, 2)
+            lcd.write(val + " mm")
 
-    elif msg.topic == CAMERA_1:
-        with lock:
-            val_camera_1 = val
+    elif msg.topic == CAMERA_1_VALUE:
+        print("Camera Value: " + val)
+        if selected_sensor == "camera":
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Camera")
+            lcd.set_cursor_position(0, 2)
+            lcd.write(val)
 
-    if selected_sensor == "camera":
-        lcd.set_cursor_position(0, 2)
-        lcd.write(val_camera_1)
-    elif selected_sensor == "lidar_left":
-        lcd.set_cursor_position(0, 2)
-        lcd.write(val_lidar_front_left + " mm")
-    else:
-        lcd.set_cursor_position(0, 2)
-        lcd.write(val_lidar_front_right + " mm")
+    elif msg.topic == CAMERA_1_ALIGNMENT:
+        print("Camera Alignment: " + val)
+        if selected_sensor == "camera":
+            if val == NOT_SEEN:
+                backlight.rgb(255, 0, 0)
+            elif val == NOT_ALIGNED:
+                backlight.rgb(0, 0, 255)
+            elif val == ALIGNED:
+                backlight.rgb(0, 255, 0)
 
-        # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
+
+
+                # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
         # int.from_bytes() requires python3: https://docs.python.org/3/library/stdtypes.html#int.from_bytes
 
 
@@ -95,45 +112,41 @@ if __name__ == "__main__":
     finally:
         mqtt_conn.disconnect()
 
+
+    @nav.on(nav.LEFT)
+    def handle_left(ch, evt):
+        global selected_sensor
+        selected_sensor = "lidar_left"
+        print("Left Lidar Display")
+        lcd.clear()
+        lcd.set_cursor_position(0, 0)
+
+        lcd.write("Left Lidar")
+        lcd.set_cursor_position(0, 2)
+
+
+    @nav.on(nav.RIGHT)
+    def handle_right(ch, evt):
+        global selected_sensor
+        selected_sensor = "lidar_right"
+        print("Right Lidar")
+        lcd.clear()
+        lcd.set_cursor_position(0, 0)
+        lcd.write("Right Lidar")
+
+        lcd.set_cursor_position(0, 2)
+
+
+    @nav.on(nav.BUTTON)
+    def handle_button(ch, evt):
+        global selected_sensor
+        selected_sensor = "camera"
+        print("Camera")
+        lcd.clear()
+        lcd.set_cursor_position(0, 0)
+        lcd.write("Camera")
+
+        lcd.set_cursor_position(0, 2)
+
+
     print("Exiting...")
-
-
-@nav.on(nav.LEFT)
-def handle_left(ch, evt):
-    selected_sensor = "lidar_left"
-    print("Left Lidar Display")
-    lcd.clear()
-    lcd.set_cursor_position(0, 0)
-
-    lcd.write("Left Lidar")
-    lcd.set_cursor_position(0, 2)
-
-    lcd.write("null")
-
-
-@nav.on(nav.RIGHT)
-def handle_right(ch, evt):
-    selected_sensor = "lidar_right"
-    print("Right Lidar")
-    lcd.clear()
-    lcd.set_cursor_position(0, 0)
-    lcd.write("Right Lidar")
-
-    lcd.set_cursor_position(0, 2)
-    lcd.write("null")
-
-
-@nav.on(nav.BUTTON)
-def handle_button(ch, evt):
-    selected_sensor = "camera"
-    print("Camera")
-    lcd.clear()
-    lcd.set_cursor_position(0, 0)
-    lcd.write("Camera")
-
-    lcd.set_cursor_position(0, 2)
-
-    lcd.write("null")
-
-
-signal.pause()
