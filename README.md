@@ -160,9 +160,10 @@ git push raspiXX master
 
 ## Topic names 
 * "camera/gear/x" - topic for camera center position and screen width (int, int)
-* "camera/gear/alignment" - topic for camera relative to object (String)
+* "camera/gear/alignment" - topic for camera relative to object and command (int, String)
 * "lidar/left" - topic for left lidar distance (int) 
 * "lidar/right" - topic for right lidar distance (int)
+* "lidar/distance" - topic for distance and command (int, int, String)
 * "mqtt-turtle.local" - mqtt hostname
 
 ## Raspi Names
