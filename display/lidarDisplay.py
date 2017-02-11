@@ -17,12 +17,12 @@ selected_sensor = "camera"
 # Constants
 LIDAR_FRONT_LEFT = "lidar/left"
 LIDAR_FRONT_RIGHT = "lidar/right"
-CAMERA_1_VALUE = "camera-gear-front/x"
-CAMERA_1_ALIGNMENT = "camera-gear-front/alignment"
+CAMERA_1_VALUE = "camera/gear/x"
+CAMERA_1_ALIGNMENT = "camera/gear/alignment"
 NOT_SEEN = "not_seen"
 NOT_ALIGNED = "not_aligned"
 ALIGNED = "aligned"
-w
+
 # lcd initialization
 lcd.clear()
 backlight.rgb(255, 255, 255)
@@ -89,7 +89,8 @@ def on_message(client, userdata, msg):
                 backlight.rgb(0, 255, 0)
 
 
-        # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
+
+                # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
         # int.from_bytes() requires python3: https://docs.python.org/3/library/stdtypes.html#int.from_bytes
 
 
