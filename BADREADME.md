@@ -44,21 +44,6 @@ be forked with a trailing `&`:
 python2 ~pi/git/object-tracking/object_tracker.py --bgr "174, 56, 5" --width 400 --flip &> ~pi/git/FRC-2017/logs/object-tracker.out &
 ```
 
-## Listening to MQTT traffic
-
-Listen to all user msgs with:
-
-```bash
-$ mosquitto_sub -h mqtt.local -t "#"
-```
-
-Listen to all system msgs with:
-
-```bash
-$ mosquitto_sub -h mqtt.local -t "\$SYS/#"
-```
-
-
 ## Setting up remote repos on a Raspi
 
 ### FRC-2017 Repo
@@ -173,6 +158,20 @@ cd object-tracking
 git push raspiXX master
 ```
 
+## Listening to MQTT traffic
+
+Listen to all user msgs with:
+
+```bash
+$ mosquitto_sub -h mqtt-turtle.local -t "#"
+```
+
+Listen to all system msgs with:
+
+```bash
+$ mosquitto_sub -h mqtt-turtle.local -t "\$SYS/#"
+```
+
 ## ~/.ssh/config contents
 
 ```
@@ -200,3 +199,23 @@ Host mqtt-turtle, mqtt-turtle.local
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
 ```
+
+## Topic names 
+| Name                 | Topic Description                                     |
+|:--------------------:|:------------------------------------------------------|
+|camera/gear/x         | camera center position and screen width (int, int)    |
+|camera/gear/alignment | camera relative to object (String)                    |
+|lidar/left            | left lidar distance (int)                             |
+|lidar/right           | right lidar distance (int)                            |
+|lidar/left            | left lidar distance (int)                             |
+
+## Raspi Names
+
+| #   | Name             | Repos                                              |
+|:---:|:----------------:|----------------------------------------------------|
+| 10  | lidar-gear-right | common-robotics, FRC-2017                          |
+| 11  | camera-gear      | common-robotics, FRC-2017, object-tracker          |
+| 12  | mqtt-turtle      | none                                               |
+| 21  | lidar-gear-left  | common-robotics, FRC-2017                          |
+
+
