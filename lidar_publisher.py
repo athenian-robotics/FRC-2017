@@ -80,7 +80,7 @@ if __name__ == "__main__":
     logging.info("HOST = {0}".format(args["mqtt_host"]))
 
     mqtt_client = MqttConnection(hostname=args["mqtt_host"],
-                                 userdata={"topic": "lidar/{0}/mm".format(args["device"]), "port": (args["serial"])})
+                                 userdata={"topic": "lidar/{0}/mm".format(args["device"]), "port": args["serial"]})
     # ,
     # on_connect=on_connect,
     # on_disconnect=on_disconnect,
