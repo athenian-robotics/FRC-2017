@@ -212,9 +212,9 @@ Host mqtt-turtle mqtt-turtle.local
 
 | #   | Name             | Repos                                              |
 |:---:|:----------------:|----------------------------------------------------|
-| 10  | lidar-gear-right | common-robotics, FRC-2017                          |
-| 11  | camera-gear      | common-robotics, FRC-2017, object-tracker          |
+| 10  | lidar-gear-right | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
+| 11  | camera-gear      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
 | 12  | mqtt-turtle      | none                                               |
-| 21  | lidar-gear-left  | common-robotics, FRC-2017                          |
+| 21  | lidar-gear-left  | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
 
 
