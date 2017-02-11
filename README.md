@@ -175,25 +175,25 @@ $ mosquitto_sub -h mqtt-turtle.local -t "\$SYS/#"
 ## ~/.ssh/config contents
 
 ```
-Host camera-gear, camera-gear.local
+Host camera-gear camera-gear.local
   HostName camera-gear.local
   User pi
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
 
-Host lidar-gear-right, lidar-gear-right.local
+Host lidar-gear-right lidar-gear-right.local
   HostName lidar-gear-right.local
   User pi
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
 
-Host lidar-gear-left, lidar-gear-left.local
+Host lidar-gear-left lidar-gear-left.local
   HostName lidar-gear-left.local
   User pi
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
 
-Host mqtt-turtle, mqtt-turtle.local
+Host mqtt-turtle mqtt-turtle.local
   HostName mqtt-turtle.local
   User pi
   StrictHostKeyChecking no
