@@ -87,12 +87,14 @@ if __name__ == "__main__":
                                   on_connect=on_connect,
                                   on_disconnect=on_disconnect,
                                   on_publish=on_publish)
+    mqtt_client.connect()
+
     try:
         sleep()
     except KeyboardInterrupt:
         pass
     finally:
-        mqtt_client.client.disconnect()
+        mqtt_client.disconnect()
         serial_reader.stop()
 
     print("Exiting...")
