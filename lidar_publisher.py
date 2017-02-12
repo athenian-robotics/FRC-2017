@@ -23,7 +23,7 @@ def on_connect(client, userdata, flags, rc):
     global total_count
     total_sum = 0
     total_count = 0
-    serial_reader.start(func=fetch_data, userdata=userdata, port=userdata["port"], baudrate=115200)
+    serial_reader.start(func=fetch_data, userdata=userdata, port=userdata["serial"], baudrate=115200)
 
 
 def on_disconnect(client, userdata, rc):
@@ -84,17 +84,16 @@ if __name__ == "__main__":
     logging.info("Hostname: {0}".format(hostname))
     logging.info("I am here 1")
 
-    mqtt_client = MqttConnection2(hostname=hostname, userdata=userdata)
+    mqtt_client = MqttConnection2(hostname=hostname,
+                                  userdata=userdata,
+                                  on_connect=on_connect,
+                                  on_disconnect=on_disconnect,
+                                  on_publish=on_publish)
 
-    # ,
-    # on_connect=on_connect,
-    # on_disconnect=on_disconnect,
-    # on_publish=on_publish)
-
-    mqtt_client.connect()
-    mqtt_client.client.on_connect = on_connect
-    mqtt_client.client.on_disconnect = on_disconnect
-    mqtt_client.client.on_publish = on_publish
+    # mqtt_client.connect()
+    # mqtt_client.client.on_connect = on_connect
+    # mqtt_client.client.on_disconnect = on_disconnect
+    # mqtt_client.client.on_publish = on_publish
 
     try:
         sleep()
