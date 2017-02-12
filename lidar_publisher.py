@@ -82,19 +82,12 @@ if __name__ == "__main__":
     userdata = {"topic": topic, "port": port}
     hostname = args["mqtt_host"]
     logging.info("Hostname: {0}".format(hostname))
-    logging.info("I am here 1")
 
     mqtt_client = MqttConnection2(hostname=hostname,
                                   userdata=userdata,
                                   on_connect=on_connect,
                                   on_disconnect=on_disconnect,
                                   on_publish=on_publish)
-
-    # mqtt_client.connect()
-    # mqtt_client.client.on_connect = on_connect
-    # mqtt_client.client.on_disconnect = on_disconnect
-    # mqtt_client.client.on_publish = on_publish
-
     try:
         sleep()
     except KeyboardInterrupt:
