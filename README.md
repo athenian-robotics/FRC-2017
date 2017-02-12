@@ -216,5 +216,5 @@ Host mqtt-turtle mqtt-turtle.local
 | 11  | camera-gear      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
 | 12  | mqtt-turtle      | none                                               |
 | 21  | lidar-gear-left  | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
-
+| 12  | lcd1             | none
 
