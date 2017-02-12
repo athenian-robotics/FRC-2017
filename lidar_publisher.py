@@ -76,14 +76,11 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args["loglevel"])
 
-    topic = "lidar/{0}/mm".format(args["device"])
-    serial_port = args["serial"]
-    userdata = {"topic": topic, "serial_port": serial_port}
-    hostname = args["mqtt_host"]
-    logging.info("Hostname: {0}".format(hostname))
+    logging.info("Hostname: {0}".format(args["mqtt_host"]))
 
-    mqtt_client = MqttConnection(hostname=hostname,
-                                 userdata=userdata,
+    mqtt_client = MqttConnection(hostname=(args["mqtt_host"]),
+                                 userdata={"topic": ("lidar/{0}/mm".format(args["device"])),
+                                           "serial_port": (args["serial"])},
                                  on_connect=on_connect,
                                  on_disconnect=on_disconnect,
                                  on_publish=on_publish)

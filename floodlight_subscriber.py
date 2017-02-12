@@ -10,8 +10,8 @@ from cli_args import setup_cli_args
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 
-HOSTNAME = "hostname"
-PORT = "port"
+HOSTNAME = "paho.hostname"
+PORT = "paho.port"
 
 
 def on_connect(client, userdata, flags, rc):
