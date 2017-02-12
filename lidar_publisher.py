@@ -4,7 +4,7 @@ import argparse
 import logging
 
 import cli_args  as cli
-from mqtt_connection2 import MqttConnection2
+from mqtt_connection import MqttConnection
 from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
@@ -83,11 +83,11 @@ if __name__ == "__main__":
     hostname = args["mqtt_host"]
     logging.info("Hostname: {0}".format(hostname))
 
-    mqtt_client = MqttConnection2(hostname=hostname,
-                                  userdata=userdata,
-                                  on_connect=on_connect,
-                                  on_disconnect=on_disconnect,
-                                  on_publish=on_publish)
+    mqtt_client = MqttConnection(hostname=hostname,
+                                 userdata=userdata,
+                                 on_connect=on_connect,
+                                 on_disconnect=on_disconnect,
+                                 on_publish=on_publish)
     try:
         sleep()
     except KeyboardInterrupt:
