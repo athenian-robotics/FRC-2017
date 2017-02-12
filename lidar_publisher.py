@@ -16,7 +16,6 @@ TOLERANCE_THRESH = 5
 
 serial_reader = SerialReader()
 
-
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
     global total_sum
