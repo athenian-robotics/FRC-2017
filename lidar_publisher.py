@@ -4,7 +4,7 @@ import argparse
 import logging
 
 import cli_args  as cli
-from mqtt_connection2 import MqttConnection2
+from mqtt_connection import MqttConnection
 from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
@@ -82,8 +82,9 @@ if __name__ == "__main__":
     userdata = {"topic": topic, "port": port}
     hostname = args["mqtt_host"]
     logging.info("Hostname: {0}".format(hostname))
+    logging.info("I am here 1")
 
-    mqtt_client = MqttConnection2(hostname=hostname, userdata=userdata)
+    mqtt_client = MqttConnection(hostname=hostname, userdata=userdata)
 
     # ,
     # on_connect=on_connect,
