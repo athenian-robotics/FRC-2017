@@ -22,7 +22,7 @@ def on_connect(client, userdata, flags, rc):
     global total_count
     total_sum = 0
     total_count = 0
-    serial_reader.start(func=fetch_data, userdata=userdata, port=userdata["serial"], baudrate=115200)
+    serial_reader.start(func=fetch_data, userdata=userdata, port=userdata["port"], baudrate=115200)
 
 
 def on_disconnect(client, userdata, rc):
@@ -77,8 +77,8 @@ if __name__ == "__main__":
     setup_logging(level=args["loglevel"])
 
     topic = "lidar/{0}/mm".format(args["device"])
-    port = args["serial"]
-    userdata = {"topic": topic, "port": port}
+    serial_port = args["serial"]
+    userdata = {"topic": topic, "port": serial_port}
     hostname = args["mqtt_host"]
     logging.info("Hostname: {0}".format(hostname))
 
