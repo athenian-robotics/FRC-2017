@@ -21,6 +21,9 @@ NOT_SEEN = "not_seen"
 NOT_ALIGNED = "not_aligned"
 ALIGNED = "aligned"
 
+lidar_l = ""
+lidar_r = ""
+
 # lcd initialization
 lcd.clear()
 backlight.rgb(255, 255, 255)
@@ -30,6 +33,7 @@ lcd.set_cursor_position(0, 0)
 lcd.write("Camera")
 lcd.set_cursor_position(0, 2)
 lcd.write("null")
+
 
 
 def on_connect(client, userdata, flags, rc):
@@ -51,21 +55,31 @@ def on_message(client, userdata, msg):
 
     if msg.topic == LIDAR_FRONT_LEFT:
         print("Lidar L: " + val)
+        lidar_l = val
         if selected_sensor == "lidar_left":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Left")
             lcd.set_cursor_position(0, 2)
             lcd.write(val + " mm")
+            if val == "-1" and lidar_l == "-1":
+                backlight.rgb(255, 0, 0)
+            else :
+                backlight.rgb(255, 255, 255)
 
     elif msg.topic == LIDAR_FRONT_RIGHT:
         print("Lidar R: " + val)
+        lidar_r = val
         if selected_sensor == "lidar_right":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Right")
             lcd.set_cursor_position(0, 2)
             lcd.write(val + " mm")
+            if val == "-1" and lidar_r == "-1":
+                backlight.rgb(255, 0, 0)
+            else :
+                backlight.rgb(255, 255, 255)
 
     elif msg.topic == CAMERA_1_VALUE:
         print("Camera Value: " + val)
