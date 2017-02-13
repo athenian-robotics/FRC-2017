@@ -1,13 +1,12 @@
 #!/usr/bin/env python2
 
-import signal
+import cli_args  as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
 import dothat.touch as nav
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
-import cli_args  as cli
 
 # default sensor
 selected_sensor = "camera"
