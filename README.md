@@ -51,11 +51,10 @@ python2 ~pi/git/object-tracking/object_tracker.py --bgr "174, 56, 5" --width 400
 Setup a bare repo and a source directory:
 
 ```bash
-cd git
-
-mkdir FRC-2017
-mkdir FRC-2017.git
-git init --bare FRC-2017.git
+$ cd ~/git
+$ mkdir FRC-2017
+$ mkdir FRC-2017.git
+$ git init --bare ~/git/FRC-2017.git
 ```
 
 Edit *FRC-2017.git/hooks/post-receive* and put this into it: 
@@ -68,18 +67,18 @@ echo "*** Updated FRC-2017 ***" >&2
 
 Make *post-receive* executable:
 ```bash
-chmod +x FRC-2017.git/hooks/post-receive
+$ chmod +x ~/gitFRC-2017.git/hooks/post-receive
 ```
 Adjust the git config on your Mac (change raspiXX to your raspi hostname):
 
 ```bash
-cd FRC-2017
-git remote add raspiXX pi@raspiXX.local:/home/pi/git/FRC-2017.git
+$ cd ~/git/FRC-2017
+$ git remote add raspiXX pi@raspiXX.local:/home/pi/git/FRC-2017.git
 ```
 
 Push to the Raspi:
 ```bash
-git push raspiXX master
+$ git push raspiXX master
 ```
 
 ### common-robotics Repo
@@ -87,11 +86,10 @@ git push raspiXX master
 Setup a bare repo and a source directory:
 
 ```bash
-cd git
-
-mkdir common-robotics
-mkdir common-robotics.git
-git init --bare common-robotics.git
+$ cd ~/git
+$ mkdir common-robotics
+$ mkdir common-robotics.git
+$ git init --bare ~/git/common-robotics.git
 ```
 
 Edit *common-robotics.git/hooks/post-receive* and put this into it: 
@@ -104,20 +102,20 @@ echo "*** Updated common-robotics.git ***" >&2
 
 Make *post-receive* executable:
 ```bash
-chmod +x common-robotics.git/hooks/post-receive
+$ chmod +x ~/git/common-robotics.git/hooks/post-receive
 ```
 
 Adjust the git config on your Mac (change raspiXX to your raspi hostname):
 
 ```bash
-cd common-robotics
-git remote add raspiXX pi@raspiXX.local:/home/pi/git/common-robotics.git
+$ cd ~/git/common-robotics
+$ git remote add raspiXX pi@raspiXX.local:/home/pi/git/common-robotics.git
 ```
 
 Push to the Raspi:
 ```bash
-cd common-robotics
-git push raspiXX master
+$ cd ~/git/common-robotics
+$ git push raspiXX master
 ```
 
 ### object-tracking Repo
@@ -125,11 +123,10 @@ git push raspiXX master
 Setup a bare repo and a source directory:
 
 ```bash
-cd git
-
-mkdir object-tracking
-mkdir object-tracking.git
-git init --bare object-tracking.git
+$ cd ~/git
+$ mkdir object-tracking
+$ mkdir object-tracking.git
+$ git init --bare ~/git/object-tracking.git
 ```
 
 Edit *object-tracking.git/hooks/post-receive* and put this into it: 
@@ -142,20 +139,20 @@ echo "*** Updated object-tracking.git ***" >&2
 
 Make *post-receive* executable:
 ```bash
-chmod +x object-tracking.git/hooks/post-receive
+$ chmod +x ~/git/object-tracking.git/hooks/post-receive
 ```
 
 Adjust the git config on your Mac (change raspiXX to your raspi hostname):
 
 ```bash
-cd object-tracking
-git remote add raspiXX pi@raspiXX.local:/home/pi/git/object-tracking.git
+$ cd ~/git/object-tracking
+$ git remote add raspiXX pi@raspiXX.local:/home/pi/git/object-tracking.git
 ```
 
 Push to the Raspi:
 ```bash
-cd object-tracking
-git push raspiXX master
+$ cd ~/git/object-tracking
+$ git push raspiXX master
 ```
 
 ## Listening to MQTT traffic
