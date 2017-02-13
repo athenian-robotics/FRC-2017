@@ -52,17 +52,3 @@ Listen to all system msgs with:
 ```bash
 $ mosquitto_sub -h mqtt-turtle.local -t "\$SYS/#"
 ```
-
-## Topic names 
-* "camera/gear/x" - topic for camera center position and screen width (int, int)
-* "camera/gear/alignment" - topic for camera relative to object and command (int, String)
-* "lidar/left" - topic for left lidar distance (int) 
-* "lidar/right" - topic for right lidar distance (int)
-* "lidar/distance" - topic for distance and command (int, int, String)
-* "mqtt-turtle.local" - mqtt hostname
-
-## Raspi Names
-* 10 = lidar-gear-right - repos: common-robotics, FRC-2017 
-* 11 = camera-gear - repos: common-robotics, FRC-2017, object-tracker
-* 12 = mqtt-turtle - repos: none
-* 21 = lidar-gear-left - repos: common-robotics, FRC-2017
