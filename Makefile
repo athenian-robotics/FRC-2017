@@ -2,6 +2,7 @@ default: help
 
 help:
 	echo "Try make github, make robot or make reboot"
+
 robot:
 	./bin/push-to-robot.sh
 
