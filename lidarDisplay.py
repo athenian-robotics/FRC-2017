@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 
+import signal
 import dothat.backlight as backlight
 import dothat.lcd as lcd
 import dothat.touch as nav
@@ -12,8 +13,8 @@ import cli_args  as cli
 selected_sensor = "camera"
 
 # Constants
-LIDAR_FRONT_LEFT = "lidar/left"
-LIDAR_FRONT_RIGHT = "lidar/right"
+LIDAR_FRONT_LEFT = "lidar/left/mm"
+LIDAR_FRONT_RIGHT = "lidar/right/mm"
 CAMERA_1_VALUE = "camera/gear/x"
 CAMERA_1_ALIGNMENT = "camera/gear/alignment"
 NOT_SEEN = "not_seen"
@@ -88,7 +89,45 @@ def on_message(client, userdata, msg):
 
 
                 # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
-        # int.from_bytes() requires python3: https://docs.python.org/3/library/stdtypes.html#int.from_bytes
+                # int.from_bytes() requires python3: https://docs.python.org/3/library/stdtypes.html#int.from_bytes
+
+
+@nav.on(nav.LEFT)
+
+
+def handle_left(ch, evt):
+    global selected_sensor
+    selected_sensor = "lidar_left"
+    print("Left Lidar Display")
+    lcd.clear()
+    lcd.set_cursor_position(0, 0)
+
+    lcd.write("Left Lidar")
+    lcd.set_cursor_position(0, 2)
+
+
+@nav.on(nav.RIGHT)
+def handle_right(ch, evt):
+    global selected_sensor
+    selected_sensor = "lidar_right"
+    print("Right Lidar")
+    lcd.clear()
+    lcd.set_cursor_position(0, 0)
+    lcd.write("Right Lidar")
+
+    lcd.set_cursor_position(0, 2)
+
+
+@nav.on(nav.BUTTON)
+def handle_button(ch, evt):
+    global selected_sensor
+    selected_sensor = "camera"
+    print("Camera")
+    lcd.clear()
+    lcd.set_cursor_position(0, 0)
+    lcd.write("Camera")
+
+    lcd.set_cursor_position(0, 2)
 
 
 if __name__ == "__main__":
@@ -112,41 +151,4 @@ if __name__ == "__main__":
     finally:
         mqtt_conn.disconnect()
 
-
-    @nav.on(nav.LEFT)
-    def handle_left(ch, evt):
-        global selected_sensor
-        selected_sensor = "lidar_left"
-        print("Left Lidar Display")
-        lcd.clear()
-        lcd.set_cursor_position(0, 0)
-
-        lcd.write("Left Lidar")
-        lcd.set_cursor_position(0, 2)
-
-
-    @nav.on(nav.RIGHT)
-    def handle_right(ch, evt):
-        global selected_sensor
-        selected_sensor = "lidar_right"
-        print("Right Lidar")
-        lcd.clear()
-        lcd.set_cursor_position(0, 0)
-        lcd.write("Right Lidar")
-
-        lcd.set_cursor_position(0, 2)
-
-
-    @nav.on(nav.BUTTON)
-    def handle_button(ch, evt):
-        global selected_sensor
-        selected_sensor = "camera"
-        print("Camera")
-        lcd.clear()
-        lcd.set_cursor_position(0, 0)
-        lcd.write("Camera")
-
-        lcd.set_cursor_position(0, 2)
-
-
-    print("Exiting...")
+print("Exiting...")
