@@ -169,7 +169,66 @@ Listen to all system msgs with:
 $ mosquitto_sub -h mqtt-turtle.local -t "\$SYS/#"
 ```
 
-## ~/.ssh/config contents
+## .git/config Remote Values
+
+### ~/git/FRC-2017/.git/config
+``` 
+[remote "origin"]
+	url = https://github.com/athenian-robotics/FRC-2017.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+
+[remote "camera-gear"]
+	url = pi@camera-gear.local:/home/pi/git/FRC-2017.git
+	fetch = +refs/heads/*:refs/remotes/camera-gear/*
+
+[remote "lidar-gear-left"]
+	url = pi@lidar-gear-left.local:/home/pi/git/FRC-2017.git
+	fetch = +refs/heads/*:refs/remotes/lidar-gear-left/*
+
+[remote "lidar-gear-right"]
+	url = pi@lidar-gear-right.local:/home/pi/git/FRC-2017.git
+	fetch = +refs/heads/*:refs/remotes/lidar-gear-right/*
+
+[remote "lcd1"]
+	url = pi@lcd1.local:/home/pi/git/FRC-2017.git
+	fetch = +refs/heads/*:refs/remotes/lcd1/*
+```
+
+### ~/git/common-robotics/.git/config 
+``` 
+[remote "origin"]
+	    url = https://github.com/athenian-robotics/common_robotics.git
+	    fetch = +refs/heads/*:refs/remotes/origin/*
+
+[remote "camera-gear"]
+        url = pi@camera-gear.local:/home/pi/git/common-robotics.git
+        fetch = +refs/heads/*:refs/remotes/camera-gear/*
+
+[remote "lidar-gear-left"]
+        url = pi@lidar-gear-left.local:/home/pi/git/common-robotics.git
+        fetch = +refs/heads/*:refs/remotes/lidar-gear-left/*
+
+[remote "lidar-gear-right"]
+        url = pi@lidar-gear-right.local:/home/pi/git/common-robotics.git
+        fetch = +refs/heads/*:refs/remotes/lidar-gear-right/*
+
+[remote "lcd1"]
+        url = pi@lcd1.local:/home/pi/git/common-robotics.git
+        fetch = +refs/heads/*:refs/remotes/lcd1/*
+```
+
+### ~/git/object-tracking/.git/config 
+``` 
+[remote "origin"]
+	url = https://github.com/athenian-robotics/object-tracking.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+
+[remote "camera-gear"]
+	url = pi@camera-gear.local:/home/pi/git/object-tracking.git
+	fetch = +refs/heads/*:refs/remotes/camera-gear/*
+```
+
+## ~/.ssh/config Contents
 
 ```
 Host camera-gear camera-gear.local
@@ -204,12 +263,12 @@ Host mqtt-turtle mqtt-turtle.local
 ```
 
 ## Topic names 
-| Name                 | Topic Description                                       |
-|:--------------------:|:--------------------------------------------------------|
-|camera/gear/x         | camera center position and screen width (String:String) |
-|camera/gear/alignment | camera relative to object (String)                      |
-|lidar/left/mm         | left lidar distance (String)                            |
-|lidar/right/mm        | right lidar distance (String)                           |
+| Name                     | Topic Description                                       |
+|:------------------------:|:--------------------------------------------------------|
+|**camera/gear/x**         | camera center position and screen width (String:String) |
+|**camera/gear/alignment** | camera relative to object (String)                      |
+|**lidar/left/mm**         | left lidar distance (String)                            |
+|**lidar/right/mm**        | right lidar distance (String)                           |
 
 ## Raspi Names
 
