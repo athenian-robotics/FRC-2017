@@ -2,13 +2,13 @@
 
 ## Raspi Names
 
-| #   | Name             | Repos                                              |
-|:---:|:----------------:|----------------------------------------------------|
-| 10  | lidar-gear-right | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
-| 11  | camera-gear      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
-| 12  | mqtt-turtle      | none                                               |
-| 21  | lidar-gear-left  | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
-| 24  | lcd1             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
+| #   | Name                       | Repos                                              |
+|:---:|:--------------------------:|----------------------------------------------------|
+| 10  | **lidar-gear-right.local** | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
+| 11  | **camera-gear.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
+| 12  | **mqtt-turtle.local**      | none                                               |
+| 21  | **lidar-gear-left.local**  | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
+| 24  | **lcd1.local**             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
 
 ## MQTT Topics 
 | Name                     | Description                                             |
