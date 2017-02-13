@@ -1,5 +1,23 @@
 # FRC-2017 Notes
 
+## Raspi Names
+
+| #   | Name             | Repos                                              |
+|:---:|:----------------:|----------------------------------------------------|
+| 10  | lidar-gear-right | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
+| 11  | camera-gear      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
+| 12  | mqtt-turtle      | none                                               |
+| 21  | lidar-gear-left  | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
+| 24  | lcd1             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
+
+## MQTT Topics 
+| Name                     | Description                                             |
+|:------------------------:|:--------------------------------------------------------|
+|**camera/gear/x**         | camera center position and screen width (String:String) |
+|**camera/gear/alignment** | camera relative to object (String)                      |
+|**lidar/left/mm**         | left lidar distance (String)                            |
+|**lidar/right/mm**        | right lidar distance (String)                           |
+
 
 ## Boot time launch scripts
 
@@ -269,20 +287,3 @@ Host mqtt-turtle mqtt-turtle.local
   UserKnownHostsFile /dev/null
 ```
 
-## Topic names 
-| Name                     | Topic Description                                       |
-|:------------------------:|:--------------------------------------------------------|
-|**camera/gear/x**         | camera center position and screen width (String:String) |
-|**camera/gear/alignment** | camera relative to object (String)                      |
-|**lidar/left/mm**         | left lidar distance (String)                            |
-|**lidar/right/mm**        | right lidar distance (String)                           |
-
-## Raspi Names
-
-| #   | Name             | Repos                                              |
-|:---:|:----------------:|----------------------------------------------------|
-| 10  | lidar-gear-right | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
-| 11  | camera-gear      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
-| 12  | mqtt-turtle      | none                                               |
-| 21  | lidar-gear-left  | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
-| 24  | lcd1             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
