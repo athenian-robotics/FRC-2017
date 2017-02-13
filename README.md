@@ -193,6 +193,12 @@ Host lidar-gear-left lidar-gear-left.local
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
 
+Host lcd1 lcd1.local
+  HostName lidar-gear-left.local
+  User pi
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+
 Host mqtt-turtle mqtt-turtle.local
   HostName mqtt-turtle.local
   User pi
@@ -216,5 +222,4 @@ Host mqtt-turtle mqtt-turtle.local
 | 11  | camera-gear      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
 | 12  | mqtt-turtle      | none                                               |
 | 21  | lidar-gear-left  | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
-| 12  | lcd1             | none
-
+| 24  | lcd1             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
