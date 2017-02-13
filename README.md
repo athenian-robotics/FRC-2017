@@ -18,6 +18,19 @@
 |**lidar/left/mm**         | left lidar distance (String)                            |
 |**lidar/right/mm**        | right lidar distance (String)                           |
 
+## Listening to MQTT traffic
+
+Listen to all user msgs with:
+
+```bash
+$ mosquitto_sub -h mqtt-turtle.local -t "#"
+```
+
+Listen to all system msgs with:
+
+```bash
+$ mosquitto_sub -h mqtt-turtle.local -t "\$SYS/#"
+```
 
 ## Boot time launch scripts
 
@@ -178,20 +191,6 @@ Push to the Raspi:
 ```bash
 $ cd ~/git/object-tracking
 $ git push raspiXX master
-```
-
-## Listening to MQTT traffic
-
-Listen to all user msgs with:
-
-```bash
-$ mosquitto_sub -h mqtt-turtle.local -t "#"
-```
-
-Listen to all system msgs with:
-
-```bash
-$ mosquitto_sub -h mqtt-turtle.local -t "\$SYS/#"
 ```
 
 ## .git/config Remote Values
