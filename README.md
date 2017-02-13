@@ -3,7 +3,7 @@
 ## Raspi Names
 
 | #   | Name                       | Repos                                              |
-|:---:|:--------------------------:|----------------------------------------------------|
+|:---:|:---------------------------|:---------------------------------------------------|
 | 10  | **lidar-gear-right.local** | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
 | 11  | **camera-gear.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
 | 12  | **mqtt-turtle.local**      | none                                               |
@@ -12,7 +12,7 @@
 
 ## MQTT Topics 
 | Name                     | Description                                             |
-|:------------------------:|:--------------------------------------------------------|
+|:-------------------------|:--------------------------------------------------------|
 |**camera/gear/x**         | camera center position and screen width (String:String) |
 |**camera/gear/alignment** | camera relative to object (String)                      |
 |**lidar/left/mm**         | left lidar distance (String)                            |
