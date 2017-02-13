@@ -50,7 +50,7 @@ if __name__ == "__main__":
                     prev_value = x_loc[0]
 
             except BaseException as e:
-                logging.error("Failusre in publish_locations() [e]".format(e))
+                logging.error("Failure in publish_locations() [e]".format(e))
                 traceback.print_exc()
                 time.sleep(1)
 
