@@ -13,8 +13,8 @@ import cli_args  as cli
 selected_sensor = "camera"
 
 # Constants
-LIDAR_FRONT_LEFT = "lidar/left"
-LIDAR_FRONT_RIGHT = "lidar/right"
+LIDAR_FRONT_LEFT = "lidar/left/mm"
+LIDAR_FRONT_RIGHT = "lidar/right/mm"
 CAMERA_1_VALUE = "camera/gear/x"
 CAMERA_1_ALIGNMENT = "camera/gear/alignment"
 NOT_SEEN = "not_seen"
