@@ -1,161 +1,56 @@
 # FRC-2017 Notes
 
+## Raspi Names
 
-## Required repos
+| #   | Name                       | Repos                                              |
+|:---:|:---------------------------|:---------------------------------------------------|
+| 10  | **lidar-gear-right.local** | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
+| 11  | **camera-gear.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
+| 12  | **mqtt-turtle.local**      | none                                               |
+| 21  | **lidar-gear-left.local**  | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
+| 24  | **lcd1.local**             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
 
-The following [athenian-robotics github repos](https://github.com/athenian-robotics) should be cloned to *~pi/git*:
+## MQTT Topics 
+| Name                     | Description                                             |
+|:-------------------------|:--------------------------------------------------------|
+|**camera/gear/x**         | camera center position and screen width (String:String) |
+|**camera/gear/alignment** | camera relative to object (String)                      |
+|**lidar/left/mm**         | left lidar distance (String)                            |
+|**lidar/right/mm**        | right lidar distance (String)                           |
 
-* [common-robotics](https://github.com/athenian-robotics/common-robotics): `git clone https://github.com/athenian-robotics/common-robotics.git`
-* [object-tracking](https://github.com/athenian-robotics/object-tracking): `git clone https://github.com/athenian-robotics/object-tracking.git`
-* [FRC-2017](https://github.com/athenian-robotics/FRC-2017): `git clone https://github.com/athenian-robotics/FRC-2017.git`
 
-## Launching scripts
+## SSH Setup
 
-* Shell scripts are found in *~pi/git/FRC-2017/bin*. All changes to these scripts
-should be pushed to github and not done as a one-off edit on the Raspi. The goal 
-is provision a Raspi with `git` and minimize the amount of configuration 
-on the Raspi. 
+* [SSH Configuration](https://github.com/athenian-robotics/FRC-2017/wiki/SSH-configuration-file)
+* [Using SSH without a password](https://github.com/athenian-robotics/FRC-2017/wiki/Using-SSH-without-a-password)
 
-* Shell script stdout and stderr are redirected to *~pi/git/FRC-2017/logs*.
+## Remote repo setup for Raspis
 
-* Shell scripts are launched from */etc/rc.local* during startup.
-The shell script calls are added just before the call to `exit 0` and are executed as user *pi*:
-````bash
-su - pi -c ~pi/git/FRC-2017/bin/object-tracker.sh
-su - pi -c ~pi/git/FRC-2017/bin/gear-front-publisher.sh
+Setting up remote repos on Raspis will allow you to push changes to Raspis without the Raspis
+have access to github.
 
-exit 0
-````
+* [OSX Configuration](https://github.com/athenian-robotics/FRC-2017/wiki/OSX-configuration-for-remote-repos)
+* [Raspi Configuration](https://github.com/athenian-robotics/FRC-2017/wiki/Raspi-configuration-for-remote-repos)
 
-* Shell scripts running Python code using OpenCV need to first setup a *cv2* environment:
+
+## Raspi launch scripts
+
+* [Makefile commands](https://github.com/athenian-robotics/FRC-2017/wiki/Makefile-commands)
+* [Raspi boot scripts](https://github.com/athenian-robotics/FRC-2017/wiki/Raspi-boot-scripts)
+
+
+## Listening to MQTT traffic
+
+Listen to all user msgs with:
+
 ```bash
-source ~pi/.profile
-workon py2cv3
+$ mosquitto_sub -h mqtt-turtle.local -t "#"
 ```
 
-* *$PYTHONPATH* must be set appropriately to include dependent packages:
-```bash
-export PYTHONPATH=${PYTHONPATH}:~pi/git/common-robotics:~pi/git/object-tracking
-```
-
-* The *stdout* and *stderr* are included in the log file by using `&>`. It is critical that each shell script
-be forked with a trailing `&`:
-```bash
-python2 ~pi/git/object-tracking/object_tracker.py --bgr "174, 56, 5" --width 400 --flip &> ~pi/git/FRC-2017/logs/object-tracker.out &
-```
-
-## Setting up remote repos on a Raspi
-
-### FRC-2017 Repo
-
-Setup a bare repo and a source directory:
+Listen to all system msgs with:
 
 ```bash
-cd git
-
-mkdir FRC-2017
-mkdir FRC-2017.git
-git init --bare FRC-2017.git
-```
-
-Edit *FRC-2017.git/hooks/post-receive* and put this into it: 
-
-```bash
-#!/bin/sh
-git --work-tree=/home/pi/git/FRC-2017 --git-dir=/home/pi/git/FRC-2017.git checkout -f
-echo "*** Updated FRC-2017 ***" >&2
-```
-
-Make *post-receive* executable:
-```bash
-chmod +x FRC-2017.git/hooks/post-receive
-```
-Adjust the git config on your Mac (change raspiXX to your raspi hostname):
-
-```bash
-cd FRC-2017
-git remote add raspiXX pi@raspiXX.local:/home/pi/git/FRC-2017.git
-```
-
-Push to the Raspi:
-```bash
-git push raspiXX master
-```
-
-### common-robotics Repo
-
-Setup a bare repo and a source directory:
-
-```bash
-cd git
-
-mkdir common-robotics
-mkdir common-robotics.git
-git init --bare common-robotics.git
-```
-
-Edit *common-robotics.git/hooks/post-receive* and put this into it: 
-
-```bash
-#!/bin/sh
-git --work-tree=/home/pi/git/common-robotics --git-dir=/home/pi/git/common-robotics.git checkout -f
-echo "*** Updated common-robotics.git ***" >&2
-```
-
-Make *post-receive* executable:
-```bash
-chmod +x common-robotics.git/hooks/post-receive
-```
-
-Adjust the git config on your Mac (change raspiXX to your raspi hostname):
-
-```bash
-cd common-robotics
-git remote add raspiXX pi@raspiXX.local:/home/pi/git/common-robotics.git
-```
-
-Push to the Raspi:
-```bash
-cd common-robotics
-git push raspiXX master
-```
-
-### object-tracking Repo
-
-Setup a bare repo and a source directory:
-
-```bash
-cd git
-
-mkdir object-tracking
-mkdir object-tracking.git
-git init --bare object-tracking.git
-```
-
-Edit *object-tracking.git/hooks/post-receive* and put this into it: 
-
-```bash
-#!/bin/sh
-git --work-tree=/home/pi/git/object-tracking --git-dir=/home/pi/git/object-tracking.git checkout -f
-echo "*** Updated object-tracking.git ***" >&2
-```
-
-Make *post-receive* executable:
-```bash
-chmod +x object-tracking.git/hooks/post-receive
-```
-
-Adjust the git config on your Mac (change raspiXX to your raspi hostname):
-
-```bash
-cd object-tracking
-git remote add raspiXX pi@raspiXX.local:/home/pi/git/object-tracking.git
-```
-
-Push to the Raspi:
-```bash
-cd object-tracking
-git push raspiXX master
+$ mosquitto_sub -h mqtt-turtle.local -t "\$SYS/#"
 ```
 
 ## Topic names 
