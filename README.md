@@ -1,20 +1,12 @@
 # FRC-2017 Notes
 
 
-## Required repos
+## Boot time launch scripts
 
-The following [athenian-robotics github repos](https://github.com/athenian-robotics) should be cloned to *~pi/git*:
-
-* [common-robotics](https://github.com/athenian-robotics/common-robotics): `git clone https://github.com/athenian-robotics/common-robotics.git`
-* [object-tracking](https://github.com/athenian-robotics/object-tracking): `git clone https://github.com/athenian-robotics/object-tracking.git`
-* [FRC-2017](https://github.com/athenian-robotics/FRC-2017): `git clone https://github.com/athenian-robotics/FRC-2017.git`
-
-## Launching scripts
-
-* Shell scripts are found in *~pi/git/FRC-2017/bin*. All changes to these scripts
-should be pushed to github and not done as a one-off edit on the Raspi. The goal 
-is provision a Raspi with `git` and minimize the amount of configuration 
-on the Raspi. 
+* Shell scripts that run at boot time are found in *~pi/git/FRC-2017/bin*. 
+All changes to these scripts should be pushed to github and not done as a one-off 
+edit on the Raspi. The goal is to provision a Raspi with `git` and minimize the amount 
+of configuration on the Raspi. 
 
 * Shell script stdout and stderr are redirected to *~pi/git/FRC-2017/logs*.
 
@@ -27,10 +19,15 @@ su - pi -c ~pi/git/FRC-2017/bin/gear-front-publisher.sh
 exit 0
 ````
 
-* Shell scripts running Python code using OpenCV need to first setup a *cv2* environment:
+* Shell scripts running Python code using OpenCV need to first setup a *cv2* environment with:
 ```bash
 source ~pi/.profile
 workon py2cv3
+```
+
+* Create a timestamp for the boot time with:
+```bash
+date > ~pi/git/FRC-2017/logs/object-tracker.reboot
 ```
 
 * *$PYTHONPATH* must be set appropriately to include dependent packages:
@@ -42,6 +39,16 @@ export PYTHONPATH=${PYTHONPATH}:~pi/git/common-robotics:~pi/git/object-tracking
 be forked with a trailing `&`:
 ```bash
 python2 ~pi/git/object-tracking/object_tracker.py --bgr "174, 56, 5" --width 400 --flip &> ~pi/git/FRC-2017/logs/object-tracker.out &
+```
+
+* The complete launch script would look like: 
+```bash
+#!/usr/bin/env bash
+source ~pi/.profile
+workon py2cv3
+date > ~pi/git/FRC-2017/logs/object-tracker.reboot
+export PYTHONPATH=${PYTHONPATH}:~pi/git/common-robotics:~pi/git/object-tracking
+python2 ~pi/git/object-tracking/single_object_tracker.py --bgr "174, 56, 5" --width 400 --delay 0.25 --flipy --usb --http "camera-gear.local:8080" &> ~pi/git/FRC-2017/logs/object-tracker.out &
 ```
 
 ## Setting up remote repos on a Raspi
