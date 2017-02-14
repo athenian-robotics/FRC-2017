@@ -46,13 +46,13 @@ def on_publish(client, userdata, mid):
 # SerialReader calls this for every line read from Arduino
 def fetch_data(val, userdata):
     global current_heading, calibrated, last_calib_publish_time
-    if "\t" in val:
+    if "X:" in val:
         try:
             client = userdata["paho.client"]
             logging.debug(val)
             vals = val.split("\t")
 
-            if not calibrated:
+            if userdata["calib_enabled"] and not calibrated:
                 calibs_str = vals[3]
                 calibs = calibs_str.split(" ")
                 sys_calib = int(calibs[0].split(":")[1])
@@ -96,15 +96,15 @@ def publish_heading(client, topic, heading):
 
 
 if __name__ == "__main__":
-
     # Parse CLI args
     parser = argparse.ArgumentParser()
     cli.mqtt_host(parser),
     cli.serial_port(parser)
     cli.baud_rate(parser)
-    parser.add_argument("--minimum", dest="min_publish", default=5, type=int, help="Minimum publishing time secs [5]")
-    parser.add_argument("--calib", dest="calib_publish", default=3, type=int,
-                        help="Calibration publishing time secs [3]")
+    parser.add_argument("--mpt", dest="min_publish", default=5, type=int, help="Minimum publishing time secs [5]")
+    parser.add_argument("-c", "--calib", dest="calib_enabled", default=False, action="store_true",
+                        help="Enable calibration publishing[false]")
+    parser.add_argument("--cpt", dest="calib_publish", default=3, type=int, help="Calibration publishing time secs [3]")
     cli.verbose(parser),
     args = vars(parser.parse_args())
 
@@ -120,6 +120,7 @@ if __name__ == "__main__":
                                            "baud_rate": args["baud_rate"],
                                            "serial_reader": serial_reader,
                                            "calib_publish": args["calib_publish"],
+                                           "calib_enabled": args["calib_enabled"],
                                            "min_publish": args["min_publish"]},
                                  on_connect=on_connect,
                                  on_disconnect=on_disconnect,
