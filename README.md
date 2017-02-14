@@ -18,6 +18,7 @@
 |**lidar/left/mm**         | Left lidar distance (String)                            |
 |**lidar/right/mm**        | Right lidar distance (String)                           |
 |**heading/degrees**       | Heading degrees (String)                                |
+|**heading/calibration**   | Calibration status (String)                             |
 
 
 ## SSH Setup
