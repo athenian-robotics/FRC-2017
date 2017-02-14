@@ -18,6 +18,7 @@ last_publish_time = -1
 stopped = False
 publish_lock = Lock()
 
+
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
     global total_sum
@@ -29,7 +30,7 @@ def on_connect(client, userdata, flags, rc):
                         userdata=userdata,
                         port=userdata["serial_port"],
                         baudrate=userdata["baud_rate"])
-    Thread(target=background_publisher, args=(userdata,)).start()
+    Thread(target=background_publisher, args=(userdata, userdata["min_publish"])).start()
 
 
 def on_disconnect(client, userdata, rc):
@@ -40,46 +41,36 @@ def on_publish(client, userdata, mid):
     logging.debug("Published value to {0} with message id {1}".format(userdata["topic"], mid))
 
 
-def publish(userdata, heading):
-    global publish_lock
-    global last_publish_time
+# SerialReader calls this for every line read from Arduino
+def fetch_data(val, userdata):
+    global current_heading
+    if "\t" in val:
+        try:
+            x_val = val.split("\t")
+            heading = round(float(x_val[0].split(": ")[1]), 1)
+            if heading != current_heading:
+                current_heading = heading
+                publish_heading(userdata["paho.client"], userdata["topic"], heading)
+        except IndexError:
+            pass
 
-    topic = userdata["topic"]
+
+def background_publisher(userdata, min_publish_secs):
+    global current_heading, last_publish_time, stopped
     client = userdata["paho.client"]
+    topic = userdata["topic"]
+    while not stopped:
+        time.sleep(.5)
+        elapsed_time = current_time_millis() - last_publish_time
+        if elapsed_time > min_publish_secs * 1000 and current_heading != -1:
+            publish_heading(client, topic, current_heading)
 
+
+def publish_heading(client, topic, heading):
+    global publish_lock, last_publish_time
     with publish_lock:
         client.publish(topic, payload=(str(heading).encode("utf-8")), qos=0)
         last_publish_time = current_time_millis()
-
-
-def fetch_data(val, userdata):
-    global current_heading
-
-    if "\t" not in val:
-        return
-
-    try:
-        x_val = val.split("\t")
-        heading = round(float(x_val[0].split(": ")[1]), 1)
-    except IndexError:
-        return
-
-    if heading == current_heading:
-        return
-
-    current_heading = heading
-    publish(userdata, heading)
-
-
-def background_publisher(userdata):
-    global current_heading, last_publish_time, stopped
-    min_publish = userdata["min_publish"]
-    while not stopped:
-        time.sleep(.5)
-        now = current_time_millis()
-        elapsed_time = abs(now - last_publish_time)
-        if elapsed_time > min_publish * 1000 and current_heading != -1:
-            publish(userdata, current_heading)
 
 
 if __name__ == "__main__":
