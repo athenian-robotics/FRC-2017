@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import argparse
 import logging
@@ -110,4 +110,4 @@ if __name__ == "__main__":
         mqtt_client.disconnect()
         serial_reader.stop()
 
-    print("Exiting...")
+        logging.info("Exiting...")
