@@ -9,10 +9,10 @@ from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
 
-global total_sum
-global total_count
+current_heading = -1
 
 TOLERANCE_THRESH = 5
+
 
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
@@ -35,34 +35,27 @@ def on_publish(client, userdata, mid):
     logging.debug("Published value to {0} with message id {1}".format(userdata["topic"], mid))
 
 
-OUT_OF_RANGE = "-1".encode("utf-8")
+def fetch_data(val, userdata):
+    global current_heading
 
+    if "\t" not in val:
+        return
 
-def fetch_data(mm_str, userdata):
-    # Using globals to keep running averages in check
-    global total_count
-    global total_sum
+    try:
+        x_val = val.split("\t")
+        heading = round(float(x_val[0].split(": ")[1]), 1)
+    except IndexError:
+        return
+
+    if heading == current_heading:
+        return
 
     topic = userdata["topic"]
     client = userdata["paho.client"]
 
-    # Values sometimes get compacted together, take the later value if that happens since it's newer
-    if "\r" in mm_str:
-        mm_str = mm_str.split("\r")[1]
+    current_heading = heading
 
-    mm = int(mm_str)
-
-    if mm < 0 or mm > 2000:  # out of range, get fresh data so it doesn't mess with averages
-        total_sum = 0
-        total_count = 0
-        client.publish(topic, payload=OUT_OF_RANGE, qos=0)
-    elif (total_sum + total_count == 0) or abs((total_sum / total_count) - mm) < TOLERANCE_THRESH:
-        total_sum += mm
-        total_count += 1
-    else:
-        client.publish(topic, payload=str(mm).encode("utf-8"), qos=0)
-        total_sum = 0 + mm
-        total_count = 1
+    client.publish(topic, payload=(str(heading).encode("utf-8")), qos=0)
 
 
 if __name__ == "__main__":
@@ -72,7 +65,6 @@ if __name__ == "__main__":
     cli.mqtt_host(parser),
     cli.serial_port(parser)
     cli.baud_rate(parser)
-    parser.add_argument("-d", "--device", required=True, help="Device ('left' or 'right'")
     cli.verbose(parser),
     args = vars(parser.parse_args())
 
@@ -82,7 +74,7 @@ if __name__ == "__main__":
     serial_reader = SerialReader()
 
     mqtt_client = MqttConnection(hostname=(args["mqtt_host"]),
-                                 userdata={"topic": "lidar/{0}/mm".format(args["device"]),
+                                 userdata={"topic": "heading/degrees",
                                            "serial_port": args["serial_port"],
                                            "baud_rate": args["baud_rate"],
                                            "serial_reader": serial_reader},
