@@ -3,6 +3,7 @@
 import argparse
 import logging
 import time
+from threading import Lock
 from threading import Thread
 
 import cli_args  as cli
@@ -15,7 +16,7 @@ from utils import sleep
 current_heading = -1
 last_publish_time = -1
 stopped = False
-
+publish_lock = Lock()
 
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
@@ -40,13 +41,15 @@ def on_publish(client, userdata, mid):
 
 
 def publish(userdata, heading):
+    global publish_lock
     global last_publish_time
 
     topic = userdata["topic"]
     client = userdata["paho.client"]
 
-    client.publish(topic, payload=(str(heading).encode("utf-8")), qos=0)
-    last_publish_time = current_time_millis()
+    with publish_lock:
+        client.publish(topic, payload=(str(heading).encode("utf-8")), qos=0)
+        last_publish_time = current_time_millis()
 
 
 def fetch_data(val, userdata):
