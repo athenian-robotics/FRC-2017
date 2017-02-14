@@ -150,7 +150,7 @@ void loop(void)
   Serial.print(event.orientation.z, 4);
 
   /* Optional: Display calibration status */
-  displayCalStatus();
+  /*displayCalStatus();*/
 
   /* Optional: Display sensor status (debug only) */
   //displaySensorStatus();

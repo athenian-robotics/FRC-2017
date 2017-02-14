@@ -14,10 +14,11 @@ global total_count
 
 TOLERANCE_THRESH = 5
 
+
 def on_connect(client, userdata, flags, rc):
-    logging.info("Connected with result code: {0}".format(rc))
     global total_sum
     global total_count
+    logging.info("Connected with result code: {0}".format(rc))
     total_sum = 0
     total_count = 0
     serial_reader = userdata["serial_reader"]

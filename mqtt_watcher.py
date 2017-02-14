@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 
 import argparse
+import logging
 
 import cli_args  as cli
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
 
-
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code: {0}".format(rc))
+    logging.info("Connected with result code: {0}".format(rc))
     # Subscribe to all broker messages
     client.subscribe("#")
 
 
 def on_disconnect(client, userdata, rc):
-    print("Disconnected with result code: {0}".format(rc))
+    logging.info("Disconnected with result code: {0}".format(rc))
 
 
 def on_message(client, userdata, msg):
-    print("{0} : {1}".format(msg.topic, msg.payload))
+    logging.info("{0} : {1}".format(msg.topic, msg.payload))
 
 
 if __name__ == "__main__":
