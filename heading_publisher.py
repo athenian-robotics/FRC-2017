@@ -8,7 +8,7 @@ from threading import Thread
 
 import cli_args as cli
 from cli_args import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL
-from mqtt_connection import MqttConnection
+from mqtt_connection import MqttConnection, PAHO_CLIENT
 from serial_reader import SerialReader
 from utils import current_time_millis
 from utils import setup_logging
@@ -56,7 +56,7 @@ def fetch_data(val, userdata):
         logging.info(val)
     else:
         try:
-            client = userdata["paho.client"]
+            client = userdata[PAHO_CLIENT]
             vals = val.split("\t")
 
             x_val = vals[0]
@@ -101,7 +101,7 @@ def fetch_data(val, userdata):
 
 def background_publisher(userdata, min_publish_secs):
     global current_heading, last_heading_publish_time, stopped
-    client = userdata["paho.client"]
+    client = userdata[PAHO_CLIENT]
     heading_topic = userdata[HEADING_TOPIC]
     while not stopped:
         time.sleep(.5)

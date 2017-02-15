@@ -5,7 +5,7 @@ import logging
 
 import cli_args as cli
 from cli_args import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL
-from mqtt_connection import MqttConnection
+from mqtt_connection import MqttConnection, PAHO_CLIENT
 from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
@@ -50,7 +50,7 @@ def fetch_data(mm_str, userdata):
     global total_sum
 
     topic = userdata[TOPIC]
-    client = userdata["paho.client"]
+    client = userdata[PAHO_CLIENT]
 
     # Values sometimes get compacted together, take the later value if that happens since it's newer
     if "\r" in mm_str:
