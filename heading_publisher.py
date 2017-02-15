@@ -15,7 +15,8 @@ from utils import sleep
 
 publish_lock = Lock()
 stopped = False
-calibrated = False
+calibrated_by_values = False
+calibrated_by_log = False
 current_heading = -1
 last_heading_publish_time = -1
 last_calib_publish_time = -1
@@ -45,35 +46,50 @@ def on_publish(client, userdata, mid):
 
 # SerialReader calls this for every line read from Arduino
 def fetch_data(val, userdata):
-    global current_heading, calibrated, last_calib_publish_time
+    global current_heading, calibrated_by_values, calibrated_by_log, last_calib_publish_time
+
     if "X:" in val:
         try:
             client = userdata["paho.client"]
-            logging.debug(val)
             vals = val.split("\t")
-
-            if userdata["calib_enabled"] and not calibrated:
-                calibs_str = vals[3]
-                calibs = calibs_str.split(" ")
-                sys_calib = int(calibs[0].split(":")[1])
-                gyro_calib = int(calibs[1].split(":")[1])
-                mag_calib = int(calibs[2].split(":")[1])
-                acc_calib = int(calibs[3].split(":")[1])
-                if sys_calib == 3 and gyro_calib == 3 and mag_calib == 3 and acc_calib == 3:
-                    msg = "Sensor calibrated"
-                    logging.info(msg)
-                    client.publish(userdata["calib_topic"], payload=(msg.encode("utf-8")), qos=0)
-                    calibrated = True
-                elif current_time_millis() - last_calib_publish_time > userdata["calib_publish"] * 1000:
-                    client.publish(userdata["calib_topic"], payload=(calibs_str.encode("utf-8")), qos=0)
-                    last_calib_publish_time = current_time_millis()
 
             x_val = vals[0]
             heading = round(float(x_val.split(": ")[1]), 1)
             if heading != current_heading:
+                logging.debug(val)
                 current_heading = heading
                 publish_heading(client, userdata["heading_topic"], heading)
+
+            if userdata["calib_enabled"] and not calibrated_by_values:
+                # The arduino sketch includes a "! " prefix to SYS if the data is not calibrated (and thus not reliable)
+                if "! " in val:
+                    nocalib_str = val[val.index("! "):]
+                    logging.info("9-DOF Sensor not calibrated by log: {0}".format(nocalib_str))
+                    client.publish(userdata["calib_topic"], payload=(nocalib_str.encode("utf-8")), qos=0)
+                    calibrated_by_log = False
+                else:
+                    if not calibrated_by_log:
+                        msg = "9-DOF Sensor calibrated by log"
+                        logging.info(msg)
+                        client.publish(userdata["calib_topic"], payload=(msg.encode("utf-8")), qos=0)
+                        calibrated_by_log = True
+
+                    calib_str = vals[3]
+                    calibs = calib_str.split(" ")
+                    sys_calib = int(calibs[0].split(":")[1])
+                    gyro_calib = int(calibs[1].split(":")[1])
+                    mag_calib = int(calibs[2].split(":")[1])
+                    acc_calib = int(calibs[3].split(":")[1])
+                    if sys_calib == 3 and gyro_calib == 3 and mag_calib == 3 and acc_calib == 3:
+                        msg = "9-DOF Sensor calibrated by values"
+                        logging.info(msg)
+                        client.publish(userdata["calib_topic"], payload=(msg.encode("utf-8")), qos=0)
+                        calibrated_by_values = True
+                    elif current_time_millis() - last_calib_publish_time > userdata["calib_publish"] * 1000:
+                        client.publish(userdata["calib_topic"], payload=(calib_str.encode("utf-8")), qos=0)
+                        last_calib_publish_time = current_time_millis()
         except IndexError:
+            logging.info("Formatting error: {0}".format(val))
             pass
 
 
