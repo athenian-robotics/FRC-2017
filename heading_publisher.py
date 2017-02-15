@@ -6,12 +6,20 @@ import time
 from threading import Lock
 from threading import Thread
 
-import cli_args  as cli
+import cli_args as cli
+from cli_args import SERIAL_PORT, BAUD_RATE, MQTT_HOST
 from mqtt_connection import MqttConnection
 from serial_reader import SerialReader
 from utils import current_time_millis
 from utils import setup_logging
 from utils import sleep
+
+HEADING_TOPIC = "heading_topic"
+CALIB_TOPIC = "calib_topic"
+CALIB_PUBLISH = "calib_publish"
+CALIB_ENABLED = "calib_enabled"
+MIN_PUBLISH = "min_publish"
+SERIAL_READER = "serial_reader"
 
 publish_lock = Lock()
 stopped = False
@@ -24,16 +32,12 @@ last_calib_publish_time = -1
 
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
-    global total_sum
-    global total_count
-    total_sum = 0
-    total_count = 0
-    serial_reader = userdata["serial_reader"]
+    serial_reader = userdata[SERIAL_READER]
     serial_reader.start(func=fetch_data,
                         userdata=userdata,
-                        port=userdata["serial_port"],
-                        baudrate=userdata["baud_rate"])
-    Thread(target=background_publisher, args=(userdata, userdata["min_publish"])).start()
+                        port=userdata[SERIAL_PORT],
+                        baudrate=userdata[BAUD_RATE])
+    Thread(target=background_publisher, args=(userdata, userdata[MIN_PUBLISH])).start()
 
 
 def on_disconnect(client, userdata, rc):
@@ -48,7 +52,9 @@ def on_publish(client, userdata, mid):
 def fetch_data(val, userdata):
     global current_heading, calibrated_by_values, calibrated_by_log, last_calib_publish_time
 
-    if "X:" in val:
+    if "X:" not in val:
+        logging.info(val)
+    else:
         try:
             client = userdata["paho.client"]
             vals = val.split("\t")
@@ -58,20 +64,20 @@ def fetch_data(val, userdata):
             if heading != current_heading:
                 logging.debug(val)
                 current_heading = heading
-                publish_heading(client, userdata["heading_topic"], heading)
+                publish_heading(client, userdata[HEADING_TOPIC], heading)
 
-            if userdata["calib_enabled"] and not calibrated_by_values:
+            if userdata[CALIB_ENABLED] and not calibrated_by_values:
                 # The arduino sketch includes a "! " prefix to SYS if the data is not calibrated (and thus not reliable)
                 if "! " in val:
                     nocalib_str = val[val.index("! "):]
                     logging.info("9-DOF Sensor not calibrated by log: {0}".format(nocalib_str))
-                    client.publish(userdata["calib_topic"], payload=(nocalib_str.encode("utf-8")), qos=0)
+                    client.publish(userdata[CALIB_TOPIC], payload=(nocalib_str.encode("utf-8")), qos=0)
                     calibrated_by_log = False
                 else:
                     if not calibrated_by_log:
                         msg = "9-DOF Sensor calibrated by log"
                         logging.info(msg)
-                        client.publish(userdata["calib_topic"], payload=(msg.encode("utf-8")), qos=0)
+                        client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
                         calibrated_by_log = True
 
                     calib_str = vals[3]
@@ -83,10 +89,10 @@ def fetch_data(val, userdata):
                     if sys_calib == 3 and gyro_calib == 3 and mag_calib == 3 and acc_calib == 3:
                         msg = "9-DOF Sensor calibrated by values"
                         logging.info(msg)
-                        client.publish(userdata["calib_topic"], payload=(msg.encode("utf-8")), qos=0)
+                        client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
                         calibrated_by_values = True
-                    elif current_time_millis() - last_calib_publish_time > userdata["calib_publish"] * 1000:
-                        client.publish(userdata["calib_topic"], payload=(calib_str.encode("utf-8")), qos=0)
+                    elif current_time_millis() - last_calib_publish_time > userdata[CALIB_PUBLISH] * 1000:
+                        client.publish(userdata[CALIB_TOPIC], payload=(calib_str.encode("utf-8")), qos=0)
                         last_calib_publish_time = current_time_millis()
         except IndexError:
             logging.info("Formatting error: {0}".format(val))
@@ -96,12 +102,12 @@ def fetch_data(val, userdata):
 def background_publisher(userdata, min_publish_secs):
     global current_heading, last_heading_publish_time, stopped
     client = userdata["paho.client"]
-    topic = userdata["heading_topic"]
+    heading_topic = userdata[HEADING_TOPIC]
     while not stopped:
         time.sleep(.5)
         elapsed_time = current_time_millis() - last_heading_publish_time
         if elapsed_time > min_publish_secs * 1000 and current_heading != -1:
-            publish_heading(client, topic, current_heading)
+            publish_heading(client, heading_topic, current_heading)
 
 
 def publish_heading(client, topic, heading):
@@ -117,10 +123,10 @@ if __name__ == "__main__":
     cli.mqtt_host(parser),
     cli.serial_port(parser)
     cli.baud_rate(parser)
-    parser.add_argument("--mpt", dest="min_publish", default=5, type=int, help="Minimum publishing time secs [5]")
-    parser.add_argument("-c", "--calib", dest="calib_enabled", default=False, action="store_true",
+    parser.add_argument("--mpt", dest=MIN_PUBLISH, default=5, type=int, help="Minimum publishing time secs [5]")
+    parser.add_argument("-c", "--calib", dest=CALIB_ENABLED, default=False, action="store_true",
                         help="Enable calibration publishing[false]")
-    parser.add_argument("--cpt", dest="calib_publish", default=3, type=int, help="Calibration publishing time secs [3]")
+    parser.add_argument("--cpt", dest=CALIB_PUBLISH, default=3, type=int, help="Calibration publishing time secs [3]")
     cli.verbose(parser),
     args = vars(parser.parse_args())
 
@@ -129,15 +135,15 @@ if __name__ == "__main__":
 
     serial_reader = SerialReader()
 
-    mqtt_client = MqttConnection(hostname=(args["mqtt_host"]),
-                                 userdata={"heading_topic": "heading/degrees",
-                                           "calib_topic": "heading/calibration",
-                                           "serial_port": args["serial_port"],
-                                           "baud_rate": args["baud_rate"],
-                                           "serial_reader": serial_reader,
-                                           "calib_publish": args["calib_publish"],
-                                           "calib_enabled": args["calib_enabled"],
-                                           "min_publish": args["min_publish"]},
+    mqtt_client = MqttConnection(hostname=(args[MQTT_HOST]),
+                                 userdata={HEADING_TOPIC: "heading/degrees",
+                                           CALIB_TOPIC: "heading/calibration",
+                                           SERIAL_PORT: args[SERIAL_PORT],
+                                           BAUD_RATE: args[BAUD_RATE],
+                                           SERIAL_READER: serial_reader,
+                                           CALIB_PUBLISH: args[CALIB_PUBLISH],
+                                           CALIB_ENABLED: args[CALIB_ENABLED],
+                                           MIN_PUBLISH: args[MIN_PUBLISH]},
                                  on_connect=on_connect,
                                  on_disconnect=on_disconnect,
                                  on_publish=on_publish)

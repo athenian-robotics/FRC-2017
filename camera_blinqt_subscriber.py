@@ -1,9 +1,9 @@
 from logging import info
 
-import cli_args  as cli
+import cli_args as cli
 from blinkt import set_pixel, set_all, show, set_clear_on_exit
+from cli_args import CAMERA_NAME, MQTT_HOST
 from cli_args import setup_cli_args
-from constants import CAMERA_NAME
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
@@ -79,11 +79,9 @@ if __name__ == "__main__":
         print("{0} {1}".format(msg.topic, msg.payload))
 
 
-        # Setup MQTT client
-
-
-    mqtt_conn = MqttConnection(args["mqtt_host"],
-                               userdata={CAMERA_NAME: args["camera_name"]},
+    # Setup MQTT client
+    mqtt_conn = MqttConnection(args[MQTT_HOST],
+                               userdata={CAMERA_NAME: args[CAMERA_NAME]},
                                on_connect=on_connect,
                                on_disconnect=on_disconnect,
                                on_message=on_message)

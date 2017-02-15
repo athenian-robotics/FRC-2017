@@ -5,7 +5,8 @@ import time
 from logging import info
 
 import blinkt
-import cli_args  as cli
+import cli_args as cli
+from cli_args import MQTT_HOST
 from cli_args import setup_cli_args
 from mqtt_connection import MqttConnection
 from utils import setup_logging
@@ -62,7 +63,7 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args["loglevel"])
 
-    mqtt_conn = MqttConnection(args["mqtt_host"],
+    mqtt_conn = MqttConnection(args[MQTT_HOST],
                                userdata={},
                                on_connect=on_connect,
                                on_disconnect=on_disconnect,

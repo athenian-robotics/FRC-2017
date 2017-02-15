@@ -1,14 +1,13 @@
-import logging
 from logging import info
 
-import common_cli_args  as cli
+import cli_args as cli
 from blinkt import set_pixel, set_all, show, set_clear_on_exit
-from common_cli_args import setup_cli_args
-from common_constants import CAMERA_NAME
-from common_constants import LOGGING_ARGS
-from common_utils import mqtt_broker_info
-from common_utils import sleep
+from cli_args import CAMERA_NAME
+from cli_args import setup_cli_args
 from mqtt_connection import MqttConnection
+from utils import mqtt_broker_info
+from utils import setup_logging
+from utils import sleep
 
 # blinkt functions
 
@@ -56,7 +55,7 @@ if __name__ == "__main__":
     args = setup_cli_args(cli.grpc, cli.mqtt, cli.camera)
 
     # Setup logging
-    logging.basicConfig(**LOGGING_ARGS)
+    setup_logging(level=args["loglevel"])
 
     # Determine MQTT server details
     mqtt_hostname, mqtt_port = mqtt_broker_info(args["mqtt"])
@@ -86,7 +85,7 @@ if __name__ == "__main__":
 
     # Setup MQTT client
     hostname, port = mqtt_broker_info(args["mqtt"])
-    mqtt_conn = MqttConnection(hostname, port, userdata={CAMERA_NAME: args["camera"]})
+    mqtt_conn = MqttConnection(hostname, userdata={CAMERA_NAME: args["camera"]})
     mqtt_conn.client.on_connect = on_connect
     mqtt_conn.client.on_disconnect = on_disconnect
     mqtt_conn.client.on_message = on_message

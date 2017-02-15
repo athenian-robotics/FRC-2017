@@ -5,6 +5,7 @@ import sys
 from logging import info
 
 import cli_args as cli
+from cli_args import MQTT_HOST
 from mqtt_connection import MqttConnection
 from utils import is_python3
 from utils import setup_logging
@@ -38,7 +39,7 @@ if __name__ == "__main__":
 
 
     # Create MQTT connection
-    mqtt_conn = MqttConnection(args["mqtt_host"],
+    mqtt_conn = MqttConnection(args[MQTT_HOST],
                                on_connect=on_connect,
                                on_disconnect=on_disconnect,
                                on_publish=on_publish)

@@ -7,8 +7,8 @@ from logging import info
 from threading import Thread
 
 import cli_args as cli
+from cli_args import CAMERA_NAME, MQTT_HOST
 from cli_args import setup_cli_args
-from constants import CAMERA_NAME
 from location_client import LocationClient
 from mqtt_connection import MqttConnection
 from utils import setup_logging
@@ -56,8 +56,8 @@ if __name__ == "__main__":
 
 
     # Setup MQTT client
-    mqtt_conn = MqttConnection(args["mqtt_host"],
-                               userdata={CAMERA_NAME: args["camera_name"]},
+    mqtt_conn = MqttConnection(args[MQTT_HOST],
+                               userdata={CAMERA_NAME: args[CAMERA_NAME]},
                                on_connect=on_connect,
                                on_disconnect=on_disconnect,
                                on_publish=on_publish)

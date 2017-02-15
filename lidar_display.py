@@ -1,9 +1,10 @@
 #!/usr/bin/env python2
 
-import cli_args  as cli
+import cli_args as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
 import dothat.touch as nav
+from cli_args import MQTT_HOST
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
@@ -63,7 +64,7 @@ def on_message(client, userdata, msg):
             lcd.write(val + " mm")
             if val == "-1" and lidar_l == "-1":
                 backlight.rgb(255, 0, 0)
-            else :
+            else:
                 backlight.rgb(255, 255, 255)
 
     elif msg.topic == LIDAR_FRONT_RIGHT:
@@ -77,7 +78,7 @@ def on_message(client, userdata, msg):
             lcd.write(val + " mm")
             if val == "-1" and lidar_r == "-1":
                 backlight.rgb(255, 0, 0)
-            else :
+            else:
                 backlight.rgb(255, 255, 255)
 
     elif msg.topic == CAMERA_1_VALUE:
@@ -151,7 +152,7 @@ if __name__ == "__main__":
     setup_logging(level=args["loglevel"])
 
     # Setup MQTT client
-    mqtt_conn = MqttConnection(args["mqtt_host"],
+    mqtt_conn = MqttConnection(args[MQTT_HOST],
                                userdata={},
                                on_connect=on_connect,
                                on_message=on_message)
