@@ -4,7 +4,7 @@ import argparse
 import logging
 
 import cli_args as cli
-from cli_args import SERIAL_PORT, BAUD_RATE, MQTT_HOST
+from cli_args import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from serial_reader import SerialReader
 from utils import setup_logging
@@ -84,12 +84,12 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     # Setup logging
-    setup_logging(level=args["loglevel"])
+    setup_logging(level=args[LOG_LEVEL])
     port = SerialReader.lookup_port(args[PID]) if args.get(PID) else args[SERIAL_PORT]
 
     serial_reader = SerialReader()
 
-    mqtt_client = MqttConnection(hostname=(args[MQTT_HOST]),
+    mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/mm".format(args[DEVICE]),
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],

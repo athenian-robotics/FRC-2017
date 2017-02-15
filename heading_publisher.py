@@ -7,7 +7,7 @@ from threading import Lock
 from threading import Thread
 
 import cli_args as cli
-from cli_args import SERIAL_PORT, BAUD_RATE, MQTT_HOST
+from cli_args import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from serial_reader import SerialReader
 from utils import current_time_millis
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
 
     # Setup logging
-    setup_logging(level=args["loglevel"])
+    setup_logging(level=args[LOG_LEVEL])
 
     serial_reader = SerialReader()
 

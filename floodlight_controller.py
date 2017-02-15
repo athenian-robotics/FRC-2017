@@ -5,7 +5,7 @@ import sys
 from logging import info
 
 import cli_args as cli
-from cli_args import MQTT_HOST
+from cli_args import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from utils import is_python3
 from utils import setup_logging
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     args = cli.setup_cli_args(cli.mqtt_host, cli.verbose)
 
     # Setup logging
-    setup_logging(level=args["loglevel"])
+    setup_logging(level=args[LOG_LEVEL])
 
 
     # Define MQTT callbacks

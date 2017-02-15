@@ -2,7 +2,7 @@ from logging import info
 
 import cli_args as cli
 from blinkt import set_pixel, set_all, show, set_clear_on_exit
-from cli_args import CAMERA_NAME
+from cli_args import CAMERA_NAME, LOG_LEVEL, MQTT_HOST
 from cli_args import setup_cli_args
 from mqtt_connection import MqttConnection
 from utils import mqtt_broker_info
@@ -52,13 +52,13 @@ def set_green():
 
 if __name__ == "__main__":
     # Parse CLI args
-    args = setup_cli_args(cli.grpc, cli.mqtt, cli.camera)
+    args = setup_cli_args(cli.grpc_host, cli.mqtt_host, cli.camera_name)
 
     # Setup logging
-    setup_logging(level=args["loglevel"])
+    setup_logging(level=args[LOG_LEVEL])
 
     # Determine MQTT server details
-    mqtt_hostname, mqtt_port = mqtt_broker_info(args["mqtt"])
+    mqtt_hostname, mqtt_port = mqtt_broker_info(args[MQTT_HOST])
 
 
     # Define MQTT callbacks
@@ -84,11 +84,11 @@ if __name__ == "__main__":
 
 
     # Setup MQTT client
-    hostname, port = mqtt_broker_info(args["mqtt"])
-    mqtt_conn = MqttConnection(hostname, userdata={CAMERA_NAME: args["camera"]})
-    mqtt_conn.client.on_connect = on_connect
-    mqtt_conn.client.on_disconnect = on_disconnect
-    mqtt_conn.client.on_message = on_message
+    mqtt_conn = MqttConnection(args[MQTT_HOST],
+                               userdata={CAMERA_NAME: args[CAMERA_NAME]},
+                               on_connect=on_connect,
+                               on_disconnect=on_disconnect,
+                               on_message=on_message)
     mqtt_conn.connect()
 
     try:
