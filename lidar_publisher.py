@@ -3,7 +3,7 @@
 import argparse
 import logging
 
-import cli_args  as cli
+import cli_args as cli
 from mqtt_connection import MqttConnection
 from serial_reader import SerialReader
 from utils import setup_logging
