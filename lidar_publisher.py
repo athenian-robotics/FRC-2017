@@ -74,17 +74,19 @@ if __name__ == "__main__":
     cli.serial_port(parser)
     cli.baud_rate(parser)
     parser.add_argument("-d", "--device", required=True, help="Device ('left' or 'right'")
+    parser.add_argument("-p", "--pid", help="USB device PID.")
     cli.verbose(parser),
     args = vars(parser.parse_args())
 
     # Setup logging
     setup_logging(level=args["loglevel"])
+    port = SerialReader.lookup_port(args["pid"]) if args.get("pid") else args["serial_port"]
 
     serial_reader = SerialReader()
 
     mqtt_client = MqttConnection(hostname=(args["mqtt_host"]),
                                  userdata={"topic": "lidar/{0}/mm".format(args["device"]),
-                                           "serial_port": args["serial_port"],
+                                           "serial_port": port,
                                            "baud_rate": args["baud_rate"],
                                            "serial_reader": serial_reader},
                                  on_connect=on_connect,
