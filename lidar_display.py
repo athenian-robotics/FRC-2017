@@ -162,4 +162,4 @@ if __name__ == "__main__":
     finally:
         mqtt_conn.disconnect()
 
-logger.info("Exiting...")
+    logger.info("Exiting...")

@@ -149,4 +149,4 @@ if __name__ == "__main__":
         mqtt_client.disconnect()
         serial_reader.stop()
 
-        logger.info("Exiting...")
+    logger.info("Exiting...")

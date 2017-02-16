@@ -18,6 +18,8 @@
 |**camera/gear/alignment**  | Camera relative to object (String)                      |
 |**lidar/left/mm**          | Left lidar distance (String)                            |
 |**lidar/right/mm**         | Right lidar distance (String)                           |
+|**lidar/front/cm**         | Front lidar distance (String)                           |
+|**lidar/rear/cm**          | Rear lidar distance (String)                            |
 |**heading/degrees**        | Heading degrees (String)                                |
 |**heading/calibration**    | Calibration status (String)                             |
 
