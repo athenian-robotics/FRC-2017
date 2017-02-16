@@ -20,6 +20,7 @@
 |**heading/degrees**       | Heading degrees (String)                                |
 |**heading/calibration**   | Calibration status (String)                             |
 
+
 ## SSH Setup
 
 * [SSH Configuration](https://github.com/athenian-robotics/FRC-2017/wiki/SSH-configuration-file)
