@@ -4,7 +4,7 @@ import argparse
 import logging
 
 import cli_args as cli
-from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL
+from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC
 from mqtt_connection import MqttConnection, PAHO_CLIENT
 from serial_reader import SerialReader
 from utils import setup_logging
@@ -16,7 +16,6 @@ total_count = 0
 SERIAL_READER = "serial_reader"
 PID = "pid"
 DEVICE = "device"
-TOPIC = "topic"
 TOLERANCE_THRESH = 5
 
 
