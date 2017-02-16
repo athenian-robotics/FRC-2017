@@ -3,10 +3,12 @@
 import argparse
 import logging
 
-import cli_args  as cli
+import cli_args as cli
+from cli_args import MQTT_HOST
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
+
 
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
@@ -31,7 +33,7 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging()
 
-    mqtt_conn = MqttConnection(args["mqtt_host"],
+    mqtt_conn = MqttConnection(args[MQTT_HOST],
                                on_connect=on_connect,
                                on_disconnect=on_disconnect,
                                on_message=on_message)
