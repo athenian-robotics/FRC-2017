@@ -2,8 +2,8 @@ from logging import info
 
 import cli_args as cli
 from blinkt import set_pixel, set_all, show, set_clear_on_exit
-from cli_args import CAMERA_NAME, LOG_LEVEL, MQTT_HOST
 from cli_args import setup_cli_args
+from constants import CAMERA_NAME, LOG_LEVEL, MQTT_HOST
 from mqtt_connection import MqttConnection
 from utils import mqtt_broker_info
 from utils import setup_logging

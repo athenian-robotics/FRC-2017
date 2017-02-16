@@ -5,7 +5,7 @@ import sys
 from logging import info
 
 import cli_args as cli
-from cli_args import MQTT_HOST, LOG_LEVEL
+from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from utils import is_python3
 from utils import setup_logging

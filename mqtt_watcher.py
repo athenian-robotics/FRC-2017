@@ -4,7 +4,7 @@ import argparse
 import logging
 
 import cli_args as cli
-from cli_args import MQTT_HOST
+from constants import MQTT_HOST
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep

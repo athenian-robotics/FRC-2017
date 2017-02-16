@@ -7,8 +7,8 @@ from logging import info
 from threading import Thread
 
 import cli_args as cli
-from cli_args import CAMERA_NAME, MQTT_HOST, LOG_LEVEL, GRPC_HOST
 from cli_args import setup_cli_args
+from constants import CAMERA_NAME, MQTT_HOST, LOG_LEVEL, GRPC_HOST
 from location_client import LocationClient
 from mqtt_connection import MqttConnection
 from utils import setup_logging

@@ -6,8 +6,8 @@ from logging import info
 
 import blinkt
 import cli_args as cli
-from cli_args import MQTT_HOST, LOG_LEVEL
 from cli_args import setup_cli_args
+from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 

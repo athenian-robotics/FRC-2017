@@ -4,7 +4,7 @@ import cli_args as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
 import dothat.touch as nav
-from cli_args import MQTT_HOST, LOG_LEVEL
+from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
