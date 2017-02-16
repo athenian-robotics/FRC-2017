@@ -10,6 +10,8 @@ from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
 
+logger = logging.getLogger(__name__)
+
 total_sum = 0
 total_count = 0
 
@@ -22,7 +24,7 @@ TOLERANCE_THRESH = 5
 def on_connect(client, userdata, flags, rc):
     global total_sum
     global total_count
-    logging.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: {0}".format(rc))
     total_sum = 0
     total_count = 0
     serial_reader = userdata[SERIAL_READER]
@@ -33,11 +35,11 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_disconnect(client, userdata, rc):
-    logging.info("Disconnected with result code: {0}".format(rc))
+    logger.info("Disconnected with result code: {0}".format(rc))
 
 
 def on_publish(client, userdata, mid):
-    logging.debug("Published value to {0} with message id {1}".format(userdata[TOPIC], mid))
+    logger.debug("Published value to {0} with message id {1}".format(userdata[TOPIC], mid))
 
 
 OUT_OF_RANGE = "-1".encode("utf-8")
@@ -106,4 +108,4 @@ if __name__ == "__main__":
         mqtt_client.disconnect()
         serial_reader.stop()
 
-    print("Exiting...")
+        logger.info("Exiting...")

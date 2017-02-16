@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+import logging
+
 import cli_args as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
@@ -8,6 +10,8 @@ from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
+
+logger = logging.getLogger(__name__)
 
 # default sensor
 selected_sensor = "camera"
@@ -37,7 +41,7 @@ lcd.write("null")
 
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: {0}".format(rc))
     client.subscribe(LIDAR_FRONT_LEFT)
     client.subscribe(LIDAR_FRONT_RIGHT)
     client.subscribe(CAMERA_1_VALUE)
@@ -45,16 +49,16 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_subscribe(client, userdata, mid, granted_qos):
-    print("Subscribed with message id: {0} QOS: {1}".format(mid, granted_qos))
+    logger.info("Subscribed with message id: {0} QOS: {1}".format(mid, granted_qos))
 
 
 def on_message(client, userdata, msg):
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
-    print("{0} : {1}".format(msg.topic, val))
+    logger.info("{0} : {1}".format(msg.topic, val))
 
     if msg.topic == LIDAR_FRONT_LEFT:
-        print("Lidar L: " + val)
+        logger.info("Lidar L: " + val)
         lidar_l = val
         if selected_sensor == "lidar_left":
             lcd.clear()
@@ -68,7 +72,7 @@ def on_message(client, userdata, msg):
                 backlight.rgb(255, 255, 255)
 
     elif msg.topic == LIDAR_FRONT_RIGHT:
-        print("Lidar R: " + val)
+        logger.info("Lidar R: " + val)
         lidar_r = val
         if selected_sensor == "lidar_right":
             lcd.clear()
@@ -82,7 +86,7 @@ def on_message(client, userdata, msg):
                 backlight.rgb(255, 255, 255)
 
     elif msg.topic == CAMERA_1_VALUE:
-        print("Camera Value: " + val)
+        logger.info("Camera Value: " + val)
         if selected_sensor == "camera":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
@@ -91,7 +95,7 @@ def on_message(client, userdata, msg):
             lcd.write(val)
 
     elif msg.topic == CAMERA_1_ALIGNMENT:
-        print("Camera Alignment: " + val)
+        logger.info("Camera Alignment: " + val)
         if selected_sensor == "camera":
             if val == NOT_SEEN:
                 backlight.rgb(255, 0, 0)
@@ -112,7 +116,7 @@ def on_message(client, userdata, msg):
 def handle_left(ch, evt):
     global selected_sensor
     selected_sensor = "lidar_left"
-    print("Left Lidar Display")
+    logger.info("Left Lidar Display")
     lcd.clear()
     lcd.set_cursor_position(0, 0)
 
@@ -124,7 +128,7 @@ def handle_left(ch, evt):
 def handle_right(ch, evt):
     global selected_sensor
     selected_sensor = "lidar_right"
-    print("Right Lidar")
+    logger.info("Right Lidar")
     lcd.clear()
     lcd.set_cursor_position(0, 0)
     lcd.write("Right Lidar")
@@ -136,7 +140,7 @@ def handle_right(ch, evt):
 def handle_button(ch, evt):
     global selected_sensor
     selected_sensor = "camera"
-    print("Camera")
+    logger.info("Camera")
     lcd.clear()
     lcd.set_cursor_position(0, 0)
     lcd.write("Camera")
@@ -165,4 +169,4 @@ if __name__ == "__main__":
     finally:
         mqtt_conn.disconnect()
 
-print("Exiting...")
+logger.info("Exiting...")

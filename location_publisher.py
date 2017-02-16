@@ -2,8 +2,6 @@
 
 import logging
 import time
-import traceback
-from logging import info
 from threading import Thread
 
 import cli_args as cli
@@ -13,6 +11,8 @@ from location_client import LocationClient
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
+
+logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     # Parse CLI args
@@ -27,16 +27,16 @@ if __name__ == "__main__":
 
     # Define MQTT callbacks
     def on_connect(client, userdata, flags, rc):
-        info("Connected to MQTT broker with result code: {0}".format(rc))
+        logger.info("Connected to MQTT broker with result code: {0}".format(rc))
         Thread(target=publish_locations, args=(client, userdata)).start()
 
 
     def on_disconnect(client, userdata, rc):
-        info("Disconnected from MQTT broker with result code: {0}".format(rc))
+        logger.info("Disconnected from MQTT broker with result code: {0}".format(rc))
 
 
     def on_publish(client, userdata, mid):
-        info("Published message id: {0}".format(mid))
+        logger.debug("Published message id: {0}".format(mid))
 
 
     def publish_locations(client, userdata):
@@ -50,8 +50,7 @@ if __name__ == "__main__":
                     prev_value = x_loc[0]
 
             except BaseException as e:
-                logging.error("Failure in publish_locations() [e]".format(e))
-                traceback.print_exc()
+                logger.error("Failure in publish_locations() [e]".format(e), exc_info=True)
                 time.sleep(1)
 
 
@@ -71,4 +70,4 @@ if __name__ == "__main__":
         mqtt_conn.disconnect()
         locations.stop()
 
-    print("Exiting...")
+    logger.info("Exiting...")

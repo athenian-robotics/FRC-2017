@@ -14,6 +14,8 @@ from utils import current_time_millis
 from utils import setup_logging
 from utils import sleep
 
+logger = logging.getLogger(__name__)
+
 HEADING_TOPIC = "heading_topic"
 CALIB_TOPIC = "calib_topic"
 CALIB_PUBLISH = "calib_publish"
@@ -31,7 +33,7 @@ last_calib_publish_time = -1
 
 
 def on_connect(client, userdata, flags, rc):
-    logging.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: {0}".format(rc))
     serial_reader = userdata[SERIAL_READER]
     serial_reader.start(func=fetch_data,
                         userdata=userdata,
@@ -41,11 +43,11 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_disconnect(client, userdata, rc):
-    logging.info("Disconnected with result code: {0}".format(rc))
+    logger.info("Disconnected with result code: {0}".format(rc))
 
 
 def on_publish(client, userdata, mid):
-    logging.debug("Published value with message id {0}".format(mid))
+    logger.debug("Published value with message id {0}".format(mid))
 
 
 # SerialReader calls this for every line read from Arduino
@@ -53,7 +55,7 @@ def fetch_data(val, userdata):
     global current_heading, calibrated_by_values, calibrated_by_log, last_calib_publish_time
 
     if "X:" not in val:
-        logging.info(val)
+        logger.info(val)
     else:
         try:
             client = userdata[PAHO_CLIENT]
@@ -62,7 +64,7 @@ def fetch_data(val, userdata):
             x_val = vals[0]
             heading = round(float(x_val.split(": ")[1]), 1)
             if heading != current_heading:
-                logging.debug(val)
+                logger.debug(val)
                 current_heading = heading
                 publish_heading(client, userdata[HEADING_TOPIC], heading)
 
@@ -70,13 +72,13 @@ def fetch_data(val, userdata):
                 # The arduino sketch includes a "! " prefix to SYS if the data is not calibrated (and thus not reliable)
                 if "! " in val:
                     nocalib_str = val[val.index("! "):]
-                    logging.info("9-DOF Sensor not calibrated by log: {0}".format(nocalib_str))
+                    logger.info("9-DOF Sensor not calibrated by log: {0}".format(nocalib_str))
                     client.publish(userdata[CALIB_TOPIC], payload=(nocalib_str.encode("utf-8")), qos=0)
                     calibrated_by_log = False
                 else:
                     if not calibrated_by_log:
                         msg = "9-DOF Sensor calibrated by log"
-                        logging.info(msg)
+                        logger.info(msg)
                         client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
                         calibrated_by_log = True
 
@@ -88,15 +90,14 @@ def fetch_data(val, userdata):
                     acc_calib = int(calibs[3].split(":")[1])
                     if sys_calib == 3 and gyro_calib == 3 and mag_calib == 3 and acc_calib == 3:
                         msg = "9-DOF Sensor calibrated by values"
-                        logging.info(msg)
+                        logger.info(msg)
                         client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
                         calibrated_by_values = True
                     elif current_time_millis() - last_calib_publish_time > userdata[CALIB_PUBLISH] * 1000:
                         client.publish(userdata[CALIB_TOPIC], payload=(calib_str.encode("utf-8")), qos=0)
                         last_calib_publish_time = current_time_millis()
         except IndexError:
-            logging.info("Formatting error: {0}".format(val))
-            pass
+            logger.info("Formatting error: {0}".format(val))
 
 
 def background_publisher(userdata, min_publish_secs):
@@ -158,4 +159,4 @@ if __name__ == "__main__":
         mqtt_client.disconnect()
         serial_reader.stop()
 
-        logging.info("Exiting...")
+        logger.info("Exiting...")

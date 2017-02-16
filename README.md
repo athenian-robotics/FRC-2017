@@ -10,14 +10,16 @@
 | 24  | **lcd1.local**             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
 
 ## MQTT Topics 
-| Name                     | Description                                             |
-|:-------------------------|:--------------------------------------------------------|
-|**camera/gear/x**         | Camera center position and screen width (String:String) |
-|**camera/gear/alignment** | Camera relative to object (String)                      |
-|**lidar/left/mm**         | Left lidar distance (String)                            |
-|**lidar/right/mm**        | Right lidar distance (String)                           |
-|**heading/degrees**       | Heading degrees (String)                                |
-|**heading/calibration**   | Calibration status (String)                             |
+| Name                      | Description                                             |
+|:--------------------------|:--------------------------------------------------------|
+|**camera/gear/x**          | Camera center position and screen width (String:String) |
+|**camera/gear/peg/x**      | Peg position and screen width (String:String)           |
+|**camera/gear/dualtape/x** | Avg dual tape position and screen width (String:String) |
+|**camera/gear/alignment**  | Camera relative to object (String)                      |
+|**lidar/left/mm**          | Left lidar distance (String)                            |
+|**lidar/right/mm**         | Right lidar distance (String)                           |
+|**heading/degrees**        | Heading degrees (String)                                |
+|**heading/calibration**    | Calibration status (String)                             |
 
 
 ## SSH Setup

@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
 import json
+import logging
 import sys
-from logging import info
 
 import cli_args as cli
 from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from utils import is_python3
 from utils import setup_logging
+
+logger = logging.getLogger(__name__)
 
 if is_python3():
     import tkinter as tk
@@ -27,15 +29,15 @@ if __name__ == "__main__":
 
     # Define MQTT callbacks
     def on_connect(client, userdata, flags, rc):
-        info("Connected with result code: {0}".format(rc))
+        logger.info("Connected with result code: {0}".format(rc))
 
 
     def on_disconnect(client, userdata, rc):
-        info("Disconnected with result code: {0}".format(rc))
+        logger.info("Disconnected with result code: {0}".format(rc))
 
 
     def on_publish(client, userdata, mid):
-        info("Published value to {0} with message id {1}".format(COMMAND_TOPIC, mid))
+        logger.debug("Published value to {0} with message id {1}".format(COMMAND_TOPIC, mid))
 
 
     # Create MQTT connection
@@ -83,12 +85,12 @@ if __name__ == "__main__":
             mqtt_conn.disconnect()
             sys.exit()
         else:
-            print("Pressed {0}".format(key_clicked))
+            logger.info("Pressed {0}".format(key_clicked))
 
 
     def on_click(event):
         root.focus_set()
-        print("Clicked at {0},{1}".format(event.x, event.y))
+        logger.info("Clicked at {0},{1}".format(event.x, event.y))
         update_display()
 
 

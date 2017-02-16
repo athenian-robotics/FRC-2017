@@ -9,6 +9,8 @@ from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
 
+logger = logging.getLogger(__name__)
+
 
 def on_connect(client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
@@ -17,11 +19,11 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_disconnect(client, userdata, rc):
-    logging.info("Disconnected with result code: {0}".format(rc))
+    logger.info("Disconnected with result code: {0}".format(rc))
 
 
 def on_message(client, userdata, msg):
-    logging.info("{0} : {1}".format(msg.topic, msg.payload))
+    logger.info("{0} : {1}".format(msg.topic, msg.payload))
 
 
 if __name__ == "__main__":
@@ -46,4 +48,4 @@ if __name__ == "__main__":
     finally:
         mqtt_conn.disconnect()
 
-    print("Exiting...")
+    logger.info("Exiting...")

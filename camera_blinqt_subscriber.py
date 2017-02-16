@@ -1,4 +1,4 @@
-from logging import info
+import logging
 
 import cli_args as cli
 from blinkt import set_pixel, set_all, show, set_clear_on_exit
@@ -8,8 +8,9 @@ from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
 
-# blinkt functions
+logger = logging.getLogger(__name__)
 
+# blinkt functions
 set_clear_on_exit(False)
 
 
@@ -59,12 +60,12 @@ if __name__ == "__main__":
 
     # Define MQTT callbacks
     def on_connect(client, userdata, flags, rc):
-        info("Connected with result code: {0}".format(rc))
+        logger.info("Connected with result code: {0}".format(rc))
         client.subscribe("{0}/#".format(userdata[CAMERA_NAME]))
 
 
     def on_disconnect(client, userdata, rc):
-        info("Disconnected with result code: {0}".format(rc))
+        logger.info("Disconnected with result code: {0}".format(rc))
 
 
     def on_message(client, userdata, msg):
@@ -76,7 +77,7 @@ if __name__ == "__main__":
             right_blue()
         if msg.payload == "in threshold":
             set_green()
-        print("{0} {1}".format(msg.topic, msg.payload))
+        logger.info("{0} {1}".format(msg.topic, msg.payload))
 
 
     # Setup MQTT client
@@ -94,4 +95,4 @@ if __name__ == "__main__":
     finally:
         mqtt_conn.disconnect()
 
-    print("Exiting...")
+    logger.info("Exiting...")
