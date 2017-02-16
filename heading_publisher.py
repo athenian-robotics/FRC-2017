@@ -42,14 +42,6 @@ def on_connect(client, userdata, flags, rc):
     Thread(target=background_publisher, args=(userdata, userdata[MIN_PUBLISH])).start()
 
 
-def on_disconnect(client, userdata, rc):
-    logger.info("Disconnected with result code: {0}".format(rc))
-
-
-def on_publish(client, userdata, mid):
-    logger.debug("Published value with message id {0}".format(mid))
-
-
 # SerialReader calls this for every line read from Arduino
 def fetch_data(val, userdata):
     global current_heading, calibrated_by_values, calibrated_by_log, last_calib_publish_time
@@ -145,9 +137,7 @@ if __name__ == "__main__":
                                            CALIB_PUBLISH: args[CALIB_PUBLISH],
                                            CALIB_ENABLED: args[CALIB_ENABLED],
                                            MIN_PUBLISH: args[MIN_PUBLISH]},
-                                 on_connect=on_connect,
-                                 on_disconnect=on_disconnect,
-                                 on_publish=on_publish)
+                                 on_connect=on_connect)
     mqtt_client.connect()
 
     try:

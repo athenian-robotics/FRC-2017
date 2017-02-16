@@ -32,10 +32,6 @@ if __name__ == "__main__":
         logger.info("Connected with result code: {0}".format(rc))
 
 
-    def on_disconnect(client, userdata, rc):
-        logger.info("Disconnected with result code: {0}".format(rc))
-
-
     def on_publish(client, userdata, mid):
         logger.debug("Published value to {0} with message id {1}".format(COMMAND_TOPIC, mid))
 
@@ -43,7 +39,6 @@ if __name__ == "__main__":
     # Create MQTT connection
     mqtt_conn = MqttConnection(args[MQTT_HOST],
                                on_connect=on_connect,
-                               on_disconnect=on_disconnect,
                                on_publish=on_publish)
     mqtt_conn.connect()
 

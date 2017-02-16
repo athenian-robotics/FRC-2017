@@ -68,10 +68,6 @@ if __name__ == "__main__":
         client.subscribe("camera/{0}/status".format(userdata[CAMERA_NAME]))
 
 
-    def on_disconnect(client, userdata, rc):
-        logger.info("Disconnected with result code: {0}".format(rc))
-
-
     def on_message(client, userdata, msg):
         if msg.payload == "out of range":
             set_red()
@@ -88,7 +84,6 @@ if __name__ == "__main__":
     mqtt_conn = MqttConnection(args[MQTT_HOST],
                                userdata={CAMERA_NAME: args[CAMERA_NAME]},
                                on_connect=on_connect,
-                               on_disconnect=on_disconnect,
                                on_message=on_message)
     mqtt_conn.connect()
 

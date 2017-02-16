@@ -18,17 +18,9 @@ PORT = "paho.port"
 
 
 def on_connect(client, userdata, flags, rc):
-    logging.info(
-        "{0} connecting to {1}:{2}".format("Success" if rc == 0 else "Failure", userdata[HOSTNAME], userdata[PORT]))
+    logging.info("{0} connecting to {1}:{2}".format("Success" if rc == 0 else "Failure",
+                                                    userdata[HOSTNAME], userdata[PORT]))
     client.subscribe("roborio/status/floodlight")
-
-
-def on_disconnect(client, userdata, rc):
-    logging.info("Disconnected with result code: {0}".format(rc))
-
-
-def on_subscribe(client, userdata, mid, granted_qos):
-    logging.info("Subscribed with message id: {0} QOS: {1}".format(mid, granted_qos))
 
 
 def on_message(client, userdata, msg):
@@ -69,8 +61,6 @@ if __name__ == "__main__":
     mqtt_conn = MqttConnection(args[MQTT_HOST],
                                userdata={},
                                on_connect=on_connect,
-                               on_disconnect=on_disconnect,
-                               on_subscribe=on_subscribe,
                                on_message=on_message)
     mqtt_conn.connect()
 

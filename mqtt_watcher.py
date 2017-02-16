@@ -18,10 +18,6 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("#")
 
 
-def on_disconnect(client, userdata, rc):
-    logger.info("Disconnected with result code: {0}".format(rc))
-
-
 def on_message(client, userdata, msg):
     logger.info("{0} : {1}".format(msg.topic, msg.payload))
 
@@ -37,7 +33,6 @@ if __name__ == "__main__":
 
     mqtt_conn = MqttConnection(args[MQTT_HOST],
                                on_connect=on_connect,
-                               on_disconnect=on_disconnect,
                                on_message=on_message)
     mqtt_conn.connect()
 

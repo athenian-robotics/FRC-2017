@@ -39,17 +39,12 @@ lcd.set_cursor_position(0, 2)
 lcd.write("null")
 
 
-
 def on_connect(client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
     client.subscribe(LIDAR_FRONT_LEFT)
     client.subscribe(LIDAR_FRONT_RIGHT)
     client.subscribe(CAMERA_1_VALUE)
     client.subscribe(CAMERA_1_ALIGNMENT)
-
-
-def on_subscribe(client, userdata, mid, granted_qos):
-    logger.info("Subscribed with message id: {0} QOS: {1}".format(mid, granted_qos))
 
 
 def on_message(client, userdata, msg):
@@ -111,8 +106,6 @@ def on_message(client, userdata, msg):
 
 
 @nav.on(nav.LEFT)
-
-
 def handle_left(ch, evt):
     global selected_sensor
     selected_sensor = "lidar_left"

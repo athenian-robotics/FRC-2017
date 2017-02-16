@@ -34,10 +34,6 @@ def on_connect(client, userdata, flags, rc):
                         baudrate=userdata[BAUD_RATE])
 
 
-def on_disconnect(client, userdata, rc):
-    logger.info("Disconnected with result code: {0}".format(rc))
-
-
 def on_publish(client, userdata, mid):
     logger.debug("Published value to {0} with message id {1}".format(userdata[TOPIC], mid))
 
@@ -96,7 +92,6 @@ if __name__ == "__main__":
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader},
                                  on_connect=on_connect,
-                                 on_disconnect=on_disconnect,
                                  on_publish=on_publish)
     mqtt_client.connect()
 
