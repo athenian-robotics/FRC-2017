@@ -15,4 +15,9 @@ echo "Updating object-tracking"
 cd ~/git/object-tracking
 git pull origin
 
+# Push FRC-2017-robot repo
+echo "Updating FRC-2017-robot"
+cd ~/git/FRC-2017-robot
+git pull origin
+
 
