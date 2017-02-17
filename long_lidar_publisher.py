@@ -14,16 +14,14 @@ from utils import sleep
 logger = logging.getLogger(__name__)
 
 SERIAL_READER = "serial_reader"
+MOVING_AVERAGE = "moving_average"
 DEVICE = "device"
+AVG_SIZE = "avg_size"
 OUT_OF_RANGE = "-1".encode("utf-8")
 TOLERANCE_THRESH = 2.5
 
 def on_connect(client, userdata, flags, rc):
-    global total_sum
-    global total_count
     logger.info("Connected with result code: {0}".format(rc))
-    total_sum = 0
-    total_count = 0
     serial_reader = userdata[SERIAL_READER]
     serial_reader.start(func=fetch_data,
                         userdata=userdata,
@@ -34,6 +32,7 @@ def on_connect(client, userdata, flags, rc):
 def fetch_data(cm_str, userdata):
     topic = userdata[TOPIC]
     client = userdata[PAHO_CLIENT]
+    movingAvg = userdata[MOVING_AVERAGE]
 
     cm = int(cm_str)
     movingAvg.add(cm)
@@ -44,7 +43,7 @@ def fetch_data(cm_str, userdata):
     else:
         if abs(cm - avg) > TOLERANCE_THRESH:
             # logging.info("Difference: {0}".format(abs(cm - avg)))
-            client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
+            client.publish(topic, payload=str(avg).encode("utf-8"), qos=0)
 
 
 if __name__ == "__main__":
@@ -55,6 +54,7 @@ if __name__ == "__main__":
     cli.serial_port(parser)
     cli.baud_rate(parser)
     parser.add_argument("-d", "--device", dest=DEVICE, required=True, help="Device ('front' or 'rear'")
+    parser.add_argument("--avg_size", dest=AVG_SIZE, default=10, type=int, help="Moving average size [10]")
     cli.device_id(parser),
     cli.verbose(parser),
     args = vars(parser.parse_args())
@@ -64,13 +64,14 @@ if __name__ == "__main__":
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
     serial_reader = SerialReader()
-    movingAvg = MovingAverage(10)
+    movingAvg = MovingAverage(args[AVG_SIZE])
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
-                                           SERIAL_READER: serial_reader},
+                                           SERIAL_READER: serial_reader,
+                                           MOVING_AVERAGE: movingAvg},
                                  on_connect=on_connect)
     mqtt_client.connect()
 
