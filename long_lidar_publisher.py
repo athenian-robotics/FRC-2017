@@ -35,6 +35,10 @@ def fetch_data(cm_str, userdata):
     movingAvg = userdata[MOVING_AVERAGE]
 
     cm = int(cm_str)
+
+    if cm <= 0:
+        return
+
     movingAvg.add(cm)
     avg = movingAvg.average()
 
