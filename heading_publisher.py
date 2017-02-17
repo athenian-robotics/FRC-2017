@@ -47,7 +47,7 @@ def fetch_data(val, userdata):
     global current_heading, calibrated_by_values, calibrated_by_log, last_calib_publish_time
 
     if "X:" not in val:
-        logger.info(val)
+        logger.info("Non-data: " + val)
     else:
         try:
             client = userdata[PAHO_CLIENT]
