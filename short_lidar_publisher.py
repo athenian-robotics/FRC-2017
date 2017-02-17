@@ -4,7 +4,7 @@ import argparse
 import logging
 
 import cli_args as cli
-from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC
+from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC, DEVICE_ID
 from mqtt_connection import MqttConnection, PAHO_CLIENT
 from serial_reader import SerialReader
 from utils import setup_logging
@@ -16,7 +16,6 @@ total_sum = 0
 total_count = 0
 
 SERIAL_READER = "serial_reader"
-PID = "pid"
 DEVICE = "device"
 TOLERANCE_THRESH = 5
 OUT_OF_RANGE = "-1".encode("utf-8")
@@ -33,10 +32,6 @@ def on_connect(client, userdata, flags, rc):
                         userdata=userdata,
                         port=userdata[SERIAL_PORT],
                         baudrate=userdata[BAUD_RATE])
-
-
-def on_publish(client, userdata, mid):
-    logger.debug("Published value to {0} with message id {1}".format(userdata[TOPIC], mid))
 
 
 def fetch_data(mm_str, userdata):
@@ -74,13 +69,13 @@ if __name__ == "__main__":
     cli.serial_port(parser)
     cli.baud_rate(parser)
     parser.add_argument("-d", "--device", dest=DEVICE, required=True, help="Device ('left' or 'right'")
-    parser.add_argument("-p", "--pid", dest=PID, help="USB device PID.")
+    cli.device_id(parser),
     cli.verbose(parser),
     args = vars(parser.parse_args())
 
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
-    port = SerialReader.lookup_port(args[PID]) if args.get(PID) else args[SERIAL_PORT]
+    port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
     serial_reader = SerialReader()
 
@@ -89,8 +84,7 @@ if __name__ == "__main__":
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader},
-                                 on_connect=on_connect,
-                                 on_publish=on_publish)
+                                 on_connect=on_connect)
     mqtt_client.connect()
 
     try:
