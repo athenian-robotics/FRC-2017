@@ -123,10 +123,6 @@
         }
 
         function setButton(num) {
-            button = document.getElementById('pause' + num);
-            button.style.backgroundColor = paused[num] ? red : green;
-            button.value = paused[num] ? 'Resume' : 'Pause';
-
             image = document.getElementById('image' + num);
             image.style.borderColor = paused[num] ? red : green;
         }
@@ -187,11 +183,6 @@
                 <canvas class="image" id="image0" width="_WIDTH_px" height="_HEIGHT_px"
                         onclick="togglePause(0, 'http://localhost:8080/image.jpg')"></canvas>
             </div>
-
-            <div>
-                <input type="button" class="pause" id="pause0" value="Pause"
-                       onclick="togglePause(0, 'http://localhost:8080/image.jpg')">
-            </div>
         </td>
         <td>
             <table border="0">
@@ -208,11 +199,6 @@
             <div>
                 <canvas class="image" id="image1" width="_WIDTH_px" height="_HEIGHT_px"
                         onclick="togglePause(1, 'http://localhost:8081/image.jpg')"></canvas>
-            </div>
-
-            <div>
-                <input type="button" class="pause" id="pause1" value="Pause"
-                       onclick="togglePause(1, 'http://localhost:8081/image.jpg')">
             </div>
         </td>
     </tr>
@@ -233,11 +219,6 @@
                 <canvas class="image" id="image2" width="_WIDTH_px" height="_HEIGHT_px"
                         onclick="togglePause(2, 'http://localhost:8080/image.jpg')"></canvas>
             </div>
-
-            <div>
-                <input type="button" class="pause" id="pause2" value="Pause"
-                       onclick="togglePause(2, 'http://localhost:8080/image.jpg')">
-            </div>
         </td>
         <td>
             <table border="0">
@@ -254,11 +235,6 @@
             <div>
                 <canvas class="image" id="image3" width="_WIDTH_px" height="_HEIGHT_px"
                         onclick="togglePause(3, 'http://localhost:8081/image.jpg')"></canvas>
-            </div>
-
-            <div>
-                <input type="button" class="pause" id="pause3" value="Pause"
-                       onclick="togglePause(3, 'http://localhost:8081/image.jpg')">
             </div>
         </td>
     </tr>
