@@ -27,8 +27,8 @@
 | Location                  | ID                                                      |
 |:--------------------------|:--------------------------------------------------------|
 |Heading                    | 95530343235351A0E0A2                                    |
-|Left lidar                 |                                                         |
-|Right lidar                |                                                         |
+|Left lidar                 | 7543331373935160E190                                    |
+|Right lidar                | 95538333535351019130                                    |
 |Forward lidar              |                                                         |
 |Rear lidar                 |                                                         |
 
