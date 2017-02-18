@@ -21,6 +21,8 @@ LIDAR_FRONT_LEFT = "lidar/left/mm"
 LIDAR_FRONT_RIGHT = "lidar/right/mm"
 CAMERA_1_VALUE = "camera/gear/x"
 CAMERA_1_ALIGNMENT = "camera/gear/alignment"
+HEADING_CALIBRATION = "heading/calibration"
+HEADING_DEGREES = "heading/degrees"
 NOT_SEEN = "not_seen"
 NOT_ALIGNED = "not_aligned"
 ALIGNED = "aligned"
@@ -99,10 +101,32 @@ def on_message(client, userdata, msg):
             elif val == ALIGNED:
                 backlight.rgb(0, 255, 0)
 
+    elif msg.topic == HEADING_CALIBRATION:
+        logger.info("Calibration: " + val)
+        if selected_sensor == "calibration":
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Calibration")
+            lcd.set_cursor_position(0, 2)
+            lcd.write(val)
+            if val == "Sys:3 G:3 A:3 M:3":
+                backlight.rgb(0, 255, 0)
+            else:
+                backlight.rgb(255, 255, 255)
+
+    elif msg.topic == HEADING_DEGREES:
+        logger.info("degrees: " + val)
+        if selected_sensor == "degrees":
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Degrees")
+            lcd.set_cursor_position(0, 2)
+            lcd.write(val)
 
 
-                # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
-                # int.from_bytes() requires python3: https://docs.python.org/3/library/stdtypes.html#int.from_bytes
+
+            # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
+            # int.from_bytes() requires python3: https://docs.python.org/3/library/stdtypes.html#int.from_bytes
 
 
 @nav.on(nav.LEFT)
@@ -111,6 +135,7 @@ def handle_left(ch, evt):
     selected_sensor = "lidar_left"
     logger.info("Left Lidar Display")
     lcd.clear()
+    backlight.rgb(255, 255, 255)
     lcd.set_cursor_position(0, 0)
 
     lcd.write("Left Lidar")
@@ -123,6 +148,7 @@ def handle_right(ch, evt):
     selected_sensor = "lidar_right"
     logger.info("Right Lidar")
     lcd.clear()
+    backlight.rgb(255, 255, 255)
     lcd.set_cursor_position(0, 0)
     lcd.write("Right Lidar")
 
@@ -135,8 +161,35 @@ def handle_button(ch, evt):
     selected_sensor = "camera"
     logger.info("Camera")
     lcd.clear()
+    backlight.rgb(255, 255, 255)
     lcd.set_cursor_position(0, 0)
     lcd.write("Camera")
+
+    lcd.set_cursor_position(0, 2)
+
+
+@nav.on(nav.UP)
+def handle_button(ch, evt):
+    global selected_sensor
+    selected_sensor = "calibration"
+    logger.info("Calibration")
+    lcd.clear()
+    backlight.rgb(255, 255, 255)
+    lcd.set_cursor_position(0, 0)
+    lcd.write("Calibration")
+
+    lcd.set_cursor_position(0, 2)
+
+
+@nav.on(nav.DOWN)
+def handle_button(ch, evt):
+    global selected_sensor
+    selected_sensor = "degrees"
+    logger.info("Degrees")
+    lcd.clear()
+    backlight.rgb(255, 255, 255)
+    lcd.set_cursor_position(0, 0)
+    lcd.write("Degrees")
 
     lcd.set_cursor_position(0, 2)
 
