@@ -33,6 +33,10 @@
 |Rear lidar                 |                                                         |
 
 
+## Heading Sensor
+
+The heading sensor calibration is described [here](https://learn.adafruit.com/bno055-absolute-orientation-sensor-with-raspberry-pi-and-beaglebone-black/webgl-example?embeds=allow#sensor-calibration)
+
 ## SSH Setup
 
 * [SSH Configuration](https://github.com/athenian-robotics/FRC-2017/wiki/SSH-configuration-file)
