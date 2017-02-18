@@ -66,10 +66,10 @@ if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
     cli.mqtt_host(parser),
+    cli.device_id(parser),
     cli.serial_port(parser)
     cli.baud_rate(parser)
     parser.add_argument("-d", "--device", dest=DEVICE, required=True, help="Device ('left' or 'right'")
-    cli.device_id(parser),
     cli.verbose(parser),
     args = vars(parser.parse_args())
 

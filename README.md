@@ -23,6 +23,15 @@
 |**heading/degrees**        | Heading degrees (String)                                |
 |**heading/calibration**    | Calibration status (String)                             |
 
+## Arduino Device IDs
+| Location                  | ID                                                      |
+|:--------------------------|:--------------------------------------------------------|
+|Heading                    | 95530343235351A0E0A2                                    |
+|Left lidar                 |                                                         |
+|Right lidar                |                                                         |
+|Forward lidar              |                                                         |
+|Rear lidar                 |                                                         |
+
 
 ## SSH Setup
 

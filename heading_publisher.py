@@ -7,7 +7,7 @@ from threading import Lock
 from threading import Thread
 
 import cli_args as cli
-from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL
+from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, DEVICE_ID
 from mqtt_connection import MqttConnection, PAHO_CLIENT
 from serial_reader import SerialReader
 from utils import current_time_millis
@@ -114,6 +114,7 @@ if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
     cli.mqtt_host(parser),
+    cli.device_id(parser),
     cli.serial_port(parser)
     cli.baud_rate(parser)
     parser.add_argument("--mpt", dest=MIN_PUBLISH, default=5, type=int, help="Minimum publishing time secs [5]")
@@ -126,12 +127,14 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
+    port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
+
     serial_reader = SerialReader()
 
     mqtt_client = MqttConnection(hostname=(args[MQTT_HOST]),
                                  userdata={HEADING_TOPIC: "heading/degrees",
                                            CALIB_TOPIC: "heading/calibration",
-                                           SERIAL_PORT: args[SERIAL_PORT],
+                                           SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
                                            CALIB_PUBLISH: args[CALIB_PUBLISH],
