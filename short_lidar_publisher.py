@@ -52,11 +52,12 @@ def fetch_data(mm_str, userdata):
 
     mm = int(mm_str)
 
-    if (mm < 0 or mm > 2000) and last_val != -1:  # out of range, reset running avg
+    if mm < 155 or mm > 2000:  # out of range, reset running avg
         total_sum = 0
         total_count = 0
-        client.publish(topic, payload=OUT_OF_RANGE, qos=0)
-        last_val = -1
+        if last_val != -1:
+            client.publish(topic, payload=OUT_OF_RANGE, qos=0)
+            last_val = -1
 
     elif (total_sum + total_count == 0) or abs((total_sum / total_count) - mm) < TOLERANCE_THRESH:
         total_sum += mm
