@@ -22,8 +22,8 @@ CALIB_PUBLISH = "calib_publish"
 CALIB_ENABLED = "calib_enabled"
 MIN_PUBLISH = "min_publish"
 SERIAL_READER = "serial_reader"
+PUBLISH_LOCK = "publish_lock"
 
-publish_lock = Lock()
 stopped = False
 calibrated_by_values = False
 calibrated_by_log = False
@@ -58,7 +58,7 @@ def fetch_data(val, userdata):
             if heading != current_heading:
                 logger.debug(val)
                 current_heading = heading
-                publish_heading(client, userdata[HEADING_TOPIC], heading)
+                publish_heading(client, userdata[HEADING_TOPIC], heading, userdata[PUBLISH_LOCK])
 
             if userdata[CALIB_ENABLED] and not calibrated_by_values:
                 # The arduino sketch includes a "! " prefix to SYS if the data is not calibrated (and thus not reliable)
@@ -100,11 +100,11 @@ def background_publisher(userdata, min_publish_secs):
         time.sleep(.5)
         elapsed_time = current_time_millis() - last_heading_publish_time
         if elapsed_time > min_publish_secs * 1000 and current_heading != -1:
-            publish_heading(client, heading_topic, current_heading)
+            publish_heading(client, heading_topic, current_heading, userdata[PUBLISH_LOCK])
 
 
-def publish_heading(client, topic, heading):
-    global publish_lock, last_heading_publish_time
+def publish_heading(client, topic, heading, publish_lock):
+    global last_heading_publish_time
     with publish_lock:
         client.publish(topic, payload=(str(heading).encode("utf-8")), qos=0)
         last_heading_publish_time = current_time_millis()
@@ -129,6 +129,7 @@ if __name__ == "__main__":
 
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
+    publish_lock = Lock()
     serial_reader = SerialReader()
 
     mqtt_client = MqttConnection(hostname=(args[MQTT_HOST]),
@@ -137,6 +138,7 @@ if __name__ == "__main__":
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
+                                           PUBLISH_LOCK: publish_lock,
                                            CALIB_PUBLISH: args[CALIB_PUBLISH],
                                            CALIB_ENABLED: args[CALIB_ENABLED],
                                            MIN_PUBLISH: args[MIN_PUBLISH]},
