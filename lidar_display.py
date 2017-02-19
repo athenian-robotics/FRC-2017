@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 
 import logging
-
 import cli_args as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
