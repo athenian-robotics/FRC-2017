@@ -57,6 +57,23 @@ have access to github.
 * [Makefile commands](https://github.com/athenian-robotics/FRC-2017/wiki/Makefile-commands)
 * [Raspi boot scripts](https://github.com/athenian-robotics/FRC-2017/wiki/Raspi-boot-scripts)
 
+## rc.local edits (append above ```exit 0```)
+
+lidar-gear:
+
+```
+su - pi -c ~pi/git/FRC-2017/bin/lidar-right-publisher.sh
+su - pi -c ~pi/git/FRC-2017/bin/lidar-left-publisher.sh
+su - pi -c ~pi/git/FRC-2017/bin/heading-publisher.sh
+```
+camera-gear:
+  
+```
+su - pi -c ~pi/git/FRC-2017/bin/object-tracker.sh
+su - pi -c ~pi/git/FRC-2017/bin/gear-front-publisher.sh
+```
+
+
 
 ## Listening to MQTT traffic
 
