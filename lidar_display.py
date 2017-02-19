@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 
 import logging
+from threading import Thread
+
 import cli_args as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
@@ -28,6 +30,11 @@ ALIGNED = "aligned"
 
 lidar_l = ""
 lidar_r = ""
+camera_v = ""
+camera_a = ""
+heading_c = ""
+heading_d = ""
+
 
 # lcd initialization
 lcd.clear()
@@ -49,6 +56,7 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
+    global lidar_r, lidar_l, camera_a, camera_v, heading_d, heading_c
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
     logger.info("{0} : {1}".format(msg.topic, val))
@@ -56,76 +64,86 @@ def on_message(client, userdata, msg):
     if msg.topic == LIDAR_FRONT_LEFT:
         logger.info("LCD Lidar L: " + val)
         lidar_l = val
+
+
+    elif msg.topic == LIDAR_FRONT_RIGHT:
+        logger.info("LCD Lidar R: " + val)
+        lidar_r = val
+
+
+    elif msg.topic == CAMERA_1_VALUE:
+        logger.info("LCD Camera Value: " + val)
+        camera_v = val
+
+    elif msg.topic == CAMERA_1_ALIGNMENT:
+        logger.info("LCD Camera Alignment: " + val)
+        camera_a = val
+
+    elif msg.topic == HEADING_CALIBRATION:
+        logger.info("LCD Calibration: " + val)
+        heading_c = val
+
+    elif msg.topic == HEADING_DEGREES:
+        logger.info("LCD Degrees: " + val)
+        heading_d = val
+
+
+def lcd_display():
+    global lidar_r, lidar_l, camera_a, camera_v, heading_d, heading_c
+    while True:
         if selected_sensor == "lidar_left":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Left")
             lcd.set_cursor_position(0, 2)
-            lcd.write(val + " mm")
-            if val == "-1" and lidar_l == "-1":
+            lcd.write(lidar_l + " mm")
+            if lidar_l == "-1" and lidar_r == "-1":
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
 
-    elif msg.topic == LIDAR_FRONT_RIGHT:
-        logger.info("LCD Lidar R: " + val)
-        lidar_r = val
-        if selected_sensor == "lidar_right":
+        elif selected_sensor == "lidar_right":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Right")
             lcd.set_cursor_position(0, 2)
-            lcd.write(val + " mm")
-            if val == "-1" and lidar_r == "-1":
+            lcd.write(lidar_r + " mm")
+            if lidar_l == "-1" and lidar_r == "-1":
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
 
-    elif msg.topic == CAMERA_1_VALUE:
-        logger.info("LCD Camera Value: " + val)
-        if selected_sensor == "camera":
+        elif selected_sensor == "camera":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Camera")
             lcd.set_cursor_position(0, 2)
-            lcd.write(val)
-
-    elif msg.topic == CAMERA_1_ALIGNMENT:
-        logger.info("LCD Camera Alignment: " + val)
-        if selected_sensor == "camera":
-            if val == NOT_SEEN:
+            lcd.write(camera_v)
+            if camera_a == NOT_SEEN:
                 backlight.rgb(255, 0, 0)
-            elif val == NOT_ALIGNED:
+            elif camera_a == NOT_ALIGNED:
                 backlight.rgb(0, 0, 255)
-            elif val == ALIGNED:
+            elif camera_a == ALIGNED:
                 backlight.rgb(0, 255, 0)
 
-    elif msg.topic == HEADING_CALIBRATION:
-        logger.info("LCD Calibration: " + val)
-        if selected_sensor == "calibration":
+        elif selected_sensor == "calibration":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Calibration")
             lcd.set_cursor_position(0, 2)
-            lcd.write(val)
-            if val == "Sys:3 G:3 A:3 M:3":
+            lcd.write(heading_c)
+            if heading_c == "Sys:3 G:3 A:3 M:3":
                 backlight.rgb(0, 255, 0)
             else:
                 backlight.rgb(255, 255, 255)
 
-    elif msg.topic == HEADING_DEGREES:
-        logger.info("LCD Degrees: " + val)
-        if selected_sensor == "degrees":
+        elif selected_sensor == "degrees":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Degrees")
             lcd.set_cursor_position(0, 2)
-            lcd.write(val)
+            lcd.write(heading_d)
 
-
-
-            # If payload is an int byte array, use: int.from_bytes(msg.payload, byteorder="big"))
-            # int.from_bytes() requires python3: https://docs.python.org/3/library/stdtypes.html#int.from_bytes
 
 
 @nav.on(nav.LEFT)
@@ -193,6 +211,7 @@ def handle_button(ch, evt):
     lcd.set_cursor_position(0, 2)
 
 
+
 if __name__ == "__main__":
     # Parse CLI args
     args = cli.setup_cli_args(cli.mqtt_host, cli.verbose)
@@ -206,6 +225,8 @@ if __name__ == "__main__":
                                on_connect=on_connect,
                                on_message=on_message)
     mqtt_conn.connect()
+
+    Thread(target=lcd_display, args=()).start()
 
     try:
         sleep()
