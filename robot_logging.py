@@ -4,7 +4,7 @@ import argparse
 import logging
 
 import cli_args as cli
-from constants import MQTT_HOST, TOPIC, MQTT_TOPIC
+from constants import MQTT_HOST, LOG_FILE, MQTT_TOPIC, TOPIC
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
@@ -13,24 +13,30 @@ logger = logging.getLogger(__name__)
 
 
 def on_connect(client, userdata, flags, rc):
-    logging.info("Connected with result code: {0}".format(rc))
     # Subscribe to all broker messages
-    client.subscribe(userdata[TOPIC])
+    topic = userdata[TOPIC]
+    client.subscribe(topic)
+    logger.info("Connected, subscribing to topic {0}".format(topic))
+    print("Connected, subscribing to topic {0}".format(topic))
 
 
 def on_message(client, userdata, msg):
     logger.info("{0} : {1}".format(msg.topic, msg.payload))
+    print("{0} : {1}".format(msg.topic, msg.payload))
 
 
 if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
-    cli.mqtt_host(parser),
-    cli.mqtt_topic(parser),
+    cli.mqtt_host(parser)
+    cli.log_file(parser)
+    cli.mqtt_topic(parser)
     args = vars(parser.parse_args())
 
     # Setup logging
-    setup_logging()
+    setup_logging(filename=args[LOG_FILE],
+                  format="%(asctime)s %(levelname)-6s %(message)s",
+                  level=logging.DEBUG)
 
     mqtt_conn = MqttConnection(args[MQTT_HOST],
                                userdata={TOPIC: args[MQTT_TOPIC]},
@@ -46,3 +52,4 @@ if __name__ == "__main__":
         mqtt_conn.disconnect()
 
     logger.info("Exiting...")
+    print("Exiting...")
