@@ -2,7 +2,7 @@
 source ~pi/.profile
 workon py2cv3
 date > ~pi/git/FRC-2017/logs/object-filter.reboot
-sleep 5
+sleep 60
 export PYTHONPATH=${PYTHONPATH}:~pi/git/common-robotics:~pi/git/object-tracking
 python2 ~pi/git/object-tracking/single_object_filter.py --bgr "174, 56, 5"  --width 400 --delay 0.25 --flipy --usb --camera "Front Gear" --http "camera-gear.local:5800" &> ~pi/git/FRC-2017/logs/object-filter.out &
 
