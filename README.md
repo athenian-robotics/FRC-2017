@@ -61,14 +61,14 @@ have access to github.
 
 lidar-gear:
 
-```
+```bash
 su - pi -c ~pi/git/FRC-2017/bin/lidar-right-publisher.sh
 su - pi -c ~pi/git/FRC-2017/bin/lidar-left-publisher.sh
 su - pi -c ~pi/git/FRC-2017/bin/heading-publisher.sh
 ```
 camera-gear:
   
-```
+```bash
 su - pi -c ~pi/git/FRC-2017/bin/object-tracker.sh
 su - pi -c ~pi/git/FRC-2017/bin/gear-front-publisher.sh
 ```
