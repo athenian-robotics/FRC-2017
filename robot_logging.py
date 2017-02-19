@@ -16,13 +16,16 @@ def on_connect(client, userdata, flags, rc):
     # Subscribe to all broker messages
     topic = userdata[TOPIC]
     client.subscribe(topic)
+    setup_logging(filename=args[LOG_FILE],
+                  format="%(asctime)s %(levelname)-6s %(message)s",
+                  level=logging.DEBUG)
     logger.info("Connected, subscribing to topic {0}".format(topic))
-    print("Connected, subscribing to topic {0}".format(topic))
+    #print("Connected, subscribing to topic {0}".format(topic))
 
 
 def on_message(client, userdata, msg):
     logger.info("{0} : {1}".format(msg.topic, msg.payload))
-    print("{0} : {1}".format(msg.topic, msg.payload))
+    #print("{0} : {1}".format(msg.topic, msg.payload))
 
 
 if __name__ == "__main__":
@@ -32,11 +35,6 @@ if __name__ == "__main__":
     cli.log_file(parser)
     cli.mqtt_topic(parser)
     args = vars(parser.parse_args())
-
-    # Setup logging
-    setup_logging(filename=args[LOG_FILE],
-                  format="%(asctime)s %(levelname)-6s %(message)s",
-                  level=logging.DEBUG)
 
     mqtt_conn = MqttConnection(args[MQTT_HOST],
                                userdata={TOPIC: args[MQTT_TOPIC]},
@@ -52,4 +50,4 @@ if __name__ == "__main__":
         mqtt_conn.disconnect()
 
     logger.info("Exiting...")
-    print("Exiting...")
+    #print("Exiting...")
