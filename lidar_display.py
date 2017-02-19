@@ -55,7 +55,7 @@ def on_message(client, userdata, msg):
     logger.info("{0} : {1}".format(msg.topic, val))
 
     if msg.topic == LIDAR_FRONT_LEFT:
-        logger.info("Lidar L: " + val)
+        logger.info("LCD Lidar L: " + val)
         lidar_l = val
         if selected_sensor == "lidar_left":
             lcd.clear()
@@ -69,7 +69,7 @@ def on_message(client, userdata, msg):
                 backlight.rgb(255, 255, 255)
 
     elif msg.topic == LIDAR_FRONT_RIGHT:
-        logger.info("Lidar R: " + val)
+        logger.info("LCD Lidar R: " + val)
         lidar_r = val
         if selected_sensor == "lidar_right":
             lcd.clear()
@@ -83,7 +83,7 @@ def on_message(client, userdata, msg):
                 backlight.rgb(255, 255, 255)
 
     elif msg.topic == CAMERA_1_VALUE:
-        logger.info("Camera Value: " + val)
+        logger.info("LCD Camera Value: " + val)
         if selected_sensor == "camera":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
@@ -92,7 +92,7 @@ def on_message(client, userdata, msg):
             lcd.write(val)
 
     elif msg.topic == CAMERA_1_ALIGNMENT:
-        logger.info("Camera Alignment: " + val)
+        logger.info("LCD Camera Alignment: " + val)
         if selected_sensor == "camera":
             if val == NOT_SEEN:
                 backlight.rgb(255, 0, 0)
@@ -102,7 +102,7 @@ def on_message(client, userdata, msg):
                 backlight.rgb(0, 255, 0)
 
     elif msg.topic == HEADING_CALIBRATION:
-        logger.info("Calibration: " + val)
+        logger.info("LCD Calibration: " + val)
         if selected_sensor == "calibration":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
@@ -115,7 +115,7 @@ def on_message(client, userdata, msg):
                 backlight.rgb(255, 255, 255)
 
     elif msg.topic == HEADING_DEGREES:
-        logger.info("degrees: " + val)
+        logger.info("LCD Degrees: " + val)
         if selected_sensor == "degrees":
             lcd.clear()
             lcd.set_cursor_position(0, 0)
