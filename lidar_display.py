@@ -16,7 +16,7 @@ from utils import sleep
 logger = logging.getLogger(__name__)
 
 # default sensor
-selected_sensor = "camera"
+selected_sensor = HEADINGD
 
 # Constants
 LIDAR_FRONT_LEFT = "lidar/left/mm"
@@ -28,6 +28,12 @@ HEADING_DEGREES = "heading/degrees"
 NOT_SEEN = "not_seen"
 NOT_ALIGNED = "not_aligned"
 ALIGNED = "aligned"
+
+CAMERA = "camera"
+LIDARL = "lidarl"
+LIDARR = "lidarr"
+HEADINGD = "headingd"
+HEADINGC = "headingc"
 
 lidar_l = ""
 lidar_r = ""
@@ -42,10 +48,6 @@ lcd.clear()
 backlight.rgb(255, 255, 255)
 lcd.set_contrast(45)
 lcd.clear()
-lcd.set_cursor_position(0, 0)
-lcd.write("Camera")
-lcd.set_cursor_position(0, 2)
-lcd.write("null")
 
 
 def on_connect(client, userdata, flags, rc):
@@ -93,7 +95,7 @@ def on_message(client, userdata, msg):
 def lcd_display(delay):
     global lidar_r, lidar_l, camera_a, camera_v, heading_d, heading_c
     while True:
-        if selected_sensor == "lidar_left":
+        if selected_sensor == LIDARL:
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Left")
@@ -104,7 +106,7 @@ def lcd_display(delay):
             else:
                 backlight.rgb(255, 255, 255)
 
-        elif selected_sensor == "calibration":
+        elif selected_sensor == HEADINGC:
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Calibration")
@@ -115,14 +117,14 @@ def lcd_display(delay):
             else:
                 backlight.rgb(255, 255, 255)
 
-        elif selected_sensor == "degrees":
+        elif selected_sensor == HEADINGD:
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Degrees")
             lcd.set_cursor_position(0, 2)
             lcd.write(heading_d)
 
-        elif selected_sensor == "lidar_right":
+        elif selected_sensor == LIDARR:
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Right")
@@ -133,7 +135,7 @@ def lcd_display(delay):
             else:
                 backlight.rgb(255, 255, 255)
 
-        elif selected_sensor == "camera":
+        elif selected_sensor == CAMERA:
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Camera")
@@ -153,7 +155,7 @@ def lcd_display(delay):
 @nav.on(nav.LEFT)
 def handle_left(ch, evt):
     global selected_sensor
-    selected_sensor = "lidar_left"
+    selected_sensor = LIDARL
     logger.info("Left Lidar Display")
     lcd.clear()
     backlight.rgb(255, 255, 255)
@@ -166,7 +168,7 @@ def handle_left(ch, evt):
 @nav.on(nav.RIGHT)
 def handle_right(ch, evt):
     global selected_sensor
-    selected_sensor = "lidar_right"
+    selected_sensor = LIDARR
     logger.info("Right Lidar")
     lcd.clear()
     backlight.rgb(255, 255, 255)
@@ -179,7 +181,7 @@ def handle_right(ch, evt):
 @nav.on(nav.BUTTON)
 def handle_button(ch, evt):
     global selected_sensor
-    selected_sensor = "camera"
+    selected_sensor = CAMERA
     logger.info("Camera")
     lcd.clear()
     backlight.rgb(255, 255, 255)
@@ -192,7 +194,7 @@ def handle_button(ch, evt):
 @nav.on(nav.UP)
 def handle_button(ch, evt):
     global selected_sensor
-    selected_sensor = "calibration"
+    selected_sensor = HEADINGC
     logger.info("Calibration")
     lcd.clear()
     backlight.rgb(255, 255, 255)
@@ -205,7 +207,7 @@ def handle_button(ch, evt):
 @nav.on(nav.DOWN)
 def handle_button(ch, evt):
     global selected_sensor
-    selected_sensor = "degrees"
+    selected_sensor = HEADINGD
     logger.info("Degrees")
     lcd.clear()
     backlight.rgb(255, 255, 255)
