@@ -229,7 +229,7 @@ if __name__ == "__main__":
                                on_message=on_message)
     mqtt_conn.connect()
 
-    Thread(target=lcd_display, args=(0.01,)).start()
+    Thread(target=lcd_display, args=(0.1,)).start()
 
     try:
         sleep()
