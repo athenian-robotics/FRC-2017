@@ -109,7 +109,7 @@ def lcd_display(delay):
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Calibration")
-            lcd.set_cursor_position(0, 2)
+            lcd.set_cursor_position(0, 1)
             lcd.write(heading_c)
             if heading_c == "Sys:3 G:3 A:3 M:3":
                 backlight.rgb(0, 255, 0)
@@ -120,7 +120,7 @@ def lcd_display(delay):
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Degrees")
-            lcd.set_cursor_position(0, 2)
+            lcd.set_cursor_position(0, 1)
             lcd.write(heading_d)
 
         elif selected_sensor == LIDARR:
