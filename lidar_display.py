@@ -66,6 +66,13 @@ def on_message(client, userdata, msg):
         logger.info("LCD Lidar L: " + val)
         lidar_l = val
 
+    elif msg.topic == HEADING_CALIBRATION:
+        logger.info("LCD Calibration: " + val)
+        heading_c = val
+
+    elif msg.topic == HEADING_DEGREES:
+        logger.info("LCD Degrees: " + val)
+        heading_d = val
 
     elif msg.topic == LIDAR_FRONT_RIGHT:
         logger.info("LCD Lidar R: " + val)
@@ -80,13 +87,7 @@ def on_message(client, userdata, msg):
         logger.info("LCD Camera Alignment: " + val)
         camera_a = val
 
-    elif msg.topic == HEADING_CALIBRATION:
-        logger.info("LCD Calibration: " + val)
-        heading_c = val
 
-    elif msg.topic == HEADING_DEGREES:
-        logger.info("LCD Degrees: " + val)
-        heading_d = val
 
 
 def lcd_display(delay):
@@ -102,6 +103,24 @@ def lcd_display(delay):
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
+
+        elif selected_sensor == "calibration":
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Calibration")
+            lcd.set_cursor_position(0, 2)
+            lcd.write(heading_c)
+            if heading_c == "Sys:3 G:3 A:3 M:3":
+                backlight.rgb(0, 255, 0)
+            else:
+                backlight.rgb(255, 255, 255)
+
+        elif selected_sensor == "degrees":
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Degrees")
+            lcd.set_cursor_position(0, 2)
+            lcd.write(heading_d)
 
         elif selected_sensor == "lidar_right":
             lcd.clear()
@@ -126,24 +145,6 @@ def lcd_display(delay):
                 backlight.rgb(0, 0, 255)
             elif camera_a == ALIGNED:
                 backlight.rgb(0, 255, 0)
-
-        elif selected_sensor == "calibration":
-            lcd.clear()
-            lcd.set_cursor_position(0, 0)
-            lcd.write("Calibration")
-            lcd.set_cursor_position(0, 2)
-            lcd.write(heading_c)
-            if heading_c == "Sys:3 G:3 A:3 M:3":
-                backlight.rgb(0, 255, 0)
-            else:
-                backlight.rgb(255, 255, 255)
-
-        elif selected_sensor == "degrees":
-            lcd.clear()
-            lcd.set_cursor_position(0, 0)
-            lcd.write("Degrees")
-            lcd.set_cursor_position(0, 2)
-            lcd.write(heading_d)
 
         time.sleep(delay)
 
