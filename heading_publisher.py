@@ -16,6 +16,9 @@ from utils import sleep
 
 logger = logging.getLogger(__name__)
 
+CALIBRATION_BY_VALUES = "9-DOF Sensor calibrated by values"
+CALIBRATION_BY_LOG = "9-DOF Sensor calibrated by log"
+
 HEADING_TOPIC = "heading_topic"
 CALIB_TOPIC = "calib_topic"
 CALIB_PUBLISH = "calib_publish"
@@ -69,7 +72,7 @@ def fetch_data(val, userdata):
                     calibrated_by_log = False
                 else:
                     if not calibrated_by_log:
-                        msg = "9-DOF Sensor calibrated by log"
+                        msg = CALIBRATION_BY_LOG
                         logger.info(msg)
                         client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
                         calibrated_by_log = True
@@ -81,7 +84,7 @@ def fetch_data(val, userdata):
                     mag_calib = int(calibs[2].split(":")[1])
                     acc_calib = int(calibs[3].split(":")[1])
                     if sys_calib == 3 and gyro_calib == 3 and mag_calib == 3 and acc_calib == 3:
-                        msg = "9-DOF Sensor calibrated by values"
+                        msg = CALIBRATION_BY_VALUES
                         logger.info(msg)
                         client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
                         calibrated_by_values = True
