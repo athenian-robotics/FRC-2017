@@ -55,6 +55,8 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(LIDAR_FRONT_RIGHT)
     client.subscribe(CAMERA_1_VALUE)
     client.subscribe(CAMERA_1_ALIGNMENT)
+    client.subscribe(HEADING_DEGREES)
+    client.subscribe(HEADING_CALIBRATION)
 
 
 def on_message(client, userdata, msg):
@@ -67,13 +69,7 @@ def on_message(client, userdata, msg):
         logger.info("LCD Lidar L: " + val)
         lidar_l = val
 
-    elif msg.topic == HEADING_CALIBRATION:
-        logger.info("LCD Calibration: " + val)
-        heading_c = val
 
-    elif msg.topic == HEADING_DEGREES:
-        logger.info("LCD Degrees: " + val)
-        heading_d = val
 
     elif msg.topic == LIDAR_FRONT_RIGHT:
         logger.info("LCD Lidar R: " + val)
@@ -87,6 +83,14 @@ def on_message(client, userdata, msg):
     elif msg.topic == CAMERA_1_ALIGNMENT:
         logger.info("LCD Camera Alignment: " + val)
         camera_a = val
+
+    elif msg.topic == HEADING_CALIBRATION:
+        logger.info("LCD Calibration: " + val)
+        heading_c = val
+
+    elif msg.topic == HEADING_DEGREES:
+        logger.info("LCD Degrees: " + val)
+        heading_d = val
 
 
 
@@ -104,24 +108,6 @@ def lcd_display(delay):
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
-
-        elif selected_sensor == HEADINGC:
-            lcd.clear()
-            lcd.set_cursor_position(0, 0)
-            lcd.write("Calibration")
-            lcd.set_cursor_position(0, 1)
-            lcd.write(heading_c)
-            if heading_c == "Sys:3 G:3 A:3 M:3":
-                backlight.rgb(0, 255, 0)
-            else:
-                backlight.rgb(255, 255, 255)
-
-        elif selected_sensor == HEADINGD:
-            lcd.clear()
-            lcd.set_cursor_position(0, 0)
-            lcd.write("Degrees")
-            lcd.set_cursor_position(0, 1)
-            lcd.write(heading_d)
 
         elif selected_sensor == LIDARR:
             lcd.clear()
@@ -146,6 +132,24 @@ def lcd_display(delay):
                 backlight.rgb(0, 0, 255)
             elif camera_a == ALIGNED:
                 backlight.rgb(0, 255, 0)
+
+        elif selected_sensor == HEADINGC:
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Calibration")
+            lcd.set_cursor_position(0, 1)
+            lcd.write(heading_c)
+            if heading_c == "Sys:3 G:3 A:3 M:3":
+                backlight.rgb(0, 255, 0)
+            else:
+                backlight.rgb(255, 255, 255)
+
+        elif selected_sensor == HEADINGD:
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Degrees")
+            lcd.set_cursor_position(0, 1)
+            lcd.write(heading_d)
 
         time.sleep(delay)
 
