@@ -15,9 +15,6 @@ from utils import sleep
 
 logger = logging.getLogger(__name__)
 
-# default sensor
-selected_sensor = HEADINGD
-
 # Constants
 LIDAR_FRONT_LEFT = "lidar/left/mm"
 LIDAR_FRONT_RIGHT = "lidar/right/mm"
@@ -42,6 +39,8 @@ camera_a = ""
 heading_c = ""
 heading_d = ""
 
+# default sensor
+selected_sensor = HEADINGD
 
 # lcd initialization
 lcd.clear()
