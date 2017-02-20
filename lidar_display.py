@@ -40,7 +40,7 @@ heading_c = ""
 heading_d = ""
 
 # default sensor
-selected_sensor = HEADINGD
+selected_sensor = HEADINGC
 
 # lcd initialization
 lcd.clear()
