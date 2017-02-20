@@ -12,6 +12,7 @@ from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
+from heading_publisher import CALIBRATION_BY_VALUES
 
 logger = logging.getLogger(__name__)
 
@@ -135,7 +136,7 @@ def lcd_display(delay):
             lcd.write("Calibration")
             lcd.set_cursor_position(0, 2)
             lcd.write(heading_c)
-            if heading_c == "Sys:3 G:3 A:3 M:3":
+            if heading_c == CALIBRATION_BY_VALUES:
                 backlight.rgb(0, 255, 0)
             else:
                 backlight.rgb(255, 255, 255)
