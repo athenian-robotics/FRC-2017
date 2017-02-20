@@ -7,6 +7,7 @@ import cli_args as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
 import dothat.touch as nav
+import time
 from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
 from utils import setup_logging
@@ -88,7 +89,7 @@ def on_message(client, userdata, msg):
         heading_d = val
 
 
-def lcd_display():
+def lcd_display(delay):
     global lidar_r, lidar_l, camera_a, camera_v, heading_d, heading_c
     while True:
         if selected_sensor == "lidar_left":
@@ -143,6 +144,8 @@ def lcd_display():
             lcd.write("Degrees")
             lcd.set_cursor_position(0, 2)
             lcd.write(heading_d)
+
+        time.sleep(delay)
 
 
 
@@ -226,7 +229,7 @@ if __name__ == "__main__":
                                on_message=on_message)
     mqtt_conn.connect()
 
-    Thread(target=lcd_display, args=()).start()
+    Thread(target=lcd_display, args=(0.01,)).start()
 
     try:
         sleep()
