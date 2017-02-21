@@ -68,14 +68,13 @@ if __name__ == "__main__":
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
     serial_reader = SerialReader()
-    moving_avg = MovingAverage(args[AVG_SIZE])
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
-                                           MOVING_AVERAGE: moving_avg},
+                                           MOVING_AVERAGE: (MovingAverage(args[AVG_SIZE]))},
                                  on_connect=on_connect)
     mqtt_client.connect()
 

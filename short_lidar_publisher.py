@@ -4,10 +4,10 @@ import argparse
 import logging
 
 import cli_args as cli
-from bad_values_queue import BadValuesQueue
 from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC, DEVICE_ID
 from moving_average import MovingAverage
 from mqtt_connection import MqttConnection, PAHO_CLIENT
+from out_of_range_values import OutOfRangeValues
 from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 SERIAL_READER = "serial_reader"
 MOVING_AVERAGE = "moving_average"
-BAD_VALUES = "bad_values"
+OOR_VALUES = "oor_values"
 DEVICE = "device"
 TOLERANCE_THRESH = 5
 OUT_OF_RANGE = "-1".encode("utf-8")
@@ -35,7 +35,7 @@ def fetch_data(mm_str, userdata):
     topic = userdata[TOPIC]
     client = userdata[PAHO_CLIENT]
     moving_avg = userdata[MOVING_AVERAGE]
-    bad_values = userdata[BAD_VALUES]
+    oor_values = userdata[OOR_VALUES]
 
     # Values sometimes get compacted together, take the later value if that happens since it's newer
     if "\r" in mm_str:
@@ -45,10 +45,10 @@ def fetch_data(mm_str, userdata):
 
     if mm <= 155 or mm > 2000:
         # Filter out bad data
-        bad_values.mark()
-        if bad_values.is_invalid(1000):
+        oor_values.mark()
+        if oor_values.is_out_of_range(1000):
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
-            bad_values.clear()
+            oor_values.clear()
     else:
         ## Deal with good data
         moving_avg.add(mm)
@@ -73,16 +73,14 @@ if __name__ == "__main__":
 
     serial_reader = SerialReader()
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
-    moving_avg = MovingAverage(size=3)
-    bad_values = BadValuesQueue(size=10)
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/mm".format(args[DEVICE]),
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
-                                           MOVING_AVERAGE: moving_avg,
-                                           BAD_VALUES: bad_values},
+                                           MOVING_AVERAGE: (MovingAverage(size=3)),
+                                           OOR_VALUES: (OutOfRangeValues(size=10))},
                                  on_connect=on_connect)
     mqtt_client.connect()
 
