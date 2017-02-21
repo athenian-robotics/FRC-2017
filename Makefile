@@ -26,6 +26,7 @@ clear-pyc:
 clear-logs:
 	rm -f ~/git/FRC-2017/logs/*.out
 	rm -f ~/git/FRC-2017/logs/*.reboot
+	rm -f ~/git/FRC-2017/logs/*.log
 
 camera-gear-logs:
 	echo "********** Camera Gear Last Reboot Time **********"
