@@ -4,18 +4,19 @@ import argparse
 import logging
 
 import cli_args as cli
+from bad_values_queue import BadValuesQueue
 from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC, DEVICE_ID
-from mqtt_connection import MqttConnection, PAHO_CLIENT
 from moving_average import MovingAverage
+from mqtt_connection import MqttConnection, PAHO_CLIENT
 from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
 
-
 logger = logging.getLogger(__name__)
 
 last_val = 0
-avg = MovingAverage()
+moving_avg = MovingAverage()
+bad_values = BadValuesQueue()
 
 SERIAL_READER = "serial_reader"
 DEVICE = "device"
@@ -25,10 +26,10 @@ OUT_OF_RANGE = "-1".encode("utf-8")
 
 def on_connect(client, userdata, flags, rc):
     global last_val
-    global avg
+    global moving_avg
     logger.info("Connected with result code: {0}".format(rc))
     last_val = 0
-    avg = MovingAverage()
+    moving_avg = MovingAverage()
     serial_reader = userdata[SERIAL_READER]
     serial_reader.start(func=fetch_data,
                         userdata=userdata,
@@ -38,8 +39,7 @@ def on_connect(client, userdata, flags, rc):
 
 def fetch_data(mm_str, userdata):
     # Using globals to keep running averages in check
-    global avg
-    global last_val
+    global moving_avg, bad_values
 
     topic = userdata[TOPIC]
     client = userdata[PAHO_CLIENT]
@@ -50,20 +50,20 @@ def fetch_data(mm_str, userdata):
 
     mm = int(mm_str)
 
-    if mm < 155 or mm > 2000:  # out of range, reset running avg
-        # avg.clear()
-        if last_val != -1:
+    if mm <= 155 or mm > 2000:
+        bad_values.mark()
+        if bad_values.is_invalid(1000):
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
-            last_val = -1
+            return
 
-    elif avg.average() is None or abs(avg.average() - mm) < TOLERANCE_THRESH:
-        avg.add(mm)
-        last_val = mm
-    else:
+    moving_avg.add(mm)
+    avg = moving_avg.average()
+
+    if not avg:
         client.publish(topic, payload=str(mm).encode("utf-8"), qos=0)
-        # avg.clear()
-        avg.add(mm)
-        last_val = mm
+    else:
+        if abs(mm - avg) > TOLERANCE_THRESH:
+            client.publish(topic, payload=str(avg).encode("utf-8"), qos=0)
 
 
 if __name__ == "__main__":
