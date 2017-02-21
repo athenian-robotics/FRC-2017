@@ -78,6 +78,7 @@ $ sudo pip install grpcio
 $ sudo pip install imutils
 $ sudo pip install paho-mqtt
 $ sudo pip install blinkt
+$ sudo pip install requests
 $ sudo pip install numpy
 $ sudo pip install pyserial
 ```

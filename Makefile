@@ -23,6 +23,10 @@ clear-pyc:
 	rm -f ~/git/object-tracking/*.pyc
 	rm -f ~/git/common-robotics/*.pyc
 
+clear-logs:
+	rm -f ~/git/FRC-2017/logs/*.out
+	rm -f ~/git/FRC-2017/logs/*.reboot
+
 camera-gear-logs:
 	echo "********** Camera Gear Last Reboot Time **********"
 	ssh camera-gear last reboot | head -1
