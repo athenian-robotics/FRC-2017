@@ -44,17 +44,17 @@ def fetch_data(mm_str, userdata):
     mm = int(mm_str)
 
     if mm <= 155 or mm > 2000:
+        # Filter out bad data
         bad_values.mark()
         if bad_values.is_invalid(1000):
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
             bad_values.clear()
-        return
-
-    moving_avg.add(mm)
-    avg = moving_avg.average()
-
-    if not avg or abs(mm - avg) > TOLERANCE_THRESH:
-        client.publish(topic, payload=str(mm).encode("utf-8"), qos=0)
+    else:
+        ## Deal with good data
+        moving_avg.add(mm)
+        avg = moving_avg.average()
+        if not avg or abs(mm - avg) > TOLERANCE_THRESH:
+            client.publish(topic, payload=str(mm).encode("utf-8"), qos=0)
 
 
 if __name__ == "__main__":
