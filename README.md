@@ -65,16 +65,19 @@ have access to github.
 
 ### PIP Actions
 
-If you are installing on a Raspbian using the *pysearchimages* distro, type this before installing  python packages:
+If you are installing on a Raspbian using the *pysearchimages* distro, do not use sudo in the pip commands below
+and type this before installing the required python packages:
 ```bash
 $ source start_py2cv3.sh
 ```
+
 
 ```bash
 $ sudo pip install --upgrade pip
 $ sudo pip install grpcio
 $ sudo pip install imutils
 $ sudo pip install paho-mqtt
+$ sudo pip install blinkt
 $ sudo pip install numpy
 $ sudo pip install pyserial
 ```
@@ -88,7 +91,7 @@ $ sudo apt-get install python-blinkt
 $ sudo apt-get install nginx
 ```
 
-## rc.local edits (append above ```exit 0```)
+## /etc/rc.local scripts (append above `exit 0`)
 
 lidar-gear:
 
@@ -99,21 +102,26 @@ su - pi -c ~pi/git/FRC-2017/bin/heading-publisher.sh
 ```
 camera-gear:
   
-```bash# Tune exposure on camera
-v4l2-ctl -d /dev/video0 -c exposure_auto=1 -c exposure_absolute=20
-\# We have two configurations: object tracking and color picking
-\# They both need exclusive camera access, so if one of the two is enabled,
-\# the other needs to be commented out.
-```
- Object tracking
 ```bash
+# Tune exposure on camera
+v4l2-ctl -d /dev/video0 -c exposure_auto=1 -c exposure_absolute=20
+
+# We have two configurations: object tracking and color picking
+# They both need exclusive camera access, so if one of the two is enabled,
+# the other needs to be commented out.
+
 #su - pi -c ~pi/git/FRC-2017/bin/dual-tape-tracker.sh
 su - pi -c ~pi/git/FRC-2017/bin/dual-tape-peg-tracker.sh
 su - pi -c ~pi/git/FRC-2017/bin/gear-front-publisher.sh
-```
- Color picking
-```bash
+
 #su - pi -c ~pi/git/FRC-2017/bin/color-picker.sh
+```
+
+camera-rope:
+  
+```bash
+su - pi -c ~pi/git/FRC-2017/bin/rope-tracker.sh
+#su - pi -c ~pi/git/FRC-2017/bin/rope-publisher.sh
 ```
 
 lcd1:
@@ -123,17 +131,4 @@ su - pi -c ~pi/git/FRC-2017/bin/clear-logs.sh
 su - pi -c ~pi/git/FRC-2017/bin/lcd1-display.sh
 ```
 
-## Listening to MQTT traffic
-
-Listen to all user msgs with:
-
-```bash
-$ mosquitto_sub -h mqtt-turtle.local -t "#"
-```
-
-Listen to all system msgs with:
-
-```bash
-$ mosquitto_sub -h mqtt-turtle.local -t "\$SYS/#"
-```
 
