@@ -6,7 +6,7 @@ from threading import Thread
 
 import cli_args as cli
 from cli_args import setup_cli_args
-from constants import CAMERA_NAME, MQTT_HOST, LOG_LEVEL, GRPC_HOST
+from constants import MQTT_HOST, LOG_LEVEL, GRPC_HOST, TOPIC, MQTT_TOPIC
 from location_client import LocationClient
 from mqtt_connection import MqttConnection
 from utils import setup_logging
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     # Parse CLI args
-    args = setup_cli_args(cli.grpc_host, cli.mqtt_host, cli.camera_name, cli.verbose)
+    args = setup_cli_args(cli.grpc_host, cli.mqtt_host, cli.mqtt_topic(), cli.verbose)
 
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
@@ -37,7 +37,7 @@ if __name__ == "__main__":
             try:
                 x_loc = locations.get_x()
                 if x_loc is not None and abs(x_loc[0] - prev_value) > 1:
-                    result, mid = client.publish("{0}/x".format(userdata[CAMERA_NAME]),
+                    result, mid = client.publish("{0}/x".format(userdata[MQTT_TOPIC]),
                                                  payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
                     prev_value = x_loc[0]
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     # Setup MQTT client
     mqtt_conn = MqttConnection(args[MQTT_HOST],
-                               userdata={CAMERA_NAME: args[CAMERA_NAME]},
+                               userdata={TOPIC: args[MQTT_TOPIC]},
                                on_connect=on_connect)
     mqtt_conn.connect()
 
