@@ -26,7 +26,8 @@
 ## Arduino Device IDs
 | Location                  | ID                                                      |
 |:--------------------------|:--------------------------------------------------------|
-|Heading                    | 95530343235351A0E0A2                                    |
+|Heading (Arduino)          | 95530343235351A0E0A2                                    |
+|Heading (Metro)            | 00FEBABC                                                |
 |Left lidar                 | 7543331373935160E190                                    |
 |Right lidar                | 95538333535351019130                                    |
 |Forward lidar              |                                                         |
