@@ -6,9 +6,6 @@ help:
 robot:
 	./bin/push-to-robot.sh
 
-github:
-	./bin/pull-from-github.sh
-
 github-pull:
 	./bin/pull-from-github.sh
 
@@ -21,6 +18,10 @@ reboot:
 shutdown:
 	./bin/shutdown-robot.sh
 
+clear-pyc:
+	rm -f ~/git/FRC-2017/*.pyc
+	rm -f ~/git/object-tracking/*.pyc
+	rm -f ~/git/common-robotics/*.pyc
 
 camera-gear-logs:
 	echo "********** Camera Gear Last Reboot Time **********"
