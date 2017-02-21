@@ -14,22 +14,16 @@ from utils import sleep
 
 logger = logging.getLogger(__name__)
 
-last_val = 0
-moving_avg = MovingAverage(size=3)
-bad_values = BadValuesQueue(size=10)
-
 SERIAL_READER = "serial_reader"
+MOVING_AVERAGE = "moving_average"
+BAD_VALUES = "bad_values"
 DEVICE = "device"
 TOLERANCE_THRESH = 5
 OUT_OF_RANGE = "-1".encode("utf-8")
 
 
 def on_connect(client, userdata, flags, rc):
-    global last_val
-    global moving_avg
     logger.info("Connected with result code: {0}".format(rc))
-    last_val = 0
-    moving_avg = MovingAverage()
     serial_reader = userdata[SERIAL_READER]
     serial_reader.start(func=fetch_data,
                         userdata=userdata,
@@ -38,11 +32,10 @@ def on_connect(client, userdata, flags, rc):
 
 
 def fetch_data(mm_str, userdata):
-    # Using globals to keep running averages in check
-    global moving_avg, bad_values
-
     topic = userdata[TOPIC]
     client = userdata[PAHO_CLIENT]
+    moving_avg = userdata[MOVING_AVERAGE]
+    bad_values = userdata[BAD_VALUES]
 
     # Values sometimes get compacted together, take the later value if that happens since it's newer
     if "\r" in mm_str:
@@ -52,7 +45,7 @@ def fetch_data(mm_str, userdata):
 
     if mm <= 155 or mm > 2000:
         bad_values.mark()
-        if bad_values.is_invalid(2000):
+        if bad_values.is_invalid(1000):
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
             bad_values.clear()
         return
@@ -65,7 +58,6 @@ def fetch_data(mm_str, userdata):
 
 
 if __name__ == "__main__":
-
     # Parse CLI args
     parser = argparse.ArgumentParser()
     cli.mqtt_host(parser),
@@ -78,15 +70,19 @@ if __name__ == "__main__":
 
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
-    port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
     serial_reader = SerialReader()
+    port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
+    moving_avg = MovingAverage(size=3)
+    bad_values = BadValuesQueue(size=10)
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/mm".format(args[DEVICE]),
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
-                                           SERIAL_READER: serial_reader},
+                                           SERIAL_READER: serial_reader,
+                                           MOVING_AVERAGE: moving_avg,
+                                           BAD_VALUES: bad_values},
                                  on_connect=on_connect)
     mqtt_client.connect()
 
