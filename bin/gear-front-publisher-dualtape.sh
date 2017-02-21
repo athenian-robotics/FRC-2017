@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 source ~pi/.profile
 workon py2cv3
 date > ~pi/git/FRC-2017/logs/gear-publisher-dualtape.reboot
