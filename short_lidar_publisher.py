@@ -6,15 +6,15 @@ import logging
 import cli_args as cli
 from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC, DEVICE_ID
 from mqtt_connection import MqttConnection, PAHO_CLIENT
-from moving_average import MovingAverage
 from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
 
 logger = logging.getLogger(__name__)
 
+total_sum = 0
+total_count = 0
 last_val = 0
-avg = MovingAverage()
 
 SERIAL_READER = "serial_reader"
 DEVICE = "device"
@@ -23,11 +23,13 @@ OUT_OF_RANGE = "-1".encode("utf-8")
 
 
 def on_connect(client, userdata, flags, rc):
+    global total_sum
+    global total_count
     global last_val
-    global avg
     logger.info("Connected with result code: {0}".format(rc))
+    total_sum = 0
+    total_count = 0
     last_val = 0
-    avg = MovingAverage()
     serial_reader = userdata[SERIAL_READER]
     serial_reader.start(func=fetch_data,
                         userdata=userdata,
@@ -37,7 +39,8 @@ def on_connect(client, userdata, flags, rc):
 
 def fetch_data(mm_str, userdata):
     # Using globals to keep running averages in check
-    global avg
+    global total_count
+    global total_sum
     global last_val
 
     topic = userdata[TOPIC]
@@ -49,19 +52,20 @@ def fetch_data(mm_str, userdata):
 
     mm = int(mm_str)
 
-    if mm < 155 or mm > 2000:  # out of range, reset running avg
-        avg.clear()
-        if last_val != -1:
-            client.publish(topic, payload=OUT_OF_RANGE, qos=0)
-            last_val = -1
+    if (mm < 0 or mm > 2000) and last_val != -1:  # out of range, reset running avg
+        total_sum = 0
+        total_count = 0
+        client.publish(topic, payload=OUT_OF_RANGE, qos=0)
+        last_val = -1
 
-    elif avg.average() is None or abs(avg.average() - mm) < TOLERANCE_THRESH:
-        avg.add(mm)
+    elif (total_sum + total_count == 0) or abs((total_sum / total_count) - mm) < TOLERANCE_THRESH:
+        total_sum += mm
+        total_count += 1
         last_val = mm
     else:
         client.publish(topic, payload=str(mm).encode("utf-8"), qos=0)
-        avg.clear()
-        avg.add(mm)
+        total_sum = 0 + mm
+        total_count = 1
         last_val = mm
 
 
