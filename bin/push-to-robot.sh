@@ -4,6 +4,7 @@
 echo "Pushing common-robotics to robot"
 cd ~/git/common-robotics
 git push camera-gear master
+git push camera-rope master
 git push lidar-gear master
 git push lcd1 master
 
@@ -11,6 +12,7 @@ git push lcd1 master
 echo "Pushing FRC-2017 to robot"
 cd ~/git/FRC-2017
 git push camera-gear master
+git push camera-rope master
 git push lidar-gear master
 git push lcd1 master
 
@@ -18,5 +20,6 @@ git push lcd1 master
 echo "Pushing object-tracking to robot"
 cd ~/git/object-tracking
 git push camera-gear master
+git push camera-rope master
 
 

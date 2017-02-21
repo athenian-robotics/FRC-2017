@@ -6,6 +6,7 @@
 |:---:|:---------------------------|:---------------------------------------------------|
 | 12  | **mqtt-turtle.local**      | none                                               |
 | 11  | **camera-gear.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
+| 31  | **camera-rope.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
 | 10  | **lidar-gear.local**       | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
 | 24  | **lcd1.local**             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
 
@@ -57,6 +58,31 @@ have access to github.
 
 * [Makefile commands](https://github.com/athenian-robotics/FRC-2017/wiki/Makefile-commands)
 * [Raspi boot scripts](https://github.com/athenian-robotics/FRC-2017/wiki/Raspi-boot-scripts)
+
+## Camera Image Requirements
+
+* Repos: [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)  
+
+### PIP Actions
+```bash
+$ sudo pip install --upgrade pip
+$ sudo pip install grpcio
+$ sudo pip install imutils
+$ sudo pip install paho-mqtt
+$ sudo apt-get install python-blinkt
+$ sudo pip install numpy
+$ sudo pip install pyserial
+```
+
+### apt-get Actions
+```bash
+$ sudo apt-get install git
+$ sudo apt-get install python
+$ sudo apt-get install python-dev
+$ sudo apt-get install nginx
+```
+
+
 
 ## rc.local edits (append above ```exit 0```)
 

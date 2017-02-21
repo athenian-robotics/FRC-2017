@@ -22,13 +22,21 @@ shutdown:
 	./bin/shutdown-robot.sh
 
 
-camera-logs:
+camera-gear-logs:
 	echo "********** Camera Gear Last Reboot Time **********"
 	ssh camera-gear last reboot | head -1
 	echo "********** Camera Gear Object Tracker **********"
 	ssh camera-gear cat /home/pi/git/FRC-2017/logs/dual-tape-tracker.out
 	echo "********** Camera Gear Publisher **********"
-	ssh camera-gear cat /home/pi/git/FRC-2017/logs/gear-front-publisher.out
+	ssh camera-gear cat /home/pi/git/FRC-2017/logs/gear-publisher.out
+
+camera-rope-logs:
+	echo "********** Camera Rope Last Reboot Time **********"
+	ssh camera-rope last reboot | head -1
+	echo "********** Camera Rope Object Tracker **********"
+	ssh camera-rope cat /home/pi/git/FRC-2017/logs/rope-tracker.out
+	echo "********** Camera Rope Publisher **********"
+	ssh camera-rope cat /home/pi/git/FRC-2017/logs/rope-publisher.out
 
 lidar-logs:
 	echo "********** Lidar Gear Last Reboot Time **********"
