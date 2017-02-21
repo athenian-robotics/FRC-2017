@@ -55,7 +55,7 @@ def fetch_data(mm_str, userdata):
         if bad_values.is_invalid(500):
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
             bad_values.clear()
-            return
+        return
 
     moving_avg.add(mm)
     avg = moving_avg.average()
