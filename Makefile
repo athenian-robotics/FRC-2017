@@ -9,6 +9,12 @@ robot:
 github:
 	./bin/pull-from-github.sh
 
+github-pull:
+	./bin/pull-from-github.sh
+
+github-push:
+	./bin/push-to-github.sh
+
 reboot:
 	./bin/reboot-robot.sh
 
