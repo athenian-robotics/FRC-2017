@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 last_val = 0
 moving_avg = MovingAverage(size=3)
-bad_values = BadValuesQueue()
+bad_values = BadValuesQueue(size=10)
 
 SERIAL_READER = "serial_reader"
 DEVICE = "device"
@@ -52,7 +52,7 @@ def fetch_data(mm_str, userdata):
 
     if mm <= 155 or mm > 2000:
         bad_values.mark()
-        if bad_values.is_invalid(1000):
+        if bad_values.is_invalid(2000):
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
             bad_values.clear()
         return
@@ -60,11 +60,8 @@ def fetch_data(mm_str, userdata):
     moving_avg.add(mm)
     avg = moving_avg.average()
 
-    if not avg:
+    if not avg or abs(mm - avg) > TOLERANCE_THRESH:
         client.publish(topic, payload=str(mm).encode("utf-8"), qos=0)
-    else:
-        if abs(mm - avg) > TOLERANCE_THRESH:
-            client.publish(topic, payload=str(int(mm)).encode("utf-8"), qos=0)
 
 
 if __name__ == "__main__":
