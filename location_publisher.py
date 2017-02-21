@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     # Parse CLI args
-    args = setup_cli_args(cli.grpc_host, cli.mqtt_host, cli.mqtt_topic(), cli.verbose)
+    args = setup_cli_args(cli.grpc_host, cli.mqtt_host, cli.mqtt_topic, cli.verbose)
 
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])

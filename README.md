@@ -64,12 +64,17 @@ have access to github.
 * Repos: [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)  
 
 ### PIP Actions
+
+If you are installing on a Raspbian using the *pysearchimages* distro, type this before installing  python packages:
+```bash
+$ source start_py2cv3.sh
+```
+
 ```bash
 $ sudo pip install --upgrade pip
 $ sudo pip install grpcio
 $ sudo pip install imutils
 $ sudo pip install paho-mqtt
-$ sudo apt-get install python-blinkt
 $ sudo pip install numpy
 $ sudo pip install pyserial
 ```
@@ -79,10 +84,9 @@ $ sudo pip install pyserial
 $ sudo apt-get install git
 $ sudo apt-get install python
 $ sudo apt-get install python-dev
+$ sudo apt-get install python-blinkt
 $ sudo apt-get install nginx
 ```
-
-
 
 ## rc.local edits (append above ```exit 0```)
 
