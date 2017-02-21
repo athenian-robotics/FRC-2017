@@ -52,7 +52,7 @@ def fetch_data(mm_str, userdata):
 
     if mm <= 155 or mm > 2000:
         bad_values.mark()
-        if bad_values.is_invalid(500):
+        if bad_values.is_invalid(1000):
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
             bad_values.clear()
         return
