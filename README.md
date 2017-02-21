@@ -65,23 +65,40 @@ have access to github.
 
 ### PIP Actions
 
-If you are installing on a Raspbian using the *pysearchimages* distro, do not use sudo in the pip commands below
-and type this before installing the required python packages:
+
+Raspbian with the *pysearchimages* distro (has OpenCV 3.2 package):
+
 ```bash
 $ source start_py2cv3.sh
+$
+$ pip install --upgrade pip
+$ pip install grpcio
+$ pip install imutils
+$ pip install paho-mqtt
+$ pip install flask
+$ pip install requests
+$ pip install blinkt
+$ pip install numpy
+$ pip install pyserial
 ```
 
+Vanilla Raspbian:
 
 ```bash
+$ source start_py2cv3.sh
+$
 $ sudo pip install --upgrade pip
 $ sudo pip install grpcio
 $ sudo pip install imutils
 $ sudo pip install paho-mqtt
-$ sudo pip install blinkt
+$ sudo pip install flask
 $ sudo pip install requests
+$ sudo pip install blinkt
 $ sudo pip install numpy
 $ sudo pip install pyserial
 ```
+
+
 
 ### apt-get Actions
 ```bash
