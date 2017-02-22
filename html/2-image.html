@@ -136,13 +136,23 @@
         }
 
         function setButton0() {
+            color = paused[0] ? red : green
+            button0 = document.getElementById('pause0');
+            button0.style.backgroundColor = color;
+            button0.value = paused[0] ? 'Resume' : 'Pause';
+
             image0 = document.getElementById('image0');
-            image0.style.borderColor = paused[0] ? red : green;
+            image0.style.borderColor = color;
         }
 
         function setButton1() {
+            color = paused[1] ? red : green
+            button1 = document.getElementById('pause1');
+            button1.style.backgroundColor = color;
+            button1.value = paused[1] ? 'Resume' : 'Pause';
+
             image1 = document.getElementById('image1');
-            image1.style.borderColor = paused[1] ? red : green;
+            image1.style.borderColor = color;
         }
 
         function togglePause0() {
