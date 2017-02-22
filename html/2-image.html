@@ -82,6 +82,8 @@
         var red = '#FF3B22'
         var green = '#14CC06'
         var paused = [false, false];
+        var gear_url = 'http://camera-gear.local:5800/image.jpg'
+        var rope_url = 'http://camera-rope.local:5800/image.jpg'
 
         window.onload = function () {
             document.getElementById('header0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
@@ -109,7 +111,7 @@
                     warning0.style.backgroundColor = red
                     setTimeout(function(){ loadImage0(); },  1000);
                 }
-                image0.src = 'http://camera-gear.local:5800/image.jpg';
+                image0.src = gear_url;
             }
         }
 
@@ -129,7 +131,7 @@
                     warning1.style.backgroundColor = red
                     setTimeout(function(){ loadImage1(); },  1000);
                 }
-                image1.src = 'http://camera-rope.local:5800/image.jpg';
+                image1.src = rope_url;
             }
         }
 
