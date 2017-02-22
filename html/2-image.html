@@ -96,51 +96,51 @@
         function loadImage0() {
             if (!(paused[0])) {
                 warning = document.getElementById('status0')
-                image = new Image();
-                image.onload = function(){
-                    warning.innerHTML = "Connected to image server";
+                image0 = new Image();
+                image0.onload = function(){
+                    warning.innerHTML = "Connected to camera gear server";
                     warning.style.backgroundColor = green
                     ctx = document.getElementById('image0').getContext('2d');
-                    ctx.drawImage(image, 0, 0);
+                    ctx.drawImage(image0, 0, 0);
                     setTimeout(function(){ loadImage0(); }, _DELAY_SECS_ * 1000);
                 };
-                image.onerror = function(){
-                    warning.innerHTML = "Disconnected from image server";
+                image0.onerror = function(){
+                    warning.innerHTML = "Disconnected from camera gear server";
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage0(); },  1000);
                 }
-                image.src = 'http://camera-gear.local:5800/image.jpg';
+                image0.src = 'http://camera-gear.local:5800/image.jpg';
             }
         }
 
         function loadImage1() {
             if (!(paused[1])) {
                 warning = document.getElementById('status1')
-                image = new Image();
-                image.onload = function(){
-                    warning.innerHTML = "Connected to image server";
+                image1 = new Image();
+                image1.onload = function(){
+                    warning.innerHTML = "Connected to camera rope server";
                     warning.style.backgroundColor = green
                     ctx = document.getElementById('image1').getContext('2d');
-                    ctx.drawImage(image, 0, 0);
+                    ctx.drawImage(image1, 0, 0);
                     setTimeout(function(){ loadImage1(); }, _DELAY_SECS_ * 1000);
                 };
-                image.onerror = function(){
-                    warning.innerHTML = "Disconnected from image server";
+                image1.onerror = function(){
+                    warning.innerHTML = "Disconnected from camera rope server";
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage1(); },  1000);
                 }
-                image.src = 'http://camera-rope.local:5800/image.jpg';
+                image1.src = 'http://camera-rope.local:5800/image.jpg';
             }
         }
 
         function setButton0() {
-            image = document.getElementById('image0');
-            image.style.borderColor = paused[0] ? red : green;
+            image0 = document.getElementById('image0');
+            image0.style.borderColor = paused[0] ? red : green;
         }
 
         function setButton1() {
-            image = document.getElementById('image1');
-            image.style.borderColor = paused[1] ? red : green;
+            image1 = document.getElementById('image1');
+            image1.style.borderColor = paused[1] ? red : green;
         }
 
         function togglePause0() {
