@@ -76,8 +76,6 @@
           box-shadow: 0 5px #666;
           transform: translateY(4px);
         }
-
-
     </style>
 
     <script>
@@ -88,42 +86,73 @@
         window.onload = function () {
             document.getElementById('header0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
             setButton(0);
-            loadImage(0, 'http://camera-gear.local:5800/image.jpg');
+            loadImage0();
 
             document.getElementById('header1').innerHTML = "Rope Camera (_DELAY_SECS_ secs)";
             setButton(1);
-            loadImage(1, 'http://camera-rope.local:5800/image.jpg');
+            loadImage1();
         };
 
-        function loadImage(num, url) {
-            if (!(paused[num])) {
-                warning = document.getElementById('status' + num)
+        function loadImage0() {
+            if (!(paused[0])) {
+                warning = document.getElementById('status0')
                 image = new Image();
                 image.onload = function(){
                     warning.innerHTML = "Connected to image server";
                     warning.style.backgroundColor = green
-                    ctx = document.getElementById('image' + num).getContext('2d');
+                    ctx = document.getElementById('image0').getContext('2d');
                     ctx.drawImage(image, 0, 0);
-                    setTimeout(function(){ loadImage(num, url); }, _DELAY_SECS_ * 1000);
+                    setTimeout(function(){ loadImage0(); }, _DELAY_SECS_ * 1000);
                 };
                 image.onerror = function(){
                     warning.innerHTML = "Disconnected from image server";
                     warning.style.backgroundColor = red
-                    setTimeout(function(){ loadImage(num, url); },  1000);
+                    setTimeout(function(){ loadImage0(); },  1000);
                 }
-                image.src = url;
+                image.src = 'http://camera-gear.local:5800/image.jpg';
             }
         }
 
-        function setButton(num) {
-            image = document.getElementById('image' + num);
-            image.style.borderColor = paused[num] ? red : green;
+        function loadImage1() {
+            if (!(paused[1])) {
+                warning = document.getElementById('status1')
+                image = new Image();
+                image.onload = function(){
+                    warning.innerHTML = "Connected to image server";
+                    warning.style.backgroundColor = green
+                    ctx = document.getElementById('image1').getContext('2d');
+                    ctx.drawImage(image, 0, 0);
+                    setTimeout(function(){ loadImage1(); }, _DELAY_SECS_ * 1000);
+                };
+                image.onerror = function(){
+                    warning.innerHTML = "Disconnected from image server";
+                    warning.style.backgroundColor = red
+                    setTimeout(function(){ loadImage1(); },  1000);
+                }
+                image.src = 'http://camera-rope.local:5800/image.jpg';
+            }
         }
 
-        function togglePause(num, url) {
-            paused[num] = !(paused[num])
-            setButton(num)
-            loadImage(num, url);
+        function setButton0() {
+            image = document.getElementById('image0');
+            image.style.borderColor = paused[0] ? red : green;
+        }
+
+        function setButton1() {
+            image = document.getElementById('image1');
+            image.style.borderColor = paused[1] ? red : green;
+        }
+
+        function togglePause0() {
+            paused[0] = !(paused[0])
+            setButton0()
+            loadImage0();
+        }
+
+        function togglePause1() {
+            paused[1] = !(paused[1])
+            setButton1()
+            loadImage1();
         }
 
         function refreshDelay(time) {
@@ -175,7 +204,7 @@
 
             <div>
                 <canvas class="image" id="image0" width="_WIDTH_px" height="_HEIGHT_px"
-                        onclick="togglePause(0, 'http://camera-gear.local:5800/image.jpg')"></canvas>
+                        onclick="togglePause0()"></canvas>
             </div>
         </td>
         <td>
@@ -192,7 +221,7 @@
 
             <div>
                 <canvas class="image" id="image1" width="_WIDTH_px" height="_HEIGHT_px"
-                        onclick="togglePause(1, 'http://camera-rope.local:5800/image.jpg')"></canvas>
+                        onclick="togglePause1('http://camera-rope.local:5800/image.jpg')"></canvas>
             </div>
         </td>
     </tr>
