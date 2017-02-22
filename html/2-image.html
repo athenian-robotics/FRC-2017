@@ -86,11 +86,11 @@
         var paused = [false, false];
 
         window.onload = function () {
-            document.getElementById('header0').innerHTML = "Front Gear (_DELAY_SECS_ secs)";
+            document.getElementById('header0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
             setButton(0);
             loadImage(0, 'http://localhost:8080/image.jpg');
 
-            document.getElementById('header1').innerHTML = "Rope Climber (_DELAY_SECS_ secs)";
+            document.getElementById('header1').innerHTML = "Rope Camera (_DELAY_SECS_ secs)";
             setButton(1);
             loadImage(1, 'http://localhost:8081/image.jpg');
         };
@@ -175,7 +175,7 @@
 
             <div>
                 <canvas class="image" id="image0" width="_WIDTH_px" height="_HEIGHT_px"
-                        onclick="togglePause(0, 'http://localhost:8080/image.jpg')"></canvas>
+                        onclick="togglePause(0, 'http://camera-gear:5800/image.jpg')"></canvas>
             </div>
         </td>
         <td>
@@ -192,7 +192,7 @@
 
             <div>
                 <canvas class="image" id="image1" width="_WIDTH_px" height="_HEIGHT_px"
-                        onclick="togglePause(1, 'http://localhost:8081/image.jpg')"></canvas>
+                        onclick="togglePause(1, 'http://camera-rope:5800/image.jpg')"></canvas>
             </div>
         </td>
     </tr>
