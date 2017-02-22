@@ -88,11 +88,11 @@
         window.onload = function () {
             document.getElementById('header0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
             setButton(0);
-            loadImage(0, 'http://localhost:8080/image.jpg');
+            loadImage(0, 'http://camera-gear.local:5800/image.jpg');
 
             document.getElementById('header1').innerHTML = "Rope Camera (_DELAY_SECS_ secs)";
             setButton(1);
-            loadImage(1, 'http://localhost:8081/image.jpg');
+            loadImage(1, 'http://camera-rope.local:5800/image.jpg');
         };
 
         function loadImage(num, url) {
