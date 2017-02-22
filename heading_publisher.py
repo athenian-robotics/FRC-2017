@@ -133,7 +133,7 @@ if __name__ == "__main__":
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
     publish_lock = Lock()
-    serial_reader = SerialReader()
+    serial_reader = SerialReader(debug=True)
 
     mqtt_client = MqttConnection(hostname=(args[MQTT_HOST]),
                                  userdata={HEADING_TOPIC: "heading/degrees",
