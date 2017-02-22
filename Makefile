@@ -18,12 +18,15 @@ reboot:
 shutdown:
 	./bin/shutdown-robot.sh
 
-clear-pyc:
+clear-logs:
+	./bin/clear-logs.sh
+
+_reset-pyc:
 	rm -f ~/git/FRC-2017/*.pyc
 	rm -f ~/git/object-tracking/*.pyc
 	rm -f ~/git/common-robotics/*.pyc
 
-clear-logs:
+_reset-logs:
 	rm -f ~/git/FRC-2017/logs/*.out
 	rm -f ~/git/FRC-2017/logs/*.reboot
 	rm -f ~/git/FRC-2017/logs/*.log
