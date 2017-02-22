@@ -95,18 +95,18 @@
 
         function loadImage0() {
             if (!(paused[0])) {
-                warning = document.getElementById('status0')
+                warning0 = document.getElementById('status0')
                 image0 = new Image();
                 image0.onload = function(){
-                    warning.innerHTML = "Connected to gear server";
-                    warning.style.backgroundColor = green
+                    warning0.innerHTML = "Connected to camera gear server";
+                    warning0.style.backgroundColor = green
                     ctx = document.getElementById('image0').getContext('2d');
                     ctx.drawImage(image0, 0, 0);
                     setTimeout(function(){ loadImage0(); }, _DELAY_SECS_ * 1000);
                 };
                 image0.onerror = function(){
-                    warning.innerHTML = "Disconnected from gear server";
-                    warning.style.backgroundColor = red
+                    warning0.innerHTML = "Disconnected from camera gear server";
+                    warning0.style.backgroundColor = red
                     setTimeout(function(){ loadImage0(); },  1000);
                 }
                 image0.src = 'http://camera-gear.local:5800/image.jpg';
@@ -115,18 +115,18 @@
 
         function loadImage1() {
             if (!(paused[1])) {
-                warning = document.getElementById('status1')
+                warning1 = document.getElementById('status1')
                 image1 = new Image();
                 image1.onload = function(){
-                    warning.innerHTML = "Connected to rope server";
-                    warning.style.backgroundColor = green
+                    warning1.innerHTML = "Connected to camera rope server";
+                    warning1.style.backgroundColor = green
                     ctx = document.getElementById('image1').getContext('2d');
                     ctx.drawImage(image1, 0, 0);
                     setTimeout(function(){ loadImage1(); }, _DELAY_SECS_ * 1000);
                 };
                 image1.onerror = function(){
-                    warning.innerHTML = "Disconnected from rope server";
-                    warning.style.backgroundColor = red
+                    warning1.innerHTML = "Disconnected from camera rope server";
+                    warning1.style.backgroundColor = red
                     setTimeout(function(){ loadImage1(); },  1000);
                 }
                 image1.src = 'http://camera-rope.local:5800/image.jpg';
@@ -221,7 +221,7 @@
 
             <div>
                 <canvas class="image" id="image1" width="_WIDTH_px" height="_HEIGHT_px"
-                        onclick="togglePause1('http://camera-rope.local:5800/image.jpg')"></canvas>
+                        onclick="togglePause1()"></canvas>
             </div>
         </td>
     </tr>
