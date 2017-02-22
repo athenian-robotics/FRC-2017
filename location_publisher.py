@@ -37,7 +37,7 @@ if __name__ == "__main__":
             try:
                 x_loc = locations.get_x()
                 if x_loc is not None and abs(x_loc[0] - prev_value) > 1:
-                    result, mid = client.publish("{0}/x".format(userdata[MQTT_TOPIC]),
+                    result, mid = client.publish("{0}/x".format(userdata[TOPIC]),
                                                  payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
                     prev_value = x_loc[0]
 
