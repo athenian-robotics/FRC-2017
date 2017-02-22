@@ -98,14 +98,14 @@
                 warning = document.getElementById('status0')
                 image0 = new Image();
                 image0.onload = function(){
-                    warning.innerHTML = "Connected to camera gear server";
+                    warning.innerHTML = "Connected to gear server";
                     warning.style.backgroundColor = green
                     ctx = document.getElementById('image0').getContext('2d');
                     ctx.drawImage(image0, 0, 0);
                     setTimeout(function(){ loadImage0(); }, _DELAY_SECS_ * 1000);
                 };
                 image0.onerror = function(){
-                    warning.innerHTML = "Disconnected from camera gear server";
+                    warning.innerHTML = "Disconnected from gear server";
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage0(); },  1000);
                 }
@@ -118,14 +118,14 @@
                 warning = document.getElementById('status1')
                 image1 = new Image();
                 image1.onload = function(){
-                    warning.innerHTML = "Connected to camera rope server";
+                    warning.innerHTML = "Connected to rope server";
                     warning.style.backgroundColor = green
                     ctx = document.getElementById('image1').getContext('2d');
                     ctx.drawImage(image1, 0, 0);
                     setTimeout(function(){ loadImage1(); }, _DELAY_SECS_ * 1000);
                 };
                 image1.onerror = function(){
-                    warning.innerHTML = "Disconnected from camera rope server";
+                    warning.innerHTML = "Disconnected from rope server";
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage1(); },  1000);
                 }
