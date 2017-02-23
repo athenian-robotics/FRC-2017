@@ -101,7 +101,7 @@
                 image.onload = function(){
                     warning.innerHTML = "Connected to gear camera";
                     warning.style.backgroundColor = green
-                    img = document.getElementById('image_' + num]);
+                    img = document.getElementById('image_' + num);
                     img.getContext('2d').drawImage(image, 0, 0);
                     setTimeout(function(){ loadImage(num); }, _DELAY_SECS_ * 1000);
                 };
