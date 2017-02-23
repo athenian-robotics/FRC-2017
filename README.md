@@ -4,11 +4,11 @@
 
 | #   | Name                       | Repos                                              |
 |:---:|:---------------------------|:---------------------------------------------------|
-| 12  | **mqtt-turtle.local**      | none                                               |
 | 11  | **camera-gear.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
 | 18  | **camera-rope.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
 | 10  | **lidar-gear.local**       | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
 | 24  | **lcd1.local**             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
+| 12  | **mqtt-turtle.local**      | none                                               |
 
 ## MQTT Topics 
 | Name                      | Description                                             |
