@@ -121,7 +121,7 @@ if __name__ == "__main__":
     cli.serial_port(parser)
     cli.baud_rate(parser)
     parser.add_argument("--mpt", dest=MIN_PUBLISH, default=1, type=int, help="Minimum publishing time secs [1]")
-    parser.add_argument("-c", "--calib", dest=CALIB_ENABLED, default=False, action="store_true",
+    parser.add_argument("--calib", dest=CALIB_ENABLED, default=False, action="store_true",
                         help="Enable calibration publishing[false]")
     parser.add_argument("--cpt", dest=CALIB_PUBLISH, default=3, type=int, help="Calibration publishing time secs [3]")
     cli.verbose(parser),
