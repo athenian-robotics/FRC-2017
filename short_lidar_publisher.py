@@ -71,7 +71,7 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
-    serial_reader = SerialReader()
+    serial_reader = SerialReader(debug=True)
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],

@@ -67,7 +67,7 @@ if __name__ == "__main__":
     setup_logging(level=args[LOG_LEVEL])
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
-    serial_reader = SerialReader()
+    serial_reader = SerialReader(debug=True)
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
