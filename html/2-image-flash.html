@@ -98,9 +98,9 @@
 
         function loadImage0(num) {
             if (!(paused[0])) {
-                warning = document.getElementById(status_vals[num])
                 image = new Image();
                 image.onload = function(){
+                    warning = document.getElementById(status_vals[num])
                     warning.innerHTML = "Connected to gear camera";
                     warning.style.backgroundColor = green
                     img = document.getElementById(image_vals[num]);
@@ -108,6 +108,7 @@
                     setTimeout(function(){ loadImage0(num); }, _DELAY_SECS_ * 1000);
                 };
                 image.onerror = function(){
+                    warning = document.getElementById(status_vals[num])
                     warning.innerHTML = "Disconnected from gear camera";
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage0(num); },  1000);
@@ -118,9 +119,9 @@
 
         function loadImage1(num) {
             if (!(paused[num])) {
-                warning = document.getElementById(status_vals[num])
                 image = new Image();
                 image.onload = function(){
+                    warning = document.getElementById(status_vals[num])
                     warning.innerHTML = "Connected to rope camera";
                     warning.style.backgroundColor = green
                     img = document.getElementById(image_vals[num]);
@@ -128,6 +129,7 @@
                     setTimeout(function(){ loadImage1(num); }, _DELAY_SECS_ * 1000);
                 };
                 image.onerror = function(){
+                    warning = document.getElementById(status_vals[num])
                     warning.innerHTML = "Disconnected from rope camera";
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage1(num); },  1000);
@@ -138,7 +140,7 @@
 
         function setButton0() {
             color = paused[0] ? red : green
-            button = document.getElementById('pause0');
+            button = document.getElementById('pause_0');
             button.style.backgroundColor = color;
             button.value = paused[0] ? 'Resume' : 'Pause';
 
@@ -148,7 +150,7 @@
 
         function setButton1() {
             color = paused[1] ? red : green
-            button = document.getElementById('pause1');
+            button = document.getElementById('pause_1');
             button.style.backgroundColor = color;
             button.value = paused[1] ? 'Resume' : 'Pause';
 
@@ -219,7 +221,7 @@
                 <canvas class="image" id="image_0" width="_WIDTH_px" height="_HEIGHT_px"
                         onclick="togglePause0()"></canvas>
                 <div>
-                    <input type="button" class="pause" id="pause0" value="Pause" onclick="togglePause0()">
+                    <input type="button" class="pause" id="pause_0" value="Pause" onclick="togglePause0()">
                 </div>
             </div>
         </td>
@@ -240,7 +242,7 @@
                         onclick="togglePause1()"></canvas>
             </div>
             <div>
-                <input type="button" class="pause" id="pause1" value="Pause" onclick="togglePause1()">
+                <input type="button" class="pause" id="pause_1" value="Pause" onclick="togglePause1()">
             </div>
         </td>
     </tr>
