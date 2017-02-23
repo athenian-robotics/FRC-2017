@@ -98,7 +98,7 @@
 
         function loadImage0(num) {
             if (!(paused[0])) {
-                image1 = new Image();
+                var image1 = new Image();
                 image1.onload = function(){
                     warning = document.getElementById(status_vals[num])
                     warning.innerHTML = "Connected to gear camera";
@@ -119,7 +119,7 @@
 
         function loadImage1(num) {
             if (!(paused[num])) {
-                image1 = new Image();
+                var image1 = new Image();
                 image1.onload = function(){
                     warning = document.getElementById(status_vals[num])
                     warning.innerHTML = "Connected to rope camera";
@@ -139,7 +139,7 @@
         }
 
         function setButton0() {
-            color = paused[0] ? red : green
+            var color = paused[0] ? red : green
             button = document.getElementById('pause_0');
             button.style.backgroundColor = color;
             button.value = paused[0] ? 'Resume' : 'Pause';
@@ -149,7 +149,7 @@
         }
 
         function setButton1() {
-            color = paused[1] ? red : green
+            var color = paused[1] ? red : green
             button = document.getElementById('pause_1');
             button.style.backgroundColor = color;
             button.value = paused[1] ? 'Resume' : 'Pause';
