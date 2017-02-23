@@ -76,103 +76,104 @@
           box-shadow: 0 5px #666;
           transform: translateY(4px);
         }
+
+
     </style>
 
     <script>
         var red = '#FF3B22'
         var green = '#14CC06'
         var paused = [false, false];
-        var status_vals = ['status_0', 'status_1']
-        var image_vals = ['image_0', 'image_1']
-        var urls = ['http://camera-gear.local:5800/image.jpg', 'http://camera-rope.local:5800/image.jpg']
+        var gear_url = 'http://camera-gear.local:5800/image.jpg'
+        var rope_url = 'http://camera-rope.local:5800/image.jpg'
 
         window.onload = function () {
-            document.getElementById('header_0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
+            document.getElementById('header0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
             setButton0();
-            loadImage0(0);
+            loadImage0();
 
-            document.getElementById('header_1').innerHTML = "Rope Camera (_DELAY_SECS_ secs)";
+            document.getElementById('header1').innerHTML = "Rope Camera (_DELAY_SECS_ secs)";
             setButton1();
-            loadImage1(1);
+            loadImage1();
         };
 
-        function loadImage0(num) {
+        function loadImage0() {
             if (!(paused[0])) {
-                var image1 = new Image();
-                image1.onload = function(){
-                    warning = document.getElementById(status_vals[num])
-                    warning.innerHTML = "Connected to gear camera";
-                    warning.style.backgroundColor = green
-                    img = document.getElementById(image_vals[num]);
-                    img.getContext('2d').drawImage(image1, 0, 0);
-                    setTimeout(function(){ loadImage0(num); }, _DELAY_SECS_ * 1000);
+                warning0 = document.getElementById('status0')
+                image0 = new Image();
+                image0.onload = function(){
+                    warning0.innerHTML = "Connected to gear camera";
+                    warning0.style.backgroundColor = green
+                    ctx = document.getElementById('image0').getContext('2d');
+                    ctx.drawImage(image0, 0, 0);
+                    setTimeout(function(){ loadImage0(); }, _DELAY_SECS_ * 1000);
                 };
-                image1.onerror = function(){
-                    warning = document.getElementById(status_vals[num])
-                    warning.innerHTML = "Disconnected from gear camera";
-                    warning.style.backgroundColor = red
-                    setTimeout(function(){ loadImage0(num); },  1000);
+                image0.onerror = function(){
+                    warning0.innerHTML = "Disconnected from gear camera";
+                    warning0.style.backgroundColor = red
+                    setTimeout(function(){ loadImage0(); },  1000);
                 }
-                image1.src = urls[num];
+                image0.src = gear_url;
             }
         }
 
-        function loadImage1(num) {
-            if (!(paused[num])) {
-                var image1 = new Image();
+        function loadImage1() {
+            if (!(paused[1])) {
+                warning1 = document.getElementById('status1')
+                image1 = new Image();
                 image1.onload = function(){
-                    warning = document.getElementById(status_vals[num])
-                    warning.innerHTML = "Connected to rope camera";
-                    warning.style.backgroundColor = green
-                    img = document.getElementById(image_vals[num]);
-                    img.getContext('2d').drawImage(image1, 0, 0);
-                    setTimeout(function(){ loadImage1(num); }, _DELAY_SECS_ * 1000);
+                    warning1.innerHTML = "Connected to rope camera";
+                    warning1.style.backgroundColor = green
+                    ctx = document.getElementById('image1').getContext('2d');
+                    ctx.drawImage(image1, 0, 0);
+                    setTimeout(function(){ loadImage1(); }, _DELAY_SECS_ * 1000);
                 };
                 image1.onerror = function(){
-                    warning = document.getElementById(status_vals[num])
-                    warning.innerHTML = "Disconnected from rope camera";
-                    warning.style.backgroundColor = red
-                    setTimeout(function(){ loadImage1(num); },  1000);
+                    warning1.innerHTML = "Disconnected from rope camera";
+                    warning1.style.backgroundColor = red
+                    setTimeout(function(){ loadImage1(); },  1000);
                 }
-                image1.src = urls[num];
+                image1.src = rope_url;
             }
         }
 
         function setButton0() {
-            var color = paused[0] ? red : green
-            button = document.getElementById('pause_0');
-            button.style.backgroundColor = color;
-            button.value = paused[0] ? 'Resume' : 'Pause';
+            color = paused[0] ? red : green
+            button0 = document.getElementById('pause0');
+            button0.style.backgroundColor = color;
+            button0.value = paused[0] ? 'Resume' : 'Pause';
 
-            image = document.getElementById('image_0');
-            image.style.borderColor = color;
+            image0 = document.getElementById('image0');
+            image0.style.borderColor = color;
         }
 
         function setButton1() {
-            var color = paused[1] ? red : green
-            button = document.getElementById('pause_1');
-            button.style.backgroundColor = color;
-            button.value = paused[1] ? 'Resume' : 'Pause';
+            color = paused[1] ? red : green
+            button1 = document.getElementById('pause1');
+            button1.style.backgroundColor = color;
+            button1.value = paused[1] ? 'Resume' : 'Pause';
 
-            image = document.getElementById('image_1');
-            image.style.borderColor = color;
+            image1 = document.getElementById('image1');
+            image1.style.borderColor = color;
         }
 
         function togglePause0() {
             paused[0] = !(paused[0])
             setButton0()
-            loadImage0(0);
+            loadImage0();
         }
 
         function togglePause1() {
             paused[1] = !(paused[1])
             setButton1()
-            loadImage1(1);
+            loadImage1();
         }
 
         function refreshDelay(time) {
             window.location.href = "/image?delay=" + time;
         }
+
+
 
 
     </script>
@@ -209,19 +210,19 @@
             <table border="0">
                 <tr>
                     <td>
-                        <p class="header" id="header_0"></p>
+                        <p class="header" id="header0"></p>
                     </td>
                     <td>
-                        <p class="status" id="status_0"></p>
+                        <p class="status" id="status0"></p>
                     </td>
                 </tr>
             </table>
 
             <div>
-                <canvas class="image" id="image_0" width="_WIDTH_px" height="_HEIGHT_px"
+                <canvas class="image" id="image0" width="_WIDTH_px" height="_HEIGHT_px"
                         onclick="togglePause0()"></canvas>
                 <div>
-                    <input type="button" class="pause" id="pause_0" value="Pause" onclick="togglePause0()">
+                    <input type="button" class="pause" id="pause0" value="Pause" onclick="togglePause0()">
                 </div>
             </div>
         </td>
@@ -229,20 +230,20 @@
             <table border="0">
                 <tr>
                     <td>
-                        <p class="header" id="header_1"></p>
+                        <p class="header" id="header1"></p>
                     </td>
                     <td>
-                        <p class="status" id="status_1"></p>
+                        <p class="status" id="status1"></p>
                     </td>
                 </tr>
             </table>
 
             <div>
-                <canvas class="image" id="image_1" width="_WIDTH_px" height="_HEIGHT_px"
+                <canvas class="image" id="image1" width="_WIDTH_px" height="_HEIGHT_px"
                         onclick="togglePause1()"></canvas>
             </div>
             <div>
-                <input type="button" class="pause" id="pause_1" value="Pause" onclick="togglePause1()">
+                <input type="button" class="pause" id="pause1" value="Pause" onclick="togglePause1()">
             </div>
         </td>
     </tr>
