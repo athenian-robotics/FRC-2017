@@ -119,22 +119,22 @@
 
         function loadImage1(num) {
             if (!(paused[num])) {
-                image = new Image();
-                image.onload = function(){
+                image1 = new Image();
+                image1.onload = function(){
                     warning = document.getElementById(status_vals[num])
                     warning.innerHTML = "Connected to rope camera";
                     warning.style.backgroundColor = green
                     img = document.getElementById(image_vals[num]);
-                    img.getContext('2d').drawImage(image, 0, 0);
+                    img.getContext('2d').drawImage(image1, 0, 0);
                     setTimeout(function(){ loadImage1(num); }, _DELAY_SECS_ * 1000);
                 };
-                image.onerror = function(){
+                image1.onerror = function(){
                     warning = document.getElementById(status_vals[num])
                     warning.innerHTML = "Disconnected from rope camera";
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage1(num); },  1000);
                 }
-                image.src = urls[num];
+                image1.src = urls[num];
             }
         }
 
