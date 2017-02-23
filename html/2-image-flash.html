@@ -82,8 +82,8 @@
         var red = '#FF3B22'
         var green = '#14CC06'
         var paused = [false, false];
-        var status_vals = 'status0', 'status1']
-        var image_vals = 'image_0', 'image_1']
+        var status_vals = ['status0', 'status1']
+        var image_vals = ['image_0', 'image_1']
         var urls['http://camera-gear.local:5800/image.jpg',
                  'http://camera-rope.local:5800/image.jpg']
 
@@ -113,7 +113,7 @@
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage0(num); },  1000);
                 }
-                image.src = urls[0];
+                image.src = urls[num];
             }
         }
 
@@ -133,7 +133,7 @@
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage1(num); },  1000);
                 }
-                image.src = urls[1];
+                image.src = urls[num];
             }
         }
 
