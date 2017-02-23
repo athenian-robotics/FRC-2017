@@ -86,11 +86,11 @@
         var names = ['gear', 'rope']
 
         window.onload = function () {
-            document.getElementById('header_0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
+            document.getElementById('header_0').innerHTML = 'Gear Camera (_DELAY_SECS_ secs)';
             setButton(0);
             loadImage(0);
 
-            document.getElementById('header_1').innerHTML = "Rope Camera (_DELAY_SECS_ secs)";
+            document.getElementById('header_1').innerHTML = 'Rope Camera (_DELAY_SECS_ secs)';
             setButton(1);
             loadImage(1);
         };
@@ -100,14 +100,14 @@
                 var warning = document.getElementById('status_' + num)
                 var image = new Image();
                 image.onload = function(){
-                    warning.innerHTML = "Connected to ' + names[num] + ' camera";
+                    warning.innerHTML = 'Connected to ' + names[num] + ' camera';
                     warning.style.backgroundColor = green
                     img = document.getElementById('image_' + num);
                     img.getContext('2d').drawImage(image, 0, 0);
                     setTimeout(function(){ loadImage(num); }, _DELAY_SECS_ * 1000);
                 };
                 image.onerror = function(){
-                    warning.innerHTML = "Disconnected from ' + names[num] + ' camera";
+                    warning.innerHTML = 'Disconnected from ' + names[num] + ' camera';
                     warning.style.backgroundColor = red
                     setTimeout(function(){ loadImage(num); },  1000);
                 }
@@ -132,7 +132,7 @@
         }
 
         function refreshDelay(time) {
-            window.location.href = "/image?delay=" + time;
+            window.location.href = '/image?delay=' + time;
         }
     </script>
 </head>
