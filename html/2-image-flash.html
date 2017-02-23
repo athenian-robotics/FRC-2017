@@ -82,17 +82,16 @@
         var red = '#FF3B22'
         var green = '#14CC06'
         var paused = [false, false];
-        var status_vals = ['status0', 'status1']
+        var status_vals = ['status_0', 'status_1']
         var image_vals = ['image_0', 'image_1']
-        var urls['http://camera-gear.local:5800/image.jpg',
-                 'http://camera-rope.local:5800/image.jpg']
+        var urls['http://camera-gear.local:5800/image.jpg', 'http://camera-rope.local:5800/image.jpg']
 
         window.onload = function () {
-            document.getElementById('header0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
+            document.getElementById('header_0').innerHTML = "Gear Camera (_DELAY_SECS_ secs)";
             setButton0();
             loadImage0(0);
 
-            document.getElementById('header1').innerHTML = "Rope Camera (_DELAY_SECS_ secs)";
+            document.getElementById('header_1').innerHTML = "Rope Camera (_DELAY_SECS_ secs)";
             setButton1();
             loadImage1(1);
         };
@@ -208,10 +207,10 @@
             <table border="0">
                 <tr>
                     <td>
-                        <p class="header" id="header0"></p>
+                        <p class="header" id="header_0"></p>
                     </td>
                     <td>
-                        <p class="status" id="status0"></p>
+                        <p class="status" id="status_0"></p>
                     </td>
                 </tr>
             </table>
@@ -228,10 +227,10 @@
             <table border="0">
                 <tr>
                     <td>
-                        <p class="header" id="header1"></p>
+                        <p class="header" id="header_1"></p>
                     </td>
                     <td>
-                        <p class="status" id="status1"></p>
+                        <p class="status" id="status_1"></p>
                     </td>
                 </tr>
             </table>
