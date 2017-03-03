@@ -39,6 +39,14 @@
 
 The heading sensor calibration is described [here](https://learn.adafruit.com/bno055-absolute-orientation-sensor-with-raspberry-pi-and-beaglebone-black/webgl-example?embeds=allow#sensor-calibration)
 
+## Metro Mini SNs
+
+Metro Minis do not report their SN via the Arduin IDE. Use:
+```bash
+$ cd git/common-robotcs
+$ ./metro_minis.py
+```
+ 
 ## SSH Setup
 
 * [SSH Configuration](https://github.com/athenian-robotics/FRC-2017/wiki/SSH-configuration-file)
