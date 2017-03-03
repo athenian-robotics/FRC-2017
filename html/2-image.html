@@ -96,7 +96,7 @@
         };
 
         function loadImage(num) {
-            if (!(paused[0])) {
+            if (!(paused[num])) {
                 var warning = document.getElementById('status_' + num)
                 var image = new Image();
                 image.onload = function(){
