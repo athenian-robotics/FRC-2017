@@ -21,6 +21,7 @@ DEVICE = "device"
 TOLERANCE_THRESH = 5
 OUT_OF_RANGE = "-1".encode("utf-8")
 
+USE_AVG = False
 
 def on_connect(client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
@@ -51,9 +52,12 @@ def fetch_data(mm_str, userdata):
             oor_values.clear()
     else:
         ## Deal with good data
-        moving_avg.add(mm)
-        avg = moving_avg.average()
-        if not avg or abs(mm - avg) > TOLERANCE_THRESH:
+        if USE_AVG:
+            moving_avg.add(mm)
+            avg = moving_avg.average()
+            if not avg or abs(mm - avg) > TOLERANCE_THRESH:
+                client.publish(topic, payload=str(mm).encode("utf-8"), qos=0)
+        else:
             client.publish(topic, payload=str(mm).encode("utf-8"), qos=0)
 
 
