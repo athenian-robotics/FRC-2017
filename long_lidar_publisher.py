@@ -4,12 +4,15 @@ import argparse
 import logging
 
 import cli_args as cli
-from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC, DEVICE_ID
+from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC, DEVICE_ID, OOR_SIZE, OOR_TIME
 from moving_average import MovingAverage
 from mqtt_connection import MqttConnection, PAHO_CLIENT
+from out_of_range_values import OutOfRangeValues
 from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
+
+from short_lidar_publisher import OOR_VALUES
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +36,7 @@ def fetch_data(cm_str, userdata):
     topic = userdata[TOPIC]
     client = userdata[PAHO_CLIENT]
     moving_avg = userdata[MOVING_AVERAGE]
+    oor_values = userdata[OOR_VALUES]
 
     cm = int(cm_str)
 
@@ -60,6 +64,8 @@ if __name__ == "__main__":
     cli.baud_rate(parser)
     parser.add_argument("-d", "--device", dest=DEVICE, required=True, help="Device ('front' or 'rear'")
     parser.add_argument("--avg_size", dest=AVG_SIZE, default=10, type=int, help="Moving average size [10]")
+    cli.oor_size(parser),
+    cli.oor_time(parser),
     cli.verbose(parser),
     args = vars(parser.parse_args())
 
@@ -74,7 +80,9 @@ if __name__ == "__main__":
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
-                                           MOVING_AVERAGE: (MovingAverage(args[AVG_SIZE]))},
+                                           MOVING_AVERAGE: MovingAverage(args[AVG_SIZE]),
+                                           OOR_VALUES: OutOfRangeValues(size=args[OOR_SIZE]),
+                                           OOR_TIME: args[OOR_TIME]},
                                  on_connect=on_connect)
     mqtt_client.connect()
 

@@ -4,7 +4,7 @@ import argparse
 import logging
 
 import cli_args as cli
-from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC, DEVICE_ID
+from constants import SERIAL_PORT, BAUD_RATE, MQTT_HOST, LOG_LEVEL, TOPIC, DEVICE_ID, OOR_SIZE, OOR_TIME, OOR_UPPER
 from moving_average import MovingAverage
 from mqtt_connection import MqttConnection, PAHO_CLIENT
 from out_of_range_values import OutOfRangeValues
@@ -23,6 +23,7 @@ OUT_OF_RANGE = "-1".encode("utf-8")
 
 USE_AVG = False
 
+
 def on_connect(client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
     serial_reader = userdata[SERIAL_READER]
@@ -37,6 +38,7 @@ def fetch_data(mm_str, userdata):
     client = userdata[PAHO_CLIENT]
     moving_avg = userdata[MOVING_AVERAGE]
     oor_values = userdata[OOR_VALUES]
+    oor_upper = userdata[OOR_UPPER]
 
     # Values sometimes get compacted together, take the later value if that happens since it's newer
     if "\r" in mm_str:
@@ -44,12 +46,12 @@ def fetch_data(mm_str, userdata):
 
     mm = int(mm_str)
 
-    if mm <= 155 or mm > 2000:
+    if oor_upper > 0 and mm <= 155 or mm > oor_upper:
         # Filter out bad data
         oor_values.mark()
-        if oor_values.is_out_of_range(1000):
+        if oor_values.is_out_of_range(userdata[OOR_TIME]):
+            # oor_values.clear()
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
-            oor_values.clear()
     else:
         ## Deal with good data
         if USE_AVG:
@@ -68,6 +70,9 @@ if __name__ == "__main__":
     cli.device_id(parser),
     cli.serial_port(parser)
     cli.baud_rate(parser)
+    cli.oor_size(parser),
+    cli.oor_time(parser),
+    cli.oor_upper(parser),
     parser.add_argument("-d", "--device", dest=DEVICE, required=True, help="Device ('left' or 'right'")
     cli.verbose(parser),
     args = vars(parser.parse_args())
@@ -83,8 +88,10 @@ if __name__ == "__main__":
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
-                                           MOVING_AVERAGE: (MovingAverage(size=3)),
-                                           OOR_VALUES: (OutOfRangeValues(size=10))},
+                                           MOVING_AVERAGE: MovingAverage(size=3),
+                                           OOR_VALUES: OutOfRangeValues(size=args[OOR_SIZE]),
+                                           OOR_TIME: args[OOR_TIME],
+                                           OOR_UPPER: args[OOR_UPPER]},
                                  on_connect=on_connect)
     mqtt_client.connect()
 
