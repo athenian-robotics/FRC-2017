@@ -53,7 +53,6 @@ def fetch_data(mm_str, userdata):
             # oor_values.clear()
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
     else:
-        ## Deal with good data
         if USE_AVG:
             moving_avg.add(mm)
             avg = moving_avg.average()

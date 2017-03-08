@@ -62,10 +62,10 @@ if __name__ == "__main__":
     cli.device_id(parser),
     cli.serial_port(parser)
     cli.baud_rate(parser)
-    parser.add_argument("-d", "--device", dest=DEVICE, required=True, help="Device ('front' or 'rear'")
-    parser.add_argument("--avg_size", dest=AVG_SIZE, default=10, type=int, help="Moving average size [10]")
     cli.oor_size(parser),
     cli.oor_time(parser),
+    parser.add_argument("-d", "--device", dest=DEVICE, required=True, help="Device ('front' or 'rear'")
+    parser.add_argument("--avg_size", dest=AVG_SIZE, default=10, type=int, help="Moving average size [10]")
     cli.verbose(parser),
     args = vars(parser.parse_args())
 
