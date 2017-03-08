@@ -28,11 +28,11 @@
 | Location                  | ID                                                      |
 |:--------------------------|:--------------------------------------------------------|
 |Heading (Arduino)          | 95530343235351A0E0A2                                    |
-|Heading (Metro)            | 00FEBABC                                                |
+|Heading (Metro)            | 00FEBA85                                                |
 |Left lidar                 | 7543331373935160E190                                    |
 |Right lidar                | 95538333535351019130                                    |
-|Forward lidar              |                                                         |
-|Rear lidar                 |                                                         |
+|Front lidar                | 00FEBA8B                                                |
+|Rear lidar                 | 00FEBA73                                                |
 
 
 ## Heading Sensor
