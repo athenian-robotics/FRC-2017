@@ -46,12 +46,12 @@ def fetch_data(cm_str, userdata):
     moving_avg.add(cm)
     avg = moving_avg.average()
 
-    if not avg:
-        client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
-    else:
-        if abs(cm - avg) > TOLERANCE_THRESH:
-            # logging.info("Difference: {0}".format(abs(cm - avg)))
-            client.publish(topic, payload=str(avg).encode("utf-8"), qos=0)
+    # if abs(cm - avg) > TOLERANCE_THRESH:
+    #    client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
+
+    if len(moving_avg) == moving_avg.max_size():
+        client.publish(topic, payload=str(int(avg)).encode("utf-8"), qos=0)
+        moving_avg.clear()
 
 
 if __name__ == "__main__":
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     setup_logging(level=args[LOG_LEVEL])
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
-    serial_reader = SerialReader(debug=True)
+    serial_reader = SerialReader()
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
