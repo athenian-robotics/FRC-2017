@@ -46,7 +46,7 @@ def fetch_data(mm_str, userdata):
 
     mm = int(mm_str)
 
-    if oor_upper > 0 and mm <= 155 or mm > oor_upper:
+    if oor_upper > 0 and (mm <= 155 or mm > oor_upper):
         # Filter out bad data
         oor_values.mark()
         if oor_values.is_out_of_range(userdata[OOR_TIME]):
