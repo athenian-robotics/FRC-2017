@@ -46,12 +46,12 @@ def fetch_data(cm_str, userdata):
     moving_avg.add(cm)
     avg = moving_avg.average()
 
-    # if abs(cm - avg) > TOLERANCE_THRESH:
-    #    client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
+    if abs(cm - avg) > TOLERANCE_THRESH:
+        client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
 
-    if len(moving_avg) == moving_avg.max_size():
-        client.publish(topic, payload=str(int(avg)).encode("utf-8"), qos=0)
-        moving_avg.clear()
+        # if len(moving_avg) == moving_avg.max_size():
+        #    client.publish(topic, payload=str(int(avg)).encode("utf-8"), qos=0)
+        #    moving_avg.clear()
 
 
 if __name__ == "__main__":

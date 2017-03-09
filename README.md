@@ -71,7 +71,7 @@ have access to github.
 
 * Repos: [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)  
 
-### PIP Actions
+### PIP requirements
 
 
 Raspbian with the *pysearchimages* distro (has OpenCV 3.2 package):
@@ -80,8 +80,8 @@ Raspbian with the *pysearchimages* distro (has OpenCV 3.2 package):
 $ source start_py2cv3.sh
 $
 $ pip install --upgrade pip
-$ pip install grpcio
 $ pip install imutils
+$ pip install grpcio
 $ pip install paho-mqtt
 $ pip install flask
 $ pip install requests
@@ -96,8 +96,8 @@ Vanilla Raspbian:
 $ source start_py2cv3.sh
 $
 $ sudo pip install --upgrade pip
-$ sudo pip install grpcio
 $ sudo pip install imutils
+$ sudo pip install grpcio
 $ sudo pip install paho-mqtt
 $ sudo pip install flask
 $ sudo pip install requests
@@ -108,7 +108,7 @@ $ sudo pip install pyserial
 
 
 
-### apt-get Actions
+### apt-get requirements
 ```bash
 $ sudo apt-get install git
 $ sudo apt-get install python
@@ -122,39 +122,24 @@ $ sudo apt-get install nginx
 lidar-gear:
 
 ```bash
-su - pi -c ~pi/git/FRC-2017/bin/lidar-right-publisher.sh
-su - pi -c ~pi/git/FRC-2017/bin/lidar-left-publisher.sh
-su - pi -c ~pi/git/FRC-2017/bin/heading-publisher.sh
+~pi/git/FRC-2017/bin/lidar-gear-startup.sh
 ```
 camera-gear:
   
 ```bash
-# Tune exposure on camera
-v4l2-ctl -d /dev/video0 -c exposure_auto=1 -c exposure_absolute=20
-
-# We have two configurations: object tracking and color picking
-# They both need exclusive camera access, so if one of the two is enabled,
-# the other needs to be commented out.
-
-#su - pi -c ~pi/git/FRC-2017/bin/dual-tape-tracker.sh
-su - pi -c ~pi/git/FRC-2017/bin/dual-tape-peg-tracker.sh
-su - pi -c ~pi/git/FRC-2017/bin/gear-front-publisher.sh
-
-#su - pi -c ~pi/git/FRC-2017/bin/color-picker.sh
+~pi/git/FRC-2017/bin/camera-gear-startup.sh
 ```
 
 camera-rope:
   
 ```bash
-su - pi -c ~pi/git/FRC-2017/bin/rope-tracker.sh
-#su - pi -c ~pi/git/FRC-2017/bin/rope-publisher.sh
+~pi/git/FRC-2017/bin/camera-rope-startup.sh
 ```
 
 lcd1:
 
 ```bash
-su - pi -c ~pi/git/FRC-2017/bin/clear-logs.sh
-su - pi -c ~pi/git/FRC-2017/bin/lcd1-display.sh
+~pi/git/FRC-2017/bin/lcd1-startup.sh
 ```
 
 
