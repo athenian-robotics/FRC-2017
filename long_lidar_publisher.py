@@ -38,9 +38,8 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     if msg.topic == userdata[COMMAND]:
-        val = msg.payload.upper()
-        is_enabled = val == "ON" or val == "ENABLED" or val == "YES" or val == "1" or val == "TRUE"
-        logger.info("With {0} setting {1} = {2}".format(val, userdata[COMMAND], is_enabled))
+        is_enabled = msg.payload.upper() in ["ON", "ENABLED", "YES", "1", "TRUE"]
+        logger.info("With {0} setting {1} = {2}".format(msg.payload, userdata[COMMAND], is_enabled))
         userdata[ENABLED] = is_enabled
 
 def fetch_data(cm_str, userdata):
