@@ -20,6 +20,9 @@ SERIAL_READER = "serial_reader"
 MOVING_AVERAGE = "moving_average"
 DEVICE = "device"
 AVG_SIZE = "avg_size"
+ENABLED = "enabled"
+COMMAND = "command"
+
 OUT_OF_RANGE = "-1".encode("utf-8")
 TOLERANCE_THRESH = 2.5
 
@@ -30,13 +33,20 @@ def on_connect(client, userdata, flags, rc):
                         userdata=userdata,
                         port=userdata[SERIAL_PORT],
                         baudrate=userdata[BAUD_RATE])
+    client.subscribe(userdata[COMMAND])
 
+
+def on_message(client, userdata, msg):
+    if msg.topic == userdata[COMMAND]:
+        val = msg.payload.upper()
+        userdata[ENABLED] = val == "ON" or val == "ENABLED" or val == "YES" or val == "1" or val == "TRUE"
 
 def fetch_data(cm_str, userdata):
     topic = userdata[TOPIC]
     client = userdata[PAHO_CLIENT]
     moving_avg = userdata[MOVING_AVERAGE]
     oor_values = userdata[OOR_VALUES]
+    enabled = userdata[ENABLED]
 
     cm = int(cm_str)
 
@@ -46,12 +56,13 @@ def fetch_data(cm_str, userdata):
     moving_avg.add(cm)
     avg = moving_avg.average()
 
-    # if abs(cm - avg) > TOLERANCE_THRESH:
-    #    client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
+    if enabled:
+        # if abs(cm - avg) > TOLERANCE_THRESH:
+        #    client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
 
-    if len(moving_avg) == moving_avg.max_size():
-        client.publish(topic, payload=str(int(avg)).encode("utf-8"), qos=0)
-        moving_avg.clear()
+        if len(moving_avg) == moving_avg.max_size():
+            client.publish(topic, payload=str(int(avg)).encode("utf-8"), qos=0)
+            moving_avg.clear()
 
 
 if __name__ == "__main__":
@@ -77,6 +88,8 @@ if __name__ == "__main__":
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
+                                           COMMAND: "lidar/{0}/command".format(args[DEVICE]),
+                                           ENABLED: True,
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
