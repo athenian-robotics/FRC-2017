@@ -38,7 +38,7 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     if msg.topic == userdata[COMMAND]:
-        val = msg.payload.encode('ASCII').upper
+        val = msg.payload.decode('ASCII').upper
         is_enabled = val in ["ON", "ENABLED", "YES", "1", "TRUE"]
         logger.info("With {0} setting {1} = {2}".format(val, userdata[COMMAND], is_enabled))
         userdata[ENABLED] = is_enabled
