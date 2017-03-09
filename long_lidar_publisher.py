@@ -12,18 +12,12 @@ from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
 
+import frc_utils
+from frc_utils import SERIAL_READER, COMMAND, ENABLED, MOVING_AVERAGE, DEVICE, AVG_SIZE
 from short_lidar_publisher import OOR_VALUES
 
 logger = logging.getLogger(__name__)
 
-SERIAL_READER = "serial_reader"
-MOVING_AVERAGE = "moving_average"
-DEVICE = "device"
-AVG_SIZE = "avg_size"
-ENABLED = "enabled"
-COMMAND = "command"
-
-OUT_OF_RANGE = "-1".encode("utf-8")
 TOLERANCE_THRESH = 2.5
 
 def on_connect(client, userdata, flags, rc):
@@ -36,19 +30,11 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(userdata[COMMAND])
 
 
-def on_message(client, userdata, msg):
-    if msg.topic == userdata[COMMAND]:
-        val = msg.payload.decode('ASCII').upper()
-        is_enabled = val in ["ON", "ENABLED", "YES", "1", "TRUE"]
-        logger.info("With {0} setting {1} = {2}".format(val, userdata[COMMAND], is_enabled))
-        userdata[ENABLED] = is_enabled
-
 def fetch_data(cm_str, userdata):
     topic = userdata[TOPIC]
     client = userdata[PAHO_CLIENT]
     moving_avg = userdata[MOVING_AVERAGE]
     oor_values = userdata[OOR_VALUES]
-    enabled = userdata[ENABLED]
 
     cm = int(cm_str)
 
@@ -58,17 +44,18 @@ def fetch_data(cm_str, userdata):
     moving_avg.add(cm)
     avg = moving_avg.average()
 
-    if enabled:
-        # if abs(cm - avg) > TOLERANCE_THRESH:
-        #    client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
+    if not userdata[ENABLED]:
+        return
 
-        if len(moving_avg) == moving_avg.max_size():
-            client.publish(topic, payload=str(int(avg)).encode("utf-8"), qos=0)
-            moving_avg.clear()
+    # if abs(cm - avg) > TOLERANCE_THRESH:
+    #    client.publish(topic, payload=str(cm).encode("utf-8"), qos=0)
+
+    if len(moving_avg) == moving_avg.max_size():
+        client.publish(topic, payload=str(int(avg)).encode("utf-8"), qos=0)
+        moving_avg.clear()
 
 
 if __name__ == "__main__":
-
     # Parse CLI args
     parser = argparse.ArgumentParser()
     cli.mqtt_host(parser),
@@ -99,7 +86,7 @@ if __name__ == "__main__":
                                            OOR_VALUES: OutOfRangeValues(size=args[OOR_SIZE]),
                                            OOR_TIME: args[OOR_TIME]},
                                  on_connect=on_connect,
-                                 on_message=on_message)
+                                 on_message=frc_utils.on_message)
     mqtt_client.connect()
 
     try:

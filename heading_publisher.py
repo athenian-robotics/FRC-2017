@@ -14,17 +14,17 @@ from utils import current_time_millis
 from utils import setup_logging
 from utils import sleep
 
+from frc_utils import SERIAL_READER
+
 logger = logging.getLogger(__name__)
 
 CALIBRATION_BY_VALUES = "9-DOF Sensor calibrated by values"
 CALIBRATION_BY_LOG = "9-DOF Sensor calibrated by log"
-
 HEADING_TOPIC = "heading_topic"
 CALIB_TOPIC = "calib_topic"
 CALIB_PUBLISH = "calib_publish"
 CALIB_ENABLED = "calib_enabled"
 MIN_PUBLISH = "min_publish"
-SERIAL_READER = "serial_reader"
 PUBLISH_LOCK = "publish_lock"
 
 stopped = False

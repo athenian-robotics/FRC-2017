@@ -12,16 +12,13 @@ from serial_reader import SerialReader
 from utils import setup_logging
 from utils import sleep
 
-logger = logging.getLogger(__name__)
+import frc_utils
+from frc_utils import SERIAL_READER, MOVING_AVERAGE, OOR_VALUES, OUT_OF_RANGE, DEVICE, COMMAND
 
-SERIAL_READER = "serial_reader"
-MOVING_AVERAGE = "moving_average"
-OOR_VALUES = "oor_values"
-DEVICE = "device"
 TOLERANCE_THRESH = 5
-OUT_OF_RANGE = "-1".encode("utf-8")
-
 USE_AVG = False
+
+logger = logging.getLogger(__name__)
 
 
 def on_connect(client, userdata, flags, rc):
@@ -39,6 +36,9 @@ def fetch_data(mm_str, userdata):
     moving_avg = userdata[MOVING_AVERAGE]
     oor_values = userdata[OOR_VALUES]
     oor_upper = userdata[OOR_UPPER]
+
+    if not userdata[frc_utils.ENABLED]:
+        return
 
     # Values sometimes get compacted together, take the later value if that happens since it's newer
     if "\r" in mm_str:
@@ -84,6 +84,7 @@ if __name__ == "__main__":
 
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/mm".format(args[DEVICE]),
+                                           COMMAND: "lidar/{0}/command".format(args[DEVICE]),
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
@@ -91,7 +92,8 @@ if __name__ == "__main__":
                                            OOR_VALUES: OutOfRangeValues(size=args[OOR_SIZE]),
                                            OOR_TIME: args[OOR_TIME],
                                            OOR_UPPER: args[OOR_UPPER]},
-                                 on_connect=on_connect)
+                                 on_connect=on_connect,
+                                 on_message=frc_utils.on_message)
     mqtt_client.connect()
 
     try:

@@ -9,23 +9,27 @@ from mqtt_connection import MqttConnection
 
 logger = logging.getLogger(__name__)
 
-
-def on_connect(client, userdata, flags, rc):
-    logger.info("Connected with result code: {0}".format(rc))
-    Thread(target=enable_disable, args=(client,)).start()
-
-
-def enable_disable(client):
-    while True:
-        client.publish("lidar/front/command", payload="OFF", qos=0)
-        client.publish("lidar/rear/command", payload="OFF", qos=0)
-        time.sleep(3)
-        client.publish("lidar/front/command", payload="ON", qos=0)
-        client.publish("lidar/rear/command", payload="ON", qos=0)
-        time.sleep(3)
-
+cmds = ["lidar/left/command", "lidar/right/command",
+        "lidar/front/command", "lidar/rear/command",
+        "heading/command",
+        "camera/gear/command"]
 
 if __name__ == "__main__":
+    def on_connect(client, userdata, flags, rc):
+        logger.info("Connected with result code: {0}".format(rc))
+        Thread(target=enable_disable, args=(client,)).start()
+
+
+    def enable_disable(client):
+        while True:
+            for i in cmds:
+                client.publish(i, payload="OFF", qos=0)
+            time.sleep(3)
+            for i in cmds:
+                client.publish(i, payload="ON", qos=0)
+            time.sleep(3)
+
+
     # Parse CLI args
     parser = argparse.ArgumentParser()
     cli.mqtt_host(parser),
