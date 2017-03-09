@@ -14,7 +14,9 @@ from utils import current_time_millis
 from utils import setup_logging
 from utils import sleep
 
-from frc_utils import SERIAL_READER
+import frc_utils
+from frc_utils import ENABLED
+from frc_utils import SERIAL_READER, COMMAND
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,7 @@ def on_connect(client, userdata, flags, rc):
                         port=userdata[SERIAL_PORT],
                         baudrate=userdata[BAUD_RATE])
     Thread(target=background_publisher, args=(userdata, userdata[MIN_PUBLISH])).start()
+    client.subscribe(userdata[COMMAND])
 
 
 # SerialReader calls this for every line read from Arduino
@@ -61,7 +64,7 @@ def fetch_data(val, userdata):
             if heading != current_heading:
                 logger.debug(val)
                 current_heading = heading
-                publish_heading(client, userdata[HEADING_TOPIC], heading, userdata[PUBLISH_LOCK])
+                publish_heading(client, userdata[HEADING_TOPIC], heading, userdata)
 
             if userdata[CALIB_ENABLED] and not calibrated_by_values:
                 # The arduino sketch includes a "! " prefix to SYS if the data is not calibrated (and thus not reliable)
@@ -103,11 +106,16 @@ def background_publisher(userdata, min_publish_secs):
         time.sleep(.5)
         elapsed_time = current_time_millis() - last_heading_publish_time
         if elapsed_time > min_publish_secs * 1000 and current_heading != -1:
-            publish_heading(client, heading_topic, current_heading, userdata[PUBLISH_LOCK])
+            publish_heading(client, heading_topic, current_heading, userdata)
 
 
-def publish_heading(client, topic, heading, publish_lock):
+def publish_heading(client, topic, heading, userdata):
     global last_heading_publish_time
+
+    if not userdata[ENABLED]:
+        return
+
+    publish_lock = userdata[PUBLISH_LOCK]
     with publish_lock:
         client.publish(topic, payload=(str(heading).encode("utf-8")), qos=0)
         last_heading_publish_time = current_time_millis()
@@ -132,20 +140,22 @@ if __name__ == "__main__":
 
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
-    publish_lock = Lock()
     serial_reader = SerialReader(debug=True)
 
     mqtt_client = MqttConnection(hostname=(args[MQTT_HOST]),
                                  userdata={HEADING_TOPIC: "heading/degrees",
                                            CALIB_TOPIC: "heading/calibration",
+                                           COMMAND: "heading/command",
+                                           ENABLED: True,
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
-                                           PUBLISH_LOCK: publish_lock,
+                                           PUBLISH_LOCK: Lock(),
                                            CALIB_PUBLISH: args[CALIB_PUBLISH],
                                            CALIB_ENABLED: args[CALIB_ENABLED],
                                            MIN_PUBLISH: args[MIN_PUBLISH]},
-                                 on_connect=on_connect)
+                                 on_connect=on_connect,
+                                 on_message=frc_utils.on_message)
     mqtt_client.connect()
 
     try:

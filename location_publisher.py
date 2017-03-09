@@ -12,6 +12,9 @@ from mqtt_connection import MqttConnection
 from utils import setup_logging
 from utils import sleep
 
+import frc_utils
+from frc_utils import COMMAND, ENABLED
+
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
@@ -29,6 +32,7 @@ if __name__ == "__main__":
     def on_connect(client, userdata, flags, rc):
         logger.info("Connected to MQTT broker with result code: {0}".format(rc))
         Thread(target=publish_locations, args=(client, userdata)).start()
+        client.subscribe(userdata[COMMAND])
 
 
     def publish_locations(client, userdata):
@@ -36,6 +40,10 @@ if __name__ == "__main__":
         while True:
             try:
                 x_loc = locations.get_x()
+
+                if not userdata[ENABLED]:
+                    continue
+
                 if x_loc is not None and abs(x_loc[0] - prev_value) > 1:
                     result, mid = client.publish("{0}/x".format(userdata[TOPIC]),
                                                  payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
@@ -48,8 +56,11 @@ if __name__ == "__main__":
 
     # Setup MQTT client
     mqtt_conn = MqttConnection(args[MQTT_HOST],
-                               userdata={TOPIC: args[MQTT_TOPIC]},
-                               on_connect=on_connect)
+                               userdata={TOPIC: args[MQTT_TOPIC],
+                                         COMMAND: args[MQTT_TOPIC] + "/command",
+                                         ENABLED: True},
+                               on_connect=on_connect,
+                               on_message=frc_utils.on_message)
     mqtt_conn.connect()
 
     try:

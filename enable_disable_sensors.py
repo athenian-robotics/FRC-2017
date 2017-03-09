@@ -27,7 +27,7 @@ if __name__ == "__main__":
             time.sleep(3)
             for i in cmds:
                 client.publish(i, payload="ON", qos=0)
-            time.sleep(3)
+            time.sleep(10)
 
 
     # Parse CLI args

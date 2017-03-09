@@ -13,7 +13,7 @@ from utils import setup_logging
 from utils import sleep
 
 import frc_utils
-from frc_utils import SERIAL_READER, MOVING_AVERAGE, OOR_VALUES, OUT_OF_RANGE, DEVICE, COMMAND
+from frc_utils import SERIAL_READER, MOVING_AVERAGE, OOR_VALUES, OUT_OF_RANGE, DEVICE, COMMAND, ENABLED
 
 TOLERANCE_THRESH = 5
 USE_AVG = False
@@ -28,6 +28,7 @@ def on_connect(client, userdata, flags, rc):
                         userdata=userdata,
                         port=userdata[SERIAL_PORT],
                         baudrate=userdata[BAUD_RATE])
+    client.subscribe(userdata[COMMAND])
 
 
 def fetch_data(mm_str, userdata):
@@ -85,6 +86,7 @@ if __name__ == "__main__":
     mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
                                  userdata={TOPIC: "lidar/{0}/mm".format(args[DEVICE]),
                                            COMMAND: "lidar/{0}/command".format(args[DEVICE]),
+                                           ENABLED: True,
                                            SERIAL_PORT: port,
                                            BAUD_RATE: args[BAUD_RATE],
                                            SERIAL_READER: serial_reader,
