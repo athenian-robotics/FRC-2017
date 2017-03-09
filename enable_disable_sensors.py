@@ -17,9 +17,11 @@ def on_connect(client, userdata, flags, rc):
 
 def enable_disable(client):
     while True:
-        client.publish("lidar/#/command", payload="OFF", qos=0)
+        client.publish("lidar/front/command", payload="OFF", qos=0)
+        client.publish("lidar/rear/command", payload="OFF", qos=0)
         time.sleep(3)
-        client.publish("lidar/#/command", payload="ON", qos=0)
+        client.publish("lidar/front/command", payload="ON", qos=0)
+        client.publish("lidar/rear/command", payload="ON", qos=0)
         time.sleep(3)
 
 
