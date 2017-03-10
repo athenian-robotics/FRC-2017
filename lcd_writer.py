@@ -36,8 +36,8 @@ LIDAR_LEFT = "lidarleft"
 LIDAR_RIGHT = "lidarright"
 LIDAR_FRONT = "lidarfront"
 LIDAR_REAR = "lidarrear"
-HEADINGD = "headingd"
-HEADINGC = "headingc"
+HEADING_DEGREES = "headingd"
+HEADING_CALIB = "headingc"
 
 lidar_left = ""
 lidar_right = ""
@@ -45,8 +45,8 @@ lidar_front = ""
 lidar_rear = ""
 camera_v = ""
 camera_a = ""
-heading_c = ""
-heading_d = ""
+heading_calib = ""
+heading_degrees = ""
 
 
 class SensorInfo(object):
@@ -60,8 +60,8 @@ sensors = deque([SensorInfo(LIDAR_LEFT, "Lidar Left"),
                  SensorInfo(LIDAR_FRONT, "Lidar Front"),
                  SensorInfo(LIDAR_REAR, "Lidar Rear"),
                  SensorInfo(CAMERA, "Camera"),
-                 SensorInfo(HEADINGC, "Calibration"),
-                 SensorInfo(HEADINGD, "Degrees")])
+                 SensorInfo(HEADING_CALIB, "Calibration"),
+                 SensorInfo(HEADING_DEGREES, "Degrees")])
 
 # default sensor
 selected_sensor = sensors[0].sensor_id
@@ -86,7 +86,7 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    global lidar_right, lidar_left, lidar_front, lidar_rear, camera_a, camera_v, heading_d, heading_c
+    global lidar_right, lidar_left, lidar_front, lidar_rear, camera_a, camera_v, heading_degrees, heading_calib
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
     logger.info("{0} : {1}".format(msg.topic, val))
@@ -118,15 +118,17 @@ def on_message(client, userdata, msg):
 
     elif msg.topic == HEADING_CALIBRATION_TOPIC:
         logger.info("LCD Calibration: " + val)
-        heading_c = val
+        val = val.replace(" ", "", 10)
+        val = val.replace("SYS", "S")
+        heading_calib = val
 
     elif msg.topic == HEADING_DEGREES_TOPIC:
         logger.info("LCD Degrees: " + val)
-        heading_d = val
+        heading_degrees = val
 
 
 def lcd_display(delay=0.1):
-    global lidar_right, lidar_left, lidar_front, lidar_rear, camera_a, camera_v, heading_d, heading_c
+    global lidar_right, lidar_left, lidar_front, lidar_rear, camera_a, camera_v, heading_degrees, heading_calib
     while True:
         if selected_sensor == LIDAR_LEFT:
             lcd.clear()
@@ -186,23 +188,23 @@ def lcd_display(delay=0.1):
             elif camera_a == ALIGNED:
                 backlight.rgb(0, 255, 0)
 
-        elif selected_sensor == HEADINGC:
+        elif selected_sensor == HEADING_CALIB:
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Calibration")
             lcd.set_cursor_position(0, 2)
-            lcd.write(heading_c)
-            if heading_c == CALIBRATION_BY_VALUES:
+            lcd.write(heading_calib)
+            if heading_calib == CALIBRATION_BY_VALUES:
                 backlight.rgb(0, 255, 0)
             else:
                 backlight.rgb(255, 255, 255)
 
-        elif selected_sensor == HEADINGD:
+        elif selected_sensor == HEADING_DEGREES:
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Degrees")
             lcd.set_cursor_position(0, 2)
-            lcd.write(heading_d)
+            lcd.write(heading_degrees)
 
         time.sleep(delay)
 
