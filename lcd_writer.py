@@ -212,11 +212,11 @@ def handle_button(ch, evt):
     global sensors
     sensors.rotate(1)
     selected_sensor = sensors[0].sensor_id
-    logger.info(selected_sensor.desc)
+    logger.info(sensors[0].desc)
     lcd.clear()
     backlight.rgb(255, 255, 255)
     lcd.set_cursor_position(0, 0)
-    lcd.write(selected_sensor.desc)
+    lcd.write(sensors[0].desc)
     lcd.set_cursor_position(0, 2)
 
 
@@ -225,11 +225,11 @@ def handle_button(ch, evt):
     global sensors
     sensors.rotate(-1)
     selected_sensor = sensors[0].sensor_id
-    logger.info(selected_sensor.desc)
+    logger.info(sensors[0].desc)
     lcd.clear()
     backlight.rgb(255, 255, 255)
     lcd.set_cursor_position(0, 0)
-    lcd.write(selected_sensor.desc)
+    lcd.write(sensors[0].desc)
     lcd.set_cursor_position(0, 2)
 
 
