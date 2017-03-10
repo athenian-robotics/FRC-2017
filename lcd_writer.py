@@ -119,7 +119,6 @@ def on_message(client, userdata, msg):
     elif msg.topic == HEADING_CALIBRATION_TOPIC:
         logger.info("LCD Calibration: " + val)
         val = val.replace(" ", "", 10)
-        val = val.replace("SYS", "S")
         heading_calib = val
 
     elif msg.topic == HEADING_DEGREES_TOPIC:
