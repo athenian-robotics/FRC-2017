@@ -2,4 +2,4 @@
 
 date > ~pi/git/FRC-2017/logs/lidar-left-publisher.reboot
 export PYTHONPATH=${PYTHONPATH}:~pi/git/common-robotics
-python3 ~pi/git/FRC-2017/short_lidar_publisher.py --mqtt mqtt-turtle.local --device left --did 7543331373935160E190 --baud 115200 --oor_size 3 --oor_time 1000 --oor_upper 2000 &> ~pi/git/FRC-2017/logs/lidar-left-publisher.out &
+python3 ~pi/git/FRC-2017/short_lidar_publisher.py --mqtt mqtt-turtle.local --device left --did 7543331373935160E190 --baud 115200 --oor_size 15 --oor_time 1000 --oor_upper 2000 &> ~pi/git/FRC-2017/logs/lidar-left-publisher.out &
