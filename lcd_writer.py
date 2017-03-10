@@ -49,6 +49,7 @@ heading_calib = ""
 heading_degrees = ""
 
 
+#
 class SensorInfo(object):
     def __init__(self, sensor_id, desc):
         self.sensor_id = sensor_id
