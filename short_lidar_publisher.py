@@ -51,7 +51,7 @@ def fetch_data(mm_str, userdata):
         # Filter out bad data
         oor_values.mark()
         if oor_values.is_out_of_range(userdata[OOR_TIME]):
-            # oor_values.clear()
+            oor_values.clear()
             client.publish(topic, payload=OUT_OF_RANGE, qos=0)
     else:
         if USE_AVG:
