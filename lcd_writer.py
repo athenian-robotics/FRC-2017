@@ -209,7 +209,7 @@ def lcd_display(delay=0.1):
 
 @nav.on(nav.UP)
 def handle_button(ch, evt):
-    global sensors
+    global sensors, selected_sensor
     sensors.rotate(1)
     selected_sensor = sensors[0].sensor_id
     logger.info(sensors[0].desc)
@@ -222,7 +222,7 @@ def handle_button(ch, evt):
 
 @nav.on(nav.DOWN)
 def handle_button(ch, evt):
-    global sensors
+    global sensors, selected_sensor
     sensors.rotate(-1)
     selected_sensor = sensors[0].sensor_id
     logger.info(sensors[0].desc)
