@@ -122,24 +122,24 @@ $ sudo apt-get install nginx
 lidar-gear:
 
 ```bash
-~pi/git/FRC-2017/bin/lidar-gear-startup.sh
+~pi/git/FRC-2017/boot/lidar-gear-startup.sh
 ```
 camera-gear:
   
 ```bash
-~pi/git/FRC-2017/bin/camera-gear-startup.sh
+~pi/git/FRC-2017/boot/camera-gear-startup.sh
 ```
 
 camera-rope:
   
 ```bash
-~pi/git/FRC-2017/bin/camera-rope-startup.sh
+~pi/git/FRC-2017/boot/camera-rope-startup.sh
 ```
 
 lcd1:
 
 ```bash
-~pi/git/FRC-2017/bin/lcd1-startup.sh
+~pi/git/FRC-2017/boot/lcd1-startup.sh
 ```
 
 
