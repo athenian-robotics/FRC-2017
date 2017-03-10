@@ -166,8 +166,8 @@ def lcd_display(delay=0.1):
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Rear")
             lcd.set_cursor_position(0, 2)
-            lcd.write(lidar_front + " cm")
-            if lidar_front == "-1":
+            lcd.write(lidar_rear + " cm")
+            if lidar_rear == "-1":
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
