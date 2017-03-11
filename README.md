@@ -1,5 +1,8 @@
 # FRC-2017 Notes
 
+## RoboRio
+
+The RoboRio hostname is *roborio-852-frc.local*.  The configuration page is at: *roborio-852-frc.local:80*
 ## Raspi Names
 
 | #   | Name                       | Repos                                              |
