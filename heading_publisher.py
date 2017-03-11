@@ -115,6 +115,10 @@ def publish_heading(client, topic, heading, userdata):
     if not userdata[ENABLED]:
         return
 
+    elapsed_time = current_time_millis() - last_heading_publish_time
+    if abs(elapsed_time < 75):
+        return
+
     publish_lock = userdata[PUBLISH_LOCK]
     with publish_lock:
         client.publish(topic, payload=(str(heading).encode("utf-8")), qos=0)
