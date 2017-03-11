@@ -23,8 +23,8 @@ LIDAR_LEFT_TOPIC = "lidar/left/mm"
 LIDAR_RIGHT_TOPIC = "lidar/right/mm"
 LIDAR_FRONT_TOPIC = "lidar/front/cm"
 LIDAR_REAR_TOPIC = "lidar/rear/cm"
-CAMERA_1_VALUE_TOPIC = "camera/gear/x"
-CAMERA_1_ALIGNMENT_TOPIC = "camera/gear/alignment"
+CAMERA_VALUE_TOPIC = "camera/gear/x"
+CAMERA_ALIGNMENT_TOPIC = "camera/gear/alignment"
 HEADING_CALIBRATION_TOPIC = "heading/calibration"
 HEADING_DEGREES_TOPIC = "heading/degrees"
 NOT_SEEN = "not_seen"
@@ -49,20 +49,29 @@ heading_calib = ""
 heading_degrees = ""
 
 
-#
 class SensorInfo(object):
-    def __init__(self, sensor_id, desc):
+    def __init__(self, sensor_id, topic, desc):
         self.sensor_id = sensor_id
+        self.topic = topic
         self.desc = desc
+        self.value = ""
 
 
-sensors = deque([SensorInfo(LIDAR_LEFT, "Lidar Left"),
-                 SensorInfo(LIDAR_RIGHT, "Lidar Right"),
-                 SensorInfo(LIDAR_FRONT, "Lidar Front"),
-                 SensorInfo(LIDAR_REAR, "Lidar Rear"),
-                 SensorInfo(CAMERA, "Camera"),
-                 SensorInfo(HEADING_CALIB, "Calibration"),
-                 SensorInfo(HEADING_DEGREES, "Degrees")])
+sensor_dict = {LIDAR_LEFT: SensorInfo(LIDAR_LEFT, LIDAR_LEFT_TOPIC, "Lidar Left"),
+               LIDAR_RIGHT: SensorInfo(LIDAR_RIGHT, LIDAR_RIGHT_TOPIC, "Lidar Right"),
+               LIDAR_FRONT: SensorInfo(LIDAR_FRONT, LIDAR_FRONT_TOPIC, "Lidar Front"),
+               LIDAR_REAR: SensorInfo(LIDAR_REAR, LIDAR_REAR_TOPIC, "Lidar Rear"),
+               CAMERA: SensorInfo(CAMERA, CAMERA_VALUE_TOPIC, "Camera"),
+               HEADING_CALIB: SensorInfo(HEADING_CALIB, HEADING_CALIBRATION_TOPIC, "Calibration"),
+               HEADING_DEGREES: SensorInfo(HEADING_DEGREES, HEADING_DEGREES_TOPIC, "Degrees")}
+
+sensors = deque([sensor_dict[LIDAR_LEFT],
+                 sensor_dict[LIDAR_RIGHT],
+                 sensor_dict[LIDAR_FRONT],
+                 sensor_dict[LIDAR_REAR],
+                 sensor_dict[CAMERA],
+                 sensor_dict[HEADING_CALIB],
+                 sensor_dict[HEADING_DEGREES]])
 
 # default sensor
 selected_sensor = sensors[0].sensor_id
@@ -75,15 +84,12 @@ lcd.clear()
 
 
 def on_connect(client, userdata, flags, rc):
+    global sensor_dict
     logger.info("Connected with result code: {0}".format(rc))
-    client.subscribe(LIDAR_LEFT_TOPIC)
-    client.subscribe(LIDAR_RIGHT_TOPIC)
-    client.subscribe(LIDAR_FRONT_TOPIC)
-    client.subscribe(LIDAR_REAR_TOPIC)
-    client.subscribe(CAMERA_1_VALUE_TOPIC)
-    client.subscribe(CAMERA_1_ALIGNMENT_TOPIC)
-    client.subscribe(HEADING_DEGREES_TOPIC)
-    client.subscribe(HEADING_CALIBRATION_TOPIC)
+
+    for sensor in sensor_dict:
+        client.subscribe(sensor.topic)
+    client.subscribe(CAMERA_ALIGNMENT_TOPIC)
 
 
 def on_message(client, userdata, msg):
@@ -108,19 +114,17 @@ def on_message(client, userdata, msg):
         logger.info("LCD Lidar Rear: " + val)
         lidar_rear = val
 
-
-    elif msg.topic == CAMERA_1_VALUE_TOPIC:
+    elif msg.topic == CAMERA_VALUE_TOPIC:
         logger.info("LCD Camera Value: " + val)
         camera_v = val
 
-    elif msg.topic == CAMERA_1_ALIGNMENT_TOPIC:
+    elif msg.topic == CAMERA_ALIGNMENT_TOPIC:
         logger.info("LCD Camera Alignment: " + val)
         camera_a = val
 
     elif msg.topic == HEADING_CALIBRATION_TOPIC:
         logger.info("LCD Calibration: " + val)
-        val = val.replace(" ", "", 10)
-        heading_calib = val
+        heading_calib = val.replace(" ", "", 10)
 
     elif msg.topic == HEADING_DEGREES_TOPIC:
         logger.info("LCD Degrees: " + val)

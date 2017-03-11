@@ -116,7 +116,7 @@ def publish_heading(client, topic, heading, userdata):
         return
 
     elapsed_time = current_time_millis() - last_heading_publish_time
-    if abs(elapsed_time < 75):
+    if elapsed_time < 75:
         return
 
     publish_lock = userdata[PUBLISH_LOCK]
