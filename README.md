@@ -2,16 +2,16 @@
 
 ## RoboRio
 
-The RoboRio hostname is *roborio-852-frc.local*.  The configuration page is at: *roborio-852-frc.local:80*
+The RoboRio hostname is *roborio-852-frc.local*.  The configuration page is at: *http://roborio-852-frc.local*
 ## Raspi Names
 
-| #   | Name                       | Repos                                              |
-|:---:|:---------------------------|:---------------------------------------------------|
-| 11  | **camera-gear.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
-| 18  | **camera-rope.local**      | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
-| 10  | **lidar-gear.local**       | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
-| 24  | **lcd1.local**             | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
-| 12  | **mqtt-turtle.local**      | none                                               |
+| #   | Name                       |Static IP Address  | Repos                                              |
+|:---:|:---------------------------|:------------------|:---------------------------------------------------|
+| 11  | **camera-gear.local**      |10.8.52.103        | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
+| 18  | **camera-rope.local**      |10.8.52.104        | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017), [object-tracker](https://github.com/athenian-robotics/object-tracking)          |
+| 10  | **lidar-gear.local**       |10.8.52.105        | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017)                          |
+| 24  | **lcd1.local**             |10.8.52.100        | [common-robotics](https://github.com/athenian-robotics/common-robotics), [FRC-2017](https://github.com/athenian-robotics/FRC-2017) |
+| 12  | **mqtt-turtle.local**      |10.8.52.102        | none                                               |
 
 ## MQTT Topics 
 | Name                      | Description                                             |
@@ -109,8 +109,6 @@ $ sudo pip install numpy
 $ sudo pip install pyserial
 ```
 
-
-
 ### apt-get requirements
 ```bash
 $ sudo apt-get install git
@@ -145,4 +143,51 @@ lcd1:
 ~pi/git/FRC-2017/boot/lcd1-startup.sh
 ```
 
+## /etc/dhcpcd.conf edits for setting up static IP addresses
 
+
+### lidar-gear.local
+
+```
+interface eth0
+static ip_address=10.8.52.105/24
+static routers=10.8.52.1
+static domain_name_servers=10.8.52.1
+```
+
+### camera-gear.local
+
+```
+interface eth0
+static ip_address=10.8.52.103/24
+static routers=10.8.52.1
+static domain_name_servers=10.8.52.1
+```
+
+### camera-rope.local
+
+```
+interface eth0
+static ip_address=10.8.52.104/24
+static routers=10.8.52.1
+static domain_name_servers=10.8.52.1
+```
+
+
+### mqtt-turtle.local
+
+```
+interface eth0
+static ip_address=10.8.52.102/24
+static routers=10.8.52.1
+static domain_name_servers=10.8.52.1
+```
+
+### lcd1.local
+
+```
+interface eth0
+static ip_address=10.8.52.100/24
+static routers=10.8.52.1
+static domain_name_servers=10.8.52.1
+```
