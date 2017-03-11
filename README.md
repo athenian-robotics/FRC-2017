@@ -143,8 +143,9 @@ lcd1:
 ~pi/git/FRC-2017/boot/lcd1-startup.sh
 ```
 
-## /etc/dhcpcd.conf edits for setting up static IP addresses
+## /etc/dhcpcd.conf edits for Raspi static IP addresses 
 
+Details are [here](https://www.modmypi.com/blog/how-to-give-your-raspberry-pi-a-static-ip-address-update).
 
 ### lidar-gear.local
 
