@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     # Setup MQTT client
     mqtt_conn = MqttConnection(args[MQTT_HOST],
-                               userdata={LOCK: lock(),
+                               userdata={LOCK: Lock(),
                                          MESSAGES: 0},
                                on_connect=on_connect,
                                on_message=on_message)
