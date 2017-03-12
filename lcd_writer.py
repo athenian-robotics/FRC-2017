@@ -27,7 +27,7 @@ CAMERA_VALUE_TOPIC = "camera/gear/x"
 CAMERA_ALIGNMENT_TOPIC = "camera/gear/alignment"
 HEADING_CALIBRATION_TOPIC = "heading/calibration"
 HEADING_DEGREES_TOPIC = "heading/degrees"
-METRICS_TOPIC = "logging/metrics/msg_rate"
+METRICS_TOPIC = "metrics/msg_rate"
 
 NOT_SEEN = "not_seen"
 NOT_ALIGNED = "not_aligned"
