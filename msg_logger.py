@@ -16,8 +16,7 @@ logger = logging.getLogger(__name__)
 topics = ["logging/camera/gear/alignment",
           "logging/lidar/gear/distance",
           "logging/lidar/long/distance",
-          "logging/heading/degrees",
-          "test/logging"]
+          "logging/heading/degrees"]
 
 
 def on_connect(client, userdata, flags, rc):

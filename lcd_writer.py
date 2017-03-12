@@ -39,14 +39,14 @@ LIDAR_REAR = "lidarrear"
 HEADING_DEGREES = "headingd"
 HEADING_CALIB = "headingc"
 
-lidar_left = ""
-lidar_right = ""
-lidar_front = ""
-lidar_rear = ""
-camera_v = ""
-camera_a = ""
-heading_calib = ""
-heading_degrees = ""
+lidar_left_val = ""
+lidar_right_val = ""
+lidar_front_val = ""
+lidar_rear_val = ""
+camera_v_val = ""
+camera_a_val = ""
+heading_calib_val = ""
+heading_degrees_val = ""
 
 
 class SensorInfo(object):
@@ -93,54 +93,54 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    global lidar_right, lidar_left, lidar_front, lidar_rear, camera_a, camera_v, heading_degrees, heading_calib
+    global lidar_right_val, lidar_left_val, lidar_front_val, lidar_rear_val, camera_a_val, camera_v_val, heading_degrees_val, heading_calib_val
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
     logger.info("{0} : {1}".format(msg.topic, val))
 
     if msg.topic == LIDAR_LEFT_TOPIC:
         logger.info("LCD Lidar Left: " + val)
-        lidar_left = val
+        lidar_left_val = val
 
     elif msg.topic == LIDAR_RIGHT_TOPIC:
         logger.info("LCD Lidar Right: " + val)
-        lidar_right = val
+        lidar_right_val = val
 
     if msg.topic == LIDAR_FRONT_TOPIC:
         logger.info("LCD Lidar Front: " + val)
-        lidar_front = val
+        lidar_front_val = val
 
     elif msg.topic == LIDAR_REAR_TOPIC:
         logger.info("LCD Lidar Rear: " + val)
-        lidar_rear = val
+        lidar_rear_val = val
 
     elif msg.topic == CAMERA_VALUE_TOPIC:
         logger.info("LCD Camera Value: " + val)
-        camera_v = val
+        camera_v_val = val
 
     elif msg.topic == CAMERA_ALIGNMENT_TOPIC:
         logger.info("LCD Camera Alignment: " + val)
-        camera_a = val
+        camera_a_val = val
 
     elif msg.topic == HEADING_CALIBRATION_TOPIC:
         logger.info("LCD Calibration: " + val)
-        heading_calib = val.replace(" ", "", 10)
+        heading_calib_val = val.replace(" ", "", 10)
 
     elif msg.topic == HEADING_DEGREES_TOPIC:
         logger.info("LCD Degrees: " + val)
-        heading_degrees = val
+        heading_degrees_val = val
 
 
 def lcd_display(delay=0.1):
-    global lidar_right, lidar_left, lidar_front, lidar_rear, camera_a, camera_v, heading_degrees, heading_calib
+    global lidar_right_val, lidar_left_val, lidar_front_val, lidar_rear_val, camera_a_val, camera_v_val, heading_degrees_val, heading_calib_val
     while True:
         if selected_sensor == LIDAR_LEFT:
             lcd.clear()
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Left")
             lcd.set_cursor_position(0, 2)
-            lcd.write(lidar_left + " mm")
-            if lidar_left == "-1" and lidar_right == "-1":
+            lcd.write(lidar_left_val + " mm")
+            if lidar_left_val == "-1" and lidar_right_val == "-1":
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
@@ -150,8 +150,8 @@ def lcd_display(delay=0.1):
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Right")
             lcd.set_cursor_position(0, 2)
-            lcd.write(lidar_right + " mm")
-            if lidar_left == "-1" and lidar_right == "-1":
+            lcd.write(lidar_right_val + " mm")
+            if lidar_left_val == "-1" and lidar_right_val == "-1":
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
@@ -161,8 +161,8 @@ def lcd_display(delay=0.1):
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Front")
             lcd.set_cursor_position(0, 2)
-            lcd.write(lidar_front + " cm")
-            if lidar_front == "-1":
+            lcd.write(lidar_front_val + " cm")
+            if lidar_front_val == "-1":
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
@@ -172,8 +172,8 @@ def lcd_display(delay=0.1):
             lcd.set_cursor_position(0, 0)
             lcd.write("Lidar Rear")
             lcd.set_cursor_position(0, 2)
-            lcd.write(lidar_rear + " cm")
-            if lidar_rear == "-1":
+            lcd.write(lidar_rear_val + " cm")
+            if lidar_rear_val == "-1":
                 backlight.rgb(255, 0, 0)
             else:
                 backlight.rgb(255, 255, 255)
@@ -184,12 +184,12 @@ def lcd_display(delay=0.1):
             lcd.set_cursor_position(0, 0)
             lcd.write("Camera")
             lcd.set_cursor_position(0, 2)
-            lcd.write(camera_v)
-            if camera_a == NOT_SEEN:
+            lcd.write(camera_v_val)
+            if camera_a_val == NOT_SEEN:
                 backlight.rgb(255, 0, 0)
-            elif camera_a == NOT_ALIGNED:
+            elif camera_a_val == NOT_ALIGNED:
                 backlight.rgb(0, 0, 255)
-            elif camera_a == ALIGNED:
+            elif camera_a_val == ALIGNED:
                 backlight.rgb(0, 255, 0)
 
         elif selected_sensor == HEADING_CALIB:
@@ -197,8 +197,8 @@ def lcd_display(delay=0.1):
             lcd.set_cursor_position(0, 0)
             lcd.write("Calibration")
             lcd.set_cursor_position(0, 2)
-            lcd.write(heading_calib)
-            if heading_calib == CALIBRATION_BY_VALUES:
+            lcd.write(heading_calib_val)
+            if heading_calib_val == CALIBRATION_BY_VALUES:
                 backlight.rgb(0, 255, 0)
             else:
                 backlight.rgb(255, 255, 255)
@@ -208,7 +208,7 @@ def lcd_display(delay=0.1):
             lcd.set_cursor_position(0, 0)
             lcd.write("Degrees")
             lcd.set_cursor_position(0, 2)
-            lcd.write(heading_degrees)
+            lcd.write(heading_degrees_val)
 
         time.sleep(delay)
 
