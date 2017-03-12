@@ -2,14 +2,13 @@
 
 import argparse
 import logging
+import time
+from threading import Thread, Lock
 
 import cli_args as cli
-from threading import Thread, Lock
 from constants import MQTT_HOST
 from mqtt_connection import MqttConnection
 from utils import sleep
-import time
-
 
 messages = 0
 
@@ -31,14 +30,18 @@ def on_message(client, userdata, msg):
 
 
 def average_publisher(client):
+    global messages, lock
     while True:
-        global messages, lock
-        time.sleep(1)
-        client.publish("metrics/msg_rate", payload=str(messages).encode("utf-8"), qos=0)
-        client.publish("logging/metrics/msg_rate", payload=str(messages).encode("utf-8"), qos=0)
-        with lock:
-            messages = 0
-
+        try:
+            time.sleep(1)
+            payload = str(messages).encode("utf-8")
+            client.publish("metrics/msg_rate", payload=payload, qos=0)
+            client.publish("logging/metrics/msg_rate", payload=payload, qos=0)
+            with lock:
+                messages = 0
+        except BaseException as e:
+            logger.error("Failure in publish_locations() [e]".format(e), exc_info=True)
+            time.sleep(1)
 
 if __name__ == "__main__":
     # Parse CLI args
