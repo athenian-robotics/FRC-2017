@@ -53,7 +53,7 @@ heading_degrees_val = ""
 metrics_val = ""
 
 
-class SensorInfo(object):
+class LcdItem(object):
     def __init__(self, sensor_id, topic, desc):
         self.sensor_id = sensor_id
         self.topic = topic
@@ -61,14 +61,14 @@ class SensorInfo(object):
         self.value = ""
 
 
-sensor_dict = {LIDAR_LEFT: SensorInfo(LIDAR_LEFT, LIDAR_LEFT_TOPIC, "Lidar Left"),
-               LIDAR_RIGHT: SensorInfo(LIDAR_RIGHT, LIDAR_RIGHT_TOPIC, "Lidar Right"),
-               LIDAR_FRONT: SensorInfo(LIDAR_FRONT, LIDAR_FRONT_TOPIC, "Lidar Front"),
-               LIDAR_REAR: SensorInfo(LIDAR_REAR, LIDAR_REAR_TOPIC, "Lidar Rear"),
-               CAMERA: SensorInfo(CAMERA, CAMERA_VALUE_TOPIC, "Camera"),
-               HEADING_CALIB: SensorInfo(HEADING_CALIB, HEADING_CALIBRATION_TOPIC, "Calibration"),
-               HEADING_DEGREES: SensorInfo(HEADING_DEGREES, HEADING_DEGREES_TOPIC, "Degrees"),
-               METRICS: SensorInfo(METRICS, METRICS_TOPIC, "Msgs/Sec")}
+sensor_dict = {LIDAR_LEFT: LcdItem(LIDAR_LEFT, LIDAR_LEFT_TOPIC, "Lidar Left"),
+               LIDAR_RIGHT: LcdItem(LIDAR_RIGHT, LIDAR_RIGHT_TOPIC, "Lidar Right"),
+               LIDAR_FRONT: LcdItem(LIDAR_FRONT, LIDAR_FRONT_TOPIC, "Lidar Front"),
+               LIDAR_REAR: LcdItem(LIDAR_REAR, LIDAR_REAR_TOPIC, "Lidar Rear"),
+               CAMERA: LcdItem(CAMERA, CAMERA_VALUE_TOPIC, "Camera"),
+               HEADING_CALIB: LcdItem(HEADING_CALIB, HEADING_CALIBRATION_TOPIC, "Calibration"),
+               HEADING_DEGREES: LcdItem(HEADING_DEGREES, HEADING_DEGREES_TOPIC, "Degrees"),
+               METRICS: LcdItem(METRICS, METRICS_TOPIC, "Msgs/Sec")}
 
 sensors = deque([sensor_dict[LIDAR_LEFT],
                  sensor_dict[LIDAR_RIGHT],
