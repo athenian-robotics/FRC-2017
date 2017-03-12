@@ -77,7 +77,7 @@ sensors = deque([sensor_dict[LIDAR_LEFT],
                  sensor_dict[CAMERA],
                  sensor_dict[HEADING_CALIB],
                  sensor_dict[HEADING_DEGREES],
-                 sensor_dict[METRICS_TOPIC]])
+                 sensor_dict[METRICS]])
 
 # default sensor
 selected_sensor = sensors[0].sensor_id
