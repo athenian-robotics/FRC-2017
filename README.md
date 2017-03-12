@@ -14,18 +14,23 @@ The RoboRio hostname is *roborio-852-frc.local*.  The configuration page is at: 
 | 12  | **mqtt-turtle.local**      |10.8.52.102        | none                                               |
 
 ## MQTT Topics 
-| Name                      | Description                                             |
-|:--------------------------|:--------------------------------------------------------|
-|**camera/gear/x**          | Camera center position and screen width (String:String) |
-|**camera/gear/peg/x**      | Peg position and screen width (String:String)           |
-|**camera/gear/dualtape/x** | Avg dual tape position and screen width (String:String) |
-|**camera/gear/alignment**  | Camera relative to object (String)                      |
-|**lidar/left/mm**          | Left lidar distance (String)                            |
-|**lidar/right/mm**         | Right lidar distance (String)                           |
-|**lidar/front/cm**         | Front lidar distance (String)                           |
-|**lidar/rear/cm**          | Rear lidar distance (String)                            |
-|**heading/degrees**        | Heading degrees (String)                                |
-|**heading/calibration**    | Calibration status (String)                             |
+| Name                             | Description                                             |
+|:---------------------------------|:--------------------------------------------------------|
+|**camera/gear/x**                 | Camera center position and screen width (String:String) |
+|**camera/gear/peg/x**             | Peg position and screen width (String:String)           |
+|**camera/gear/dualtape/x**        | Avg dual tape position and screen width (String:String) |
+|**camera/gear/alignment**         | Camera relative to object (String)                      |
+|**lidar/left/mm**                 | Left lidar distance (String)                            |
+|**lidar/right/mm**                | Right lidar distance (String)                           |
+|**lidar/front/cm**                | Front lidar distance (String)                           |
+|**lidar/rear/cm**                 | Rear lidar distance (String)                            |
+|**heading/degrees**               | Heading degrees (String)                                |
+|**heading/calibration**           | Calibration status (String)                             |
+|**metrics/msg_rate**              | Msgs/Sec (String)                                       |
+|**logging/camera/gear/alignment** | Logging info (String)                                   |
+|**logging/lidar/gear/distance**   | Logging info (String)                                   |
+|**logging/heading/degrees**       | Logging info (String)                                   |
+|**logging/metrics/msg_rate**      | Logging info (String)                                   |
 
 ## Arduino Device IDs
 | Location                  | ID                                                      |

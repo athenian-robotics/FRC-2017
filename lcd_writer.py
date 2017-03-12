@@ -27,6 +27,8 @@ CAMERA_VALUE_TOPIC = "camera/gear/x"
 CAMERA_ALIGNMENT_TOPIC = "camera/gear/alignment"
 HEADING_CALIBRATION_TOPIC = "heading/calibration"
 HEADING_DEGREES_TOPIC = "heading/degrees"
+METRICS_TOPIC = "logging/metrics/msg_rate"
+
 NOT_SEEN = "not_seen"
 NOT_ALIGNED = "not_aligned"
 ALIGNED = "aligned"
@@ -38,6 +40,7 @@ LIDAR_FRONT = "lidarfront"
 LIDAR_REAR = "lidarrear"
 HEADING_DEGREES = "headingd"
 HEADING_CALIB = "headingc"
+METRICS = "metrics"
 
 lidar_left_val = ""
 lidar_right_val = ""
@@ -47,6 +50,7 @@ camera_v_val = ""
 camera_a_val = ""
 heading_calib_val = ""
 heading_degrees_val = ""
+metrics_val = ""
 
 
 class SensorInfo(object):
@@ -63,7 +67,8 @@ sensor_dict = {LIDAR_LEFT: SensorInfo(LIDAR_LEFT, LIDAR_LEFT_TOPIC, "Lidar Left"
                LIDAR_REAR: SensorInfo(LIDAR_REAR, LIDAR_REAR_TOPIC, "Lidar Rear"),
                CAMERA: SensorInfo(CAMERA, CAMERA_VALUE_TOPIC, "Camera"),
                HEADING_CALIB: SensorInfo(HEADING_CALIB, HEADING_CALIBRATION_TOPIC, "Calibration"),
-               HEADING_DEGREES: SensorInfo(HEADING_DEGREES, HEADING_DEGREES_TOPIC, "Degrees")}
+               HEADING_DEGREES: SensorInfo(HEADING_DEGREES, HEADING_DEGREES_TOPIC, "Degrees"),
+               METRICS: SensorInfo(METRICS, METRICS_TOPIC, "Msgs/Sec")}
 
 sensors = deque([sensor_dict[LIDAR_LEFT],
                  sensor_dict[LIDAR_RIGHT],
@@ -71,7 +76,8 @@ sensors = deque([sensor_dict[LIDAR_LEFT],
                  sensor_dict[LIDAR_REAR],
                  sensor_dict[CAMERA],
                  sensor_dict[HEADING_CALIB],
-                 sensor_dict[HEADING_DEGREES]])
+                 sensor_dict[HEADING_DEGREES],
+                 sensor_dict[METRICS_TOPIC]])
 
 # default sensor
 selected_sensor = sensors[0].sensor_id
@@ -93,7 +99,7 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    global lidar_right_val, lidar_left_val, lidar_front_val, lidar_rear_val, camera_a_val, camera_v_val, heading_degrees_val, heading_calib_val
+    global lidar_right_val, lidar_left_val, lidar_front_val, lidar_rear_val, camera_a_val, camera_v_val, heading_degrees_val, heading_calib_val, metrics_val
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
     logger.info("{0} : {1}".format(msg.topic, val))
@@ -130,9 +136,13 @@ def on_message(client, userdata, msg):
         logger.info("LCD Degrees: " + val)
         heading_degrees_val = val
 
+    elif msg.topic == METRICS_TOPIC:
+        logger.info("Msgs/Sec: " + val)
+        metrics_val = val
+
 
 def lcd_display(delay=0.1):
-    global lidar_right_val, lidar_left_val, lidar_front_val, lidar_rear_val, camera_a_val, camera_v_val, heading_degrees_val, heading_calib_val
+    global lidar_right_val, lidar_left_val, lidar_front_val, lidar_rear_val, camera_a_val, camera_v_val, heading_degrees_val, heading_calib_val, metrics_val
     while True:
         if selected_sensor == LIDAR_LEFT:
             lcd.clear()
@@ -209,6 +219,13 @@ def lcd_display(delay=0.1):
             lcd.write("Degrees")
             lcd.set_cursor_position(0, 2)
             lcd.write(heading_degrees_val)
+
+        elif selected_sensor == METRICS:
+            lcd.clear()
+            lcd.set_cursor_position(0, 0)
+            lcd.write("Msgs/Sec")
+            lcd.set_cursor_position(0, 2)
+            lcd.write(metrics_val)
 
         time.sleep(delay)
 
