@@ -3,6 +3,7 @@
 import argparse
 import logging
 import time
+from threading import Lock
 from threading import Thread
 
 import cli_args as cli
