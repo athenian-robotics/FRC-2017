@@ -40,7 +40,7 @@ def average_publisher(client, userdata):
             with userdata[LOCK]:
                 userdata[MESSAGES] = 0
         except BaseException as e:
-            logger.error("Failure in publish_locations() [e]".format(e), exc_info=True)
+            logger.error("Failure in publish averages() [e]".format(e), exc_info=True)
             time.sleep(1)
 
 
