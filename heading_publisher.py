@@ -146,29 +146,26 @@ if __name__ == "__main__":
 
     serial_reader = SerialReader(debug=True)
 
-    mqtt_client = MqttConnection(hostname=(args[MQTT_HOST]),
-                                 userdata={HEADING_TOPIC: "heading/degrees",
-                                           CALIB_TOPIC: "heading/calibration",
-                                           COMMAND: "heading/command",
-                                           ENABLED: True,
-                                           SERIAL_PORT: port,
-                                           BAUD_RATE: args[BAUD_RATE],
-                                           SERIAL_READER: serial_reader,
-                                           PUBLISH_LOCK: Lock(),
-                                           CALIB_PUBLISH: args[CALIB_PUBLISH],
-                                           CALIB_ENABLED: args[CALIB_ENABLED],
-                                           MIN_PUBLISH: args[MIN_PUBLISH]},
-                                 on_connect=on_connect,
-                                 on_message=frc_utils.on_message)
-    mqtt_client.connect()
-
-    try:
-        sleep()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        stopped = True
-        mqtt_client.disconnect()
-        serial_reader.stop()
+    with MqttConnection(hostname=(args[MQTT_HOST]),
+                        userdata={HEADING_TOPIC: "heading/degrees",
+                                  CALIB_TOPIC: "heading/calibration",
+                                  COMMAND: "heading/command",
+                                  ENABLED: True,
+                                  SERIAL_PORT: port,
+                                  BAUD_RATE: args[BAUD_RATE],
+                                  SERIAL_READER: serial_reader,
+                                  PUBLISH_LOCK: Lock(),
+                                  CALIB_PUBLISH: args[CALIB_PUBLISH],
+                                  CALIB_ENABLED: args[CALIB_ENABLED],
+                                  MIN_PUBLISH: args[MIN_PUBLISH]},
+                        on_connect=on_connect,
+                        on_message=frc_utils.on_message):
+        try:
+            sleep()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            stopped = True
+            serial_reader.stop()
 
     logger.info("Exiting...")

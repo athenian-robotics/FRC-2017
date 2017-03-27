@@ -81,37 +81,21 @@ have access to github.
 
 ### PIP requirements
 
-
 Raspbian with the *pysearchimages* distro (has OpenCV 3.2 package):
 
 ```bash
 $ source start_py2cv3.sh
 $
 $ pip install --upgrade pip
-$ pip install imutils
-$ pip install grpcio
-$ pip install paho-mqtt
-$ pip install flask
-$ pip install requests
-$ pip install blinkt
-$ pip install numpy
-$ pip install pyserial
+$ pip install -r pip/requirements.txt
+$ pip install -r pip/opencv-requirements.txt
 ```
 
 Vanilla Raspbian:
 
 ```bash
-$ source start_py2cv3.sh
-$
 $ sudo pip install --upgrade pip
-$ sudo pip install imutils
-$ sudo pip install grpcio
-$ sudo pip install paho-mqtt
-$ sudo pip install flask
-$ sudo pip install requests
-$ sudo pip install blinkt
-$ sudo pip install numpy
-$ sudo pip install pyserial
+$ sudo pip install -r pip/requirements.txt
 ```
 
 ### apt-get requirements
@@ -146,6 +130,15 @@ lcd1:
 
 ```bash
 ~pi/git/FRC-2017/boot/lcd1-startup.sh
+```
+
+## /etc/ssh/sshd_config edits for turning off reverse DNS lookup
+
+Details are [here](https://linux-tips.com/t/disabling-reverse-dns-lookups-in-ssh/222)
+
+Add this line to the bottom of */etc/ssh/sshd_config*:
+```
+UseDNS no
 ```
 
 ## /etc/dhcpcd.conf edits for Raspi static IP addresses 

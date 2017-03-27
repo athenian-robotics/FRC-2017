@@ -5,8 +5,7 @@ import logging
 import cli_args as cli
 from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
-from utils import setup_logging
-from utils import sleep
+from utils import setup_logging, waitForKeyboardInterrupt
 
 DIR = "dir"
 LOG = "log"
@@ -20,7 +19,7 @@ topics = ["logging/camera/gear/alignment",
 
 
 def on_connect(client, userdata, flags, rc):
-    global sensor_dict
+    global topics
     logger.info("Connected with result code: {0}".format(rc))
 
     for topic in topics:
@@ -47,17 +46,10 @@ if __name__ == "__main__":
     setup_logging(filename=filename, level=args[LOG_LEVEL])
 
     # Setup MQTT client
-    mqtt_conn = MqttConnection(args[MQTT_HOST],
-                               userdata={},
-                               on_connect=on_connect,
-                               on_message=on_message)
-    mqtt_conn.connect()
-
-    try:
-        sleep()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        mqtt_conn.disconnect()
+    with MqttConnection(args[MQTT_HOST],
+                        userdata={},
+                        on_connect=on_connect,
+                        on_message=on_message):
+        waitForKeyboardInterrupt()
 
     logger.info("Exiting...")

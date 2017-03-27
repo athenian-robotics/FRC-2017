@@ -58,17 +58,13 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
-    mqtt_conn = MqttConnection(args[MQTT_HOST],
-                               userdata={},
-                               on_connect=on_connect,
-                               on_message=on_message)
-    mqtt_conn.connect()
-
-    try:
-        run_display()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        mqtt_conn.disconnect()
+    with MqttConnection(args[MQTT_HOST],
+                        userdata={},
+                        on_connect=on_connect,
+                        on_message=on_message):
+        try:
+            run_display()
+        except KeyboardInterrupt:
+            pass
 
     logging.info("Exiting...")

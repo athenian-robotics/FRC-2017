@@ -6,6 +6,7 @@ from threading import Thread
 import cli_args as cli
 from constants import MQTT_HOST
 from mqtt_connection import MqttConnection
+from utils import waitForKeyboardInterrupt
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,9 @@ if __name__ == "__main__":
     cli.verbose(parser),
     args = vars(parser.parse_args())
 
-    mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
-                                 userdata={},
-                                 on_connect=on_connect)
-    mqtt_client.connect()
+    with MqttConnection(hostname=args[MQTT_HOST],
+                        userdata={},
+                        on_connect=on_connect):
+        waitForKeyboardInterrupt()
+
+    logger.info("Exiting...")

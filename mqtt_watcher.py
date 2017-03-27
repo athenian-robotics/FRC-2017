@@ -6,8 +6,7 @@ import logging
 import cli_args as cli
 from constants import MQTT_HOST, TOPIC, MQTT_TOPIC
 from mqtt_connection import MqttConnection
-from utils import setup_logging
-from utils import sleep
+from utils import setup_logging, waitForKeyboardInterrupt
 
 logger = logging.getLogger(__name__)
 
@@ -32,17 +31,10 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging()
 
-    mqtt_conn = MqttConnection(args[MQTT_HOST],
-                               userdata={TOPIC: args[MQTT_TOPIC]},
-                               on_connect=on_connect,
-                               on_message=on_message)
-    mqtt_conn.connect()
-
-    try:
-        sleep()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        mqtt_conn.disconnect()
+    with MqttConnection(args[MQTT_HOST],
+                        userdata={TOPIC: args[MQTT_TOPIC]},
+                        on_connect=on_connect,
+                        on_message=on_message):
+        waitForKeyboardInterrupt()
 
     logger.info("Exiting...")

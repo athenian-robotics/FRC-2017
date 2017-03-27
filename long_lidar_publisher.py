@@ -75,8 +75,8 @@ if __name__ == "__main__":
     serial_reader = SerialReader()
     port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
 
-    mqtt_client = MqttConnection(hostname=args[MQTT_HOST],
-                                 userdata={TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
+    with MqttConnection(hostname=args[MQTT_HOST],
+                        userdata={TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
                                            COMMAND: "lidar/{0}/command".format(args[DEVICE]),
                                            ENABLED: True,
                                            SERIAL_PORT: port,
@@ -85,16 +85,13 @@ if __name__ == "__main__":
                                            MOVING_AVERAGE: MovingAverage(args[AVG_SIZE]),
                                            OOR_VALUES: OutOfRangeValues(size=args[OOR_SIZE]),
                                            OOR_TIME: args[OOR_TIME]},
-                                 on_connect=on_connect,
-                                 on_message=frc_utils.on_message)
-    mqtt_client.connect()
-
-    try:
-        sleep()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        mqtt_client.disconnect()
-        serial_reader.stop()
+                        on_connect=on_connect,
+                        on_message=frc_utils.on_message):
+        try:
+            sleep()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            serial_reader.stop()
 
     logger.info("Exiting...")

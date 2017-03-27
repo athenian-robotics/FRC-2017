@@ -1,17 +1,17 @@
 #!/usr/bin/env python2
 
 import logging
+import time
 from threading import Thread
 
 import cli_args as cli
 import dothat.backlight as backlight
 import dothat.lcd as lcd
 import dothat.touch as nav
-import time
 from constants import MQTT_HOST, LOG_LEVEL
 from mqtt_connection import MqttConnection
-from utils import setup_logging
-from utils import sleep
+from utils import setup_logging, waitForKeyboardInterrupt
+
 from heading_publisher import CALIBRATION_BY_VALUES
 
 logger = logging.getLogger(__name__)
@@ -151,7 +151,6 @@ def lcd_display(delay):
         time.sleep(delay)
 
 
-
 @nav.on(nav.LEFT)
 def handle_left(ch, evt):
     global selected_sensor
@@ -219,20 +218,13 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
-    # Setup MQTT client
-    mqtt_conn = MqttConnection(args[MQTT_HOST],
-                               userdata={},
-                               on_connect=on_connect,
-                               on_message=on_message)
-    mqtt_conn.connect()
-
     Thread(target=lcd_display, args=(0.1,)).start()
 
-    try:
-        sleep()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        mqtt_conn.disconnect()
+    # Setup MQTT client
+    with MqttConnection(args[MQTT_HOST],
+                        userdata={},
+                        on_connect=on_connect,
+                        on_message=on_message):
+        waitForKeyboardInterrupt()
 
     logger.info("Exiting...")

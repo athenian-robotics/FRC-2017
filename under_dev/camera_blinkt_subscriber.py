@@ -5,9 +5,8 @@ from blinkt import set_pixel, set_all, show, set_clear_on_exit
 from cli_args import setup_cli_args
 from constants import CAMERA_NAME, LOG_LEVEL, MQTT_HOST
 from mqtt_connection import MqttConnection
-from utils import mqtt_broker_info
+from utils import mqtt_broker_info, waitForKeyboardInterrupt
 from utils import setup_logging
-from utils import sleep
 
 logger = logging.getLogger(__name__)
 
@@ -81,17 +80,10 @@ if __name__ == "__main__":
 
 
     # Setup MQTT client
-    mqtt_conn = MqttConnection(args[MQTT_HOST],
-                               userdata={CAMERA_NAME: args[CAMERA_NAME]},
-                               on_connect=on_connect,
-                               on_message=on_message)
-    mqtt_conn.connect()
-
-    try:
-        sleep()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        mqtt_conn.disconnect()
+    with MqttConnection(args[MQTT_HOST],
+                        userdata={CAMERA_NAME: args[CAMERA_NAME]},
+                        on_connect=on_connect,
+                        on_message=on_message):
+        waitForKeyboardInterrupt()
 
     logger.info("Exiting...")
