@@ -86,7 +86,7 @@ Raspbian with the *pysearchimages* distro (has OpenCV 3.2 package):
 ```bash
 $ source start_py2cv3.sh
 $
-$ pip install --upgrade pip
+$ pip install --upgrade setuptools pip
 $ pip install -r pip/requirements.txt
 $ pip install -r pip/opencv-requirements.txt
 ```
