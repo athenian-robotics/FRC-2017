@@ -114,7 +114,9 @@ $ sudo apt-get install python-blinkt
 $ sudo apt-get install nginx
 ```
 
-## /etc/rc.local scripts (append above `exit 0`)
+## /etc/rc.local scripts
+
+These snipets are appended above `exit 0` statement:
 
 lidar-gear:
 
@@ -146,6 +148,11 @@ Details are [here](https://linux-tips.com/t/disabling-reverse-dns-lookups-in-ssh
 Add this line to the bottom of */etc/ssh/sshd_config*:
 ```
 UseDNS no
+```
+
+Restart sshd with: 
+```bash
+$ service ssh reload
 ```
 
 ## /etc/dhcpcd.conf edits for Raspi static IP addresses 
