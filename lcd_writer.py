@@ -68,15 +68,15 @@ lcd.set_contrast(45)
 lcd.clear()
 
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(mqtt_client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
 
     dict = userdata[ITEM_DICT]
     for key in dict.keys():
-        client.subscribe(dict[key].topic)
+        mqtt_client.subscribe(dict[key].topic)
 
 
-def on_message(client, userdata, msg):
+def on_message(mqtt_client, userdata, msg):
     dict = userdata[ITEM_DICT]
 
     # Payload is a string byte array

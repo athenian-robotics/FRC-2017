@@ -15,7 +15,7 @@ ENABLED_VALS = ["ON", "ENABLED", "YES", "1", "TRUE"]
 logger = logging.getLogger(__name__)
 
 
-def on_message(client, userdata, msg):
+def on_message(mqtt_client, userdata, msg):
     if msg.topic == userdata[COMMAND]:
         val = msg.payload.decode('ASCII').upper()
         is_enabled = val in ENABLED_VALS

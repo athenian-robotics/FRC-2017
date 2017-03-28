@@ -24,27 +24,27 @@ if __name__ == "__main__":
     setup_logging(level=args[LOG_LEVEL])
 
     # Start location reader
-    with LocationClient(args[GRPC_HOST]) as client:
+    with LocationClient(args[GRPC_HOST]) as loc_client:
 
         # Define MQTT callbacks
-        def on_connect(client, userdata, flags, rc):
+        def on_connect(mqtt_client, userdata, flags, rc):
             logger.info("Connected to MQTT broker with result code: {0}".format(rc))
-            Thread(target=publish_locations, args=(client, userdata)).start()
-            client.subscribe(userdata[COMMAND])
+            Thread(target=publish_locations, args=(mqtt_client, userdata)).start()
+            mqtt_client.subscribe(userdata[COMMAND])
 
 
-        def publish_locations(client, userdata):
+        def publish_locations(mqtt_client, userdata):
             prev_value = -1
             while True:
                 try:
-                    x_loc = client.get_x()
+                    x_loc = loc_client.get_x()
 
                     if not userdata[ENABLED]:
                         continue
 
                     if x_loc is not None and abs(x_loc[0] - prev_value) > 1:
-                        result, mid = client.publish("{0}/x".format(userdata[TOPIC]),
-                                                     payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
+                        result, mid = mqtt_client.publish("{0}/x".format(userdata[TOPIC]),
+                                                          payload="{0}:{1}".format(x_loc[0], x_loc[1]).encode('utf-8'))
                         prev_value = x_loc[0]
 
                 except BaseException as e:

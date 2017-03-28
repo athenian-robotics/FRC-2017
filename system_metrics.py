@@ -19,24 +19,24 @@ MESSAGES = "messages"
 logger = logging.getLogger(__name__)
 
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(mqtt_client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
-    client.subscribe("#")
-    Thread(target=average_publisher, args=(client, userdata)).start()
+    mqtt_client.subscribe("#")
+    Thread(target=average_publisher, args=(mqtt_client, userdata)).start()
 
 
-def on_message(client, userdata, msg):
+def on_message(mqtt_client, userdata, msg):
     with userdata[LOCK]:
         userdata[MESSAGES] += 1
 
 
-def average_publisher(client, userdata):
+def average_publisher(mqtt_client, userdata):
     while True:
         try:
             time.sleep(1)
             payload = str(userdata[MESSAGES]).encode("utf-8")
-            client.publish("metrics/msg_rate", payload=payload, qos=0)
-            client.publish("logging/metrics/msg_rate", payload=payload, qos=0)
+            mqtt_client.publish("metrics/msg_rate", payload=payload, qos=0)
+            mqtt_client.publish("logging/metrics/msg_rate", payload=payload, qos=0)
             with userdata[LOCK]:
                 userdata[MESSAGES] = 0
         except BaseException as e:

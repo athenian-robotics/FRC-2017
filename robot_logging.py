@@ -11,10 +11,10 @@ from utils import setup_logging, waitForKeyboardInterrupt
 logger = logging.getLogger(__name__)
 
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(mqtt_client, userdata, flags, rc):
     # Subscribe to all broker messages
     topic = userdata[TOPIC]
-    client.subscribe(topic)
+    mqtt_client.subscribe(topic)
     setup_logging(filename=args[LOG_FILE],
                   format="%(asctime)s %(levelname)-6s %(message)s",
                   level=logging.DEBUG)
@@ -22,7 +22,7 @@ def on_connect(client, userdata, flags, rc):
     #print("Connected, subscribing to topic {0}".format(topic))
 
 
-def on_message(client, userdata, msg):
+def on_message(mqtt_client, userdata, msg):
     logger.info("{0} : {1}".format(msg.topic, msg.payload))
     #print("{0} : {1}".format(msg.topic, msg.payload))
 

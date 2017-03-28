@@ -11,13 +11,13 @@ from utils import setup_logging, waitForKeyboardInterrupt
 logger = logging.getLogger(__name__)
 
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(mqtt_client, userdata, flags, rc):
     logging.info("Connected with result code: {0}".format(rc))
     # Subscribe to all broker messages
-    client.subscribe(userdata[TOPIC])
+    mqtt_client.subscribe(userdata[TOPIC])
 
 
-def on_message(client, userdata, msg):
+def on_message(mqtt_client, userdata, msg):
     logger.info("{0} : {1}".format(msg.topic, msg.payload))
 
 

@@ -20,14 +20,15 @@ logger = logging.getLogger(__name__)
 
 TOLERANCE_THRESH = 2.5
 
-def on_connect(client, userdata, flags, rc):
+
+def on_connect(mqtt_client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
     serial_reader = userdata[SERIAL_READER]
     serial_reader.start(func=fetch_data,
                         userdata=userdata,
                         port=userdata[SERIAL_PORT],
                         baudrate=userdata[BAUD_RATE])
-    client.subscribe(userdata[COMMAND])
+    mqtt_client.subscribe(userdata[COMMAND])
 
 
 def fetch_data(cm_str, userdata):

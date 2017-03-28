@@ -37,7 +37,7 @@ last_heading_publish_time = -1
 last_calib_publish_time = -1
 
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(mqtt_client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
     serial_reader = userdata[SERIAL_READER]
     serial_reader.start(func=fetch_data,
@@ -45,7 +45,7 @@ def on_connect(client, userdata, flags, rc):
                         port=userdata[SERIAL_PORT],
                         baudrate=userdata[BAUD_RATE])
     Thread(target=background_publisher, args=(userdata, userdata[MIN_PUBLISH])).start()
-    client.subscribe(userdata[COMMAND])
+    mqtt_client.subscribe(userdata[COMMAND])
 
 
 # SerialReader calls this for every line read from Arduino
@@ -56,7 +56,7 @@ def fetch_data(val, userdata):
         logger.info("Non-data: " + val)
     else:
         try:
-            client = userdata[PAHO_CLIENT]
+            mqtt_client = userdata[PAHO_CLIENT]
             vals = val.split("\t")
 
             x_val = vals[0]
@@ -64,20 +64,20 @@ def fetch_data(val, userdata):
             if heading != current_heading:
                 logger.debug(val)
                 current_heading = heading
-                publish_heading(client, userdata[HEADING_TOPIC], heading, userdata)
+                publish_heading(mqtt_client, userdata[HEADING_TOPIC], heading, userdata)
 
             if userdata[CALIB_ENABLED] and not calibrated_by_values:
                 # The arduino sketch includes a "! " prefix to SYS if the data is not calibrated (and thus not reliable)
                 if "! " in val:
                     nocalib_str = val[val.index("! "):]
                     logger.info("9-DOF Sensor not calibrated by log: {0}".format(nocalib_str))
-                    client.publish(userdata[CALIB_TOPIC], payload=(nocalib_str.encode("utf-8")), qos=0)
+                    mqtt_client.publish(userdata[CALIB_TOPIC], payload=(nocalib_str.encode("utf-8")), qos=0)
                     calibrated_by_log = False
                 else:
                     if not calibrated_by_log:
                         msg = CALIBRATION_BY_LOG
                         logger.info(msg)
-                        client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
+                        mqtt_client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
                         calibrated_by_log = True
 
                     calib_str = vals[3]
@@ -89,10 +89,10 @@ def fetch_data(val, userdata):
                     if sys_calib == 3 and gyro_calib == 3 and mag_calib == 3 and acc_calib == 3:
                         msg = CALIBRATION_BY_VALUES
                         logger.info(msg)
-                        client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
+                        mqtt_client.publish(userdata[CALIB_TOPIC], payload=(msg.encode("utf-8")), qos=0)
                         calibrated_by_values = True
                     elif current_time_millis() - last_calib_publish_time > userdata[CALIB_PUBLISH] * 1000:
-                        client.publish(userdata[CALIB_TOPIC], payload=(calib_str.encode("utf-8")), qos=0)
+                        mqtt_client.publish(userdata[CALIB_TOPIC], payload=(calib_str.encode("utf-8")), qos=0)
                         last_calib_publish_time = current_time_millis()
         except IndexError:
             logger.info("Formatting error: {0}".format(val))

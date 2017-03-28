@@ -16,9 +16,9 @@ cmds = ["lidar/left/command", "lidar/right/command",
         "camera/gear/command"]
 
 if __name__ == "__main__":
-    def on_connect(client, userdata, flags, rc):
+    def on_connect(mqtt_client, userdata, flags, rc):
         logger.info("Connected with result code: {0}".format(rc))
-        Thread(target=enable_disable, args=(client,)).start()
+        Thread(target=enable_disable, args=(mqtt_client,)).start()
 
 
     def enable_disable(client):

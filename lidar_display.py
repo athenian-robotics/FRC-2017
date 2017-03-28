@@ -50,17 +50,17 @@ lcd.set_contrast(45)
 lcd.clear()
 
 
-def on_connect(client, userdata, flags, rc):
+def on_connect(mqtt_client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
-    client.subscribe(LIDAR_FRONT_LEFT)
-    client.subscribe(LIDAR_FRONT_RIGHT)
-    client.subscribe(CAMERA_1_VALUE)
-    client.subscribe(CAMERA_1_ALIGNMENT)
-    client.subscribe(HEADING_DEGREES)
-    client.subscribe(HEADING_CALIBRATION)
+    mqtt_client.subscribe(LIDAR_FRONT_LEFT)
+    mqtt_client.subscribe(LIDAR_FRONT_RIGHT)
+    mqtt_client.subscribe(CAMERA_1_VALUE)
+    mqtt_client.subscribe(CAMERA_1_ALIGNMENT)
+    mqtt_client.subscribe(HEADING_DEGREES)
+    mqtt_client.subscribe(HEADING_CALIBRATION)
 
 
-def on_message(client, userdata, msg):
+def on_message(mqtt_client, userdata, msg):
     global lidar_r, lidar_l, camera_a, camera_v, heading_d, heading_c
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
