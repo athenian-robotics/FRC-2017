@@ -89,13 +89,20 @@ $
 $ pip install --upgrade setuptools pip
 $ pip install -r pip/requirements.txt
 $ pip install -r pip/opencv-requirements.txt
+$
+$ pip3 install --upgrade setuptools pip
+$ pip3 install -r pip/requirements.txt
+$ pip3 install -r pip/opencv-requirements.txt
 ```
 
 Vanilla Raspbian:
 
 ```bash
-$ sudo pip install --upgrade pip
+$ sudo pip install --upgrade setuptools pip
 $ sudo pip install -r pip/requirements.txt
+$
+$ sudo pip3 install --upgrade setuptools pip
+$ sudo pip3 install -r pip/requirements.txt
 ```
 
 ### apt-get requirements
