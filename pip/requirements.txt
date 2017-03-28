@@ -2,7 +2,6 @@ grpcio
 paho-mqtt
 flask
 requests
-numpy
 pyserial
 
 blinkt
