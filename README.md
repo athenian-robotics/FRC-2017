@@ -204,3 +204,7 @@ static ip_address=10.8.52.100/24
 static routers=10.8.52.1
 static domain_name_servers=10.8.52.1
 ```
+
+## Connecting to robot Raspis
+
+When connecting to the robot Raspis, manually set your IP address to `10.8.52.201` and netmask to `255.0.0.0`.
