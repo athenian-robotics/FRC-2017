@@ -9,11 +9,10 @@ from moving_average import MovingAverage
 from mqtt_connection import MqttConnection, PAHO_CLIENT
 from out_of_range_values import OutOfRangeValues
 from serial_reader import SerialReader
-from utils import setup_logging
-from utils import sleep
+from utils import setup_logging, waitForKeyboardInterrupt
 
 import frc_utils
-from frc_utils import SERIAL_READER, COMMAND, ENABLED, MOVING_AVERAGE, DEVICE, AVG_SIZE
+from frc_utils import COMMAND, ENABLED, MOVING_AVERAGE, DEVICE, AVG_SIZE
 from short_lidar_publisher import OOR_VALUES
 
 logger = logging.getLogger(__name__)
@@ -23,11 +22,6 @@ TOLERANCE_THRESH = 2.5
 
 def on_connect(mqtt_client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
-    serial_reader = userdata[SERIAL_READER]
-    serial_reader.start(func=fetch_data,
-                        userdata=userdata,
-                        port=userdata[SERIAL_PORT],
-                        baudrate=userdata[BAUD_RATE])
     mqtt_client.subscribe(userdata[COMMAND])
 
 
@@ -73,26 +67,21 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
-    serial_reader = SerialReader()
-    port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
+    userdata = {TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
+                COMMAND: "lidar/{0}/command".format(args[DEVICE]),
+                ENABLED: True,
+                MOVING_AVERAGE: MovingAverage(args[AVG_SIZE]),
+                OOR_VALUES: OutOfRangeValues(size=args[OOR_SIZE]),
+                OOR_TIME: args[OOR_TIME]}
 
-    with MqttConnection(hostname=args[MQTT_HOST],
-                        userdata={TOPIC: "lidar/{0}/cm".format(args[DEVICE]),
-                                           COMMAND: "lidar/{0}/command".format(args[DEVICE]),
-                                           ENABLED: True,
-                                           SERIAL_PORT: port,
-                                           BAUD_RATE: args[BAUD_RATE],
-                                           SERIAL_READER: serial_reader,
-                                           MOVING_AVERAGE: MovingAverage(args[AVG_SIZE]),
-                                           OOR_VALUES: OutOfRangeValues(size=args[OOR_SIZE]),
-                                           OOR_TIME: args[OOR_TIME]},
-                        on_connect=on_connect,
-                        on_message=frc_utils.on_message):
-        try:
-            sleep()
-        except KeyboardInterrupt:
-            pass
-        finally:
-            serial_reader.stop()
+    with SerialReader(func=fetch_data,
+                      userdata=userdata,
+                      port=SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT],
+                      baudrate=args[BAUD_RATE]):
+        with MqttConnection(hostname=args[MQTT_HOST],
+                            userdata=userdata,
+                            on_connect=on_connect,
+                            on_message=frc_utils.on_message):
+            waitForKeyboardInterrupt()
 
     logger.info("Exiting...")

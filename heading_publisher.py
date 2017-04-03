@@ -15,8 +15,8 @@ from utils import setup_logging
 from utils import sleep
 
 import frc_utils
+from frc_utils import COMMAND
 from frc_utils import ENABLED
-from frc_utils import SERIAL_READER, COMMAND
 
 logger = logging.getLogger(__name__)
 
@@ -39,11 +39,6 @@ last_calib_publish_time = -1
 
 def on_connect(mqtt_client, userdata, flags, rc):
     logger.info("Connected with result code: {0}".format(rc))
-    serial_reader = userdata[SERIAL_READER]
-    serial_reader.start(func=fetch_data,
-                        userdata=userdata,
-                        port=userdata[SERIAL_PORT],
-                        baudrate=userdata[BAUD_RATE])
     Thread(target=background_publisher, args=(userdata, userdata[MIN_PUBLISH])).start()
     mqtt_client.subscribe(userdata[COMMAND])
 
@@ -142,30 +137,29 @@ if __name__ == "__main__":
     # Setup logging
     setup_logging(level=args[LOG_LEVEL])
 
-    port = SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT]
+    userdata = {HEADING_TOPIC: "heading/degrees",
+                CALIB_TOPIC: "heading/calibration",
+                COMMAND: "heading/command",
+                ENABLED: True,
+                PUBLISH_LOCK: Lock(),
+                CALIB_PUBLISH: args[CALIB_PUBLISH],
+                CALIB_ENABLED: args[CALIB_ENABLED],
+                MIN_PUBLISH: args[MIN_PUBLISH]},
 
-    serial_reader = SerialReader(debug=True)
-
-    with MqttConnection(hostname=(args[MQTT_HOST]),
-                        userdata={HEADING_TOPIC: "heading/degrees",
-                                  CALIB_TOPIC: "heading/calibration",
-                                  COMMAND: "heading/command",
-                                  ENABLED: True,
-                                  SERIAL_PORT: port,
-                                  BAUD_RATE: args[BAUD_RATE],
-                                  SERIAL_READER: serial_reader,
-                                  PUBLISH_LOCK: Lock(),
-                                  CALIB_PUBLISH: args[CALIB_PUBLISH],
-                                  CALIB_ENABLED: args[CALIB_ENABLED],
-                                  MIN_PUBLISH: args[MIN_PUBLISH]},
-                        on_connect=on_connect,
-                        on_message=frc_utils.on_message):
-        try:
-            sleep()
-        except KeyboardInterrupt:
-            pass
-        finally:
-            stopped = True
-            serial_reader.stop()
+    with SerialReader(func=fetch_data,
+                      userdata=userdata,
+                      port=SerialReader.lookup_port(args[DEVICE_ID]) if args.get(DEVICE_ID) else args[SERIAL_PORT],
+                      baudrate=args[BAUD_RATE],
+                      debug=True):
+        with MqttConnection(hostname=(args[MQTT_HOST]),
+                            userdata=userdata,
+                            on_connect=on_connect,
+                            on_message=frc_utils.on_message):
+            try:
+                sleep()
+            except KeyboardInterrupt:
+                pass
+            finally:
+                stopped = True
 
     logger.info("Exiting...")
