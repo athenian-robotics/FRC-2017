@@ -94,7 +94,6 @@ def fetch_data(val, userdata):
 
 
 def background_publisher(userdata, min_publish_secs):
-    global current_heading, last_heading_publish_time, stopped
     client = userdata[PAHO_CLIENT]
     heading_topic = userdata[HEADING_TOPIC]
     while not stopped:

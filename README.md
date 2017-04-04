@@ -1,3 +1,5 @@
+[![Code Health](https://landscape.io/github/athenian-robotics/FRC-2017/master/landscape.svg?style=flat)](https://landscape.io/github/athenian-robotics/FRC-2017/master)
+
 # FRC-2017 Notes
 
 ## RoboRio

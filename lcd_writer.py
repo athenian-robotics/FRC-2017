@@ -93,7 +93,6 @@ def on_message(mqtt_client, userdata, msg):
 
 
 def lcd_display(dict, delay=0.1):
-    global selected_sensor
     while True:
         try:
             lcd.clear()
@@ -162,14 +161,12 @@ def assign_selected_sensor():
 
 @nav.on(nav.UP)
 def handle_button(ch, evt):
-    global item_deque
     item_deque.rotate(1)
     assign_selected_sensor()
 
 
 @nav.on(nav.DOWN)
 def handle_button(ch, evt):
-    global item_deque
     item_deque.rotate(-1)
     assign_selected_sensor()
 
