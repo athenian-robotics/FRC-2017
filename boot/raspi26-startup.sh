@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-# We have two configurations: object tracking and color picking
-# They both need exclusive camera access, so if one of the two is enabled,
-# the other needs to be commented out.
-
-# Object tracking
-su - pi -c ~pi/git/FRC-2017/bin/zero-heading-publisher.sh
+su - pi -c ~pi/git/FRC-2017/bin/zero-lidar.sh
 
 # MQTT publishing
 #su - pi -c ~pi/git/FRC-2017/bin/gear-front-publisher.sh
