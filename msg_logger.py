@@ -19,7 +19,6 @@ topics = ["logging/camera/gear/alignment",
 
 
 def on_connect(mqtt_client, userdata, flags, rc):
-    global topics
     logger.info("Connected with result code: %s", rc)
 
     for topic in topics:
