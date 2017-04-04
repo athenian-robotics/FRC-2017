@@ -18,13 +18,13 @@ def on_connect(mqtt_client, userdata, flags, rc):
     setup_logging(filename=args[LOG_FILE],
                   format="%(asctime)s %(levelname)-6s %(message)s",
                   level=logging.DEBUG)
-    logger.info("Connected, subscribing to topic {0}".format(topic))
-    #print("Connected, subscribing to topic {0}".format(topic))
+    logger.info("Connected, subscribing to topic %s", topic)
+    # print("Connected, subscribing to topic {0}".format(topic))
 
 
 def on_message(mqtt_client, userdata, msg):
-    logger.info("{0} : {1}".format(msg.topic, msg.payload))
-    #print("{0} : {1}".format(msg.topic, msg.payload))
+    logger.info("%s : %s", msg.topic, msg.payload)
+    # print("{0} : {1}".format(msg.topic, msg.payload))
 
 
 if __name__ == "__main__":

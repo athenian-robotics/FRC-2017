@@ -20,7 +20,7 @@ topics = ["logging/camera/gear/alignment",
 
 def on_connect(mqtt_client, userdata, flags, rc):
     global topics
-    logger.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: %s", rc)
 
     for topic in topics:
         mqtt_client.subscribe(topic)
@@ -29,7 +29,7 @@ def on_connect(mqtt_client, userdata, flags, rc):
 def on_message(mqtt_client, userdata, msg):
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
-    logger.info("{0} : {1}".format(msg.topic, val))
+    logger.info("%s : %s", msg.topic, val)
 
 
 if __name__ == "__main__":

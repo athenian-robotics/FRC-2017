@@ -51,7 +51,7 @@ lcd.clear()
 
 
 def on_connect(mqtt_client, userdata, flags, rc):
-    logger.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: %s", rc)
     mqtt_client.subscribe(LIDAR_FRONT_LEFT)
     mqtt_client.subscribe(LIDAR_FRONT_RIGHT)
     mqtt_client.subscribe(CAMERA_1_VALUE)
@@ -64,7 +64,7 @@ def on_message(mqtt_client, userdata, msg):
     global lidar_r, lidar_l, camera_a, camera_v, heading_d, heading_c
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
-    logger.info("{0} : {1}".format(msg.topic, val))
+    logger.info("%s : %s", msg.topic, val)
 
     if msg.topic == LIDAR_FRONT_LEFT:
         logger.info("LCD Lidar L: " + val)

@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 def on_connect(mqtt_client, userdata, flags, rc):
-    logger.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: %s", rc)
     mqtt_client.subscribe("#")
     Thread(target=average_publisher, args=(mqtt_client, userdata)).start()
 
@@ -40,7 +40,7 @@ def average_publisher(mqtt_client, userdata):
             with userdata[LOCK]:
                 userdata[MESSAGES] = 0
         except BaseException as e:
-            logger.error("Failure in publish averages() [e]".format(e), exc_info=True)
+            logger.error("Failure in publish averages() [%s]", e, exc_info=True)
             time.sleep(1)
 
 

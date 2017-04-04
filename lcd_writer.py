@@ -69,7 +69,7 @@ lcd.clear()
 
 
 def on_connect(mqtt_client, userdata, flags, rc):
-    logger.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: %s", rc)
 
     dict = userdata[ITEM_DICT]
     for key in dict.keys():
@@ -81,14 +81,14 @@ def on_message(mqtt_client, userdata, msg):
 
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
-    logger.info("{0} : {1}".format(msg.topic, val))
+    logger.info("%s : %s", msg.topic, val)
 
     item = dict[msg.topic]
     if item is None:
-        logger.warn("Invalid topic: {0}".format(msg.topic))
+        logger.warn("Invalid topic: %s", msg.topic)
         return
 
-    logger.info("{0}: {1}".format(msg.topic, val))
+    logger.info("%s: %s", msg.topic, val)
     item.value = val
 
 
@@ -144,7 +144,7 @@ def lcd_display(dict, delay=0.1):
             time.sleep(delay)
 
         except BaseException as e:
-            logger.error("{0}".format(e), exc_info=True)
+            logger.error("%s", e, exc_info=True)
             time.sleep(1)
 
 

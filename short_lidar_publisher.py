@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def on_connect(mqtt_client, userdata, flags, rc):
-    logger.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: %s", rc)
     mqtt_client.subscribe(userdata[COMMAND])
 
 

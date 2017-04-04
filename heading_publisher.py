@@ -38,7 +38,7 @@ last_calib_publish_time = -1
 
 
 def on_connect(mqtt_client, userdata, flags, rc):
-    logger.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: %s", rc)
     Thread(target=background_publisher, args=(userdata, userdata[MIN_PUBLISH])).start()
     mqtt_client.subscribe(userdata[COMMAND])
 
@@ -48,7 +48,7 @@ def fetch_data(val, userdata):
     global current_heading, calibrated_by_values, calibrated_by_log, last_calib_publish_time
 
     if "X:" not in val:
-        logger.info("Non-data: " + val)
+        logger.info("Non-data: %s", val)
     else:
         try:
             mqtt_client = userdata[PAHO_CLIENT]
@@ -65,7 +65,7 @@ def fetch_data(val, userdata):
                 # The arduino sketch includes a "! " prefix to SYS if the data is not calibrated (and thus not reliable)
                 if "! " in val:
                     nocalib_str = val[val.index("! "):]
-                    logger.info("9-DOF Sensor not calibrated by log: {0}".format(nocalib_str))
+                    logger.info("9-DOF Sensor not calibrated by log: %s", nocalib_str)
                     mqtt_client.publish(userdata[CALIB_TOPIC], payload=(nocalib_str.encode("utf-8")), qos=0)
                     calibrated_by_log = False
                 else:
@@ -90,7 +90,7 @@ def fetch_data(val, userdata):
                         mqtt_client.publish(userdata[CALIB_TOPIC], payload=(calib_str.encode("utf-8")), qos=0)
                         last_calib_publish_time = current_time_millis()
         except IndexError:
-            logger.info("Formatting error: {0}".format(val))
+            logger.info("Formatting error: %s", val)
 
 
 def background_publisher(userdata, min_publish_secs):

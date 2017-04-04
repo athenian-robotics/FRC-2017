@@ -90,7 +90,7 @@ lcd.clear()
 
 def on_connect(mqtt_client, userdata, flags, rc):
     global sensor_dict
-    logger.info("Connected with result code: {0}".format(rc))
+    logger.info("Connected with result code: %s", rc)
 
     # for sensor in sensor_dict:
     #    client.subscribe(sensor.topic)
@@ -111,7 +111,7 @@ def on_message(mqtt_client, userdata, msg):
     global lidar_right_val, lidar_left_val, lidar_front_val, lidar_rear_val, camera_a_val, camera_v_val, heading_degrees_val, heading_calib_val, metrics_val
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
-    logger.info("{0} : {1}".format(msg.topic, val))
+    logger.info("%s : %s", msg.topic, val)
 
     if msg.topic == LIDAR_LEFT_TOPIC:
         logger.info("LCD Lidar Left: " + val)

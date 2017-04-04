@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
         # Define MQTT callbacks
         def on_connect(mqtt_client, userdata, flags, rc):
-            logger.info("Connected to MQTT broker with result code: {0}".format(rc))
+            logger.info("Connected to MQTT broker with result code: %s", rc)
             Thread(target=publish_locations, args=(mqtt_client, userdata)).start()
             mqtt_client.subscribe(userdata[COMMAND])
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
                         prev_value = x_loc[0]
 
                 except BaseException as e:
-                    logger.error("Failure in publish_locations() [e]".format(e), exc_info=True)
+                    logger.error("Failure in publish_locations() [%s]", e, exc_info=True)
                     time.sleep(1)
 
 

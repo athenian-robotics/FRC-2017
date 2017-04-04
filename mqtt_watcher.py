@@ -12,13 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 def on_connect(mqtt_client, userdata, flags, rc):
-    logging.info("Connected with result code: {0}".format(rc))
+    logging.info("Connected with result code: %s", rc)
     # Subscribe to all broker messages
     mqtt_client.subscribe(userdata[TOPIC])
 
 
 def on_message(mqtt_client, userdata, msg):
-    logger.info("{0} : {1}".format(msg.topic, msg.payload))
+    logger.info("%s : %s", msg.topic, msg.payload)
 
 
 if __name__ == "__main__":
