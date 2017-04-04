@@ -24,8 +24,8 @@ def on_message(mqtt_client, userdata, msg):
 if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
-    cli.mqtt_host(parser),
-    cli.mqtt_topic(parser),
+    cli.mqtt_host(parser)
+    cli.mqtt_topic(parser)
     args = vars(parser.parse_args())
 
     # Setup logging

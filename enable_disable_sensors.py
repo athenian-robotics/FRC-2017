@@ -33,8 +33,8 @@ if __name__ == "__main__":
 
     # Parse CLI args
     parser = argparse.ArgumentParser()
-    cli.mqtt_host(parser),
-    cli.verbose(parser),
+    cli.mqtt_host(parser)
+    cli.verbose(parser)
     args = vars(parser.parse_args())
 
     with MqttConnection(hostname=args[MQTT_HOST],

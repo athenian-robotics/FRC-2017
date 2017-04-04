@@ -122,15 +122,15 @@ def publish_heading(client, topic, heading, userdata):
 if __name__ == "__main__":
     # Parse CLI args
     parser = argparse.ArgumentParser()
-    cli.mqtt_host(parser),
-    cli.device_id(parser),
+    cli.mqtt_host(parser)
+    cli.device_id(parser)
     cli.serial_port(parser)
     cli.baud_rate(parser)
     parser.add_argument("--mpt", dest=MIN_PUBLISH, default=1, type=int, help="Minimum publishing time secs [1]")
     parser.add_argument("--calib", dest=CALIB_ENABLED, default=False, action="store_true",
                         help="Enable calibration publishing[false]")
     parser.add_argument("--cpt", dest=CALIB_PUBLISH, default=3, type=int, help="Calibration publishing time secs [3]")
-    cli.verbose(parser),
+    cli.verbose(parser)
     args = vars(parser.parse_args())
 
     # Setup logging
