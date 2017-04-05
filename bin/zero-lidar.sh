@@ -8,4 +8,4 @@ export PYTHONWARNINGS="ignore"
 
 python ~pi/git/distance-tracking/distance_server.py --did 00FEBABC --baud 115200 &> ~pi/git/FRC-2017/logs/distance_server.out &
 
-go run ~pi/git/distance-tracking/http_proxy.go -stderrthreshold=INFO -logtostderr=true &
+go run ~pi/git/distance-tracking/http_proxy.go -stderrthreshold=INFO -logtostderr=true &> ~pi/git/FRC-2017/logs/http_proxy.out &
