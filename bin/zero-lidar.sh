@@ -2,5 +2,8 @@
 
 date > ~pi/git/FRC-2017/logs/zero-lidar.reboot
 export PYTHONPATH=${PYTHONPATH}:~pi/git/common-robotics
+export GOPATH=~pi/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+export PYTHONWARNINGS="ignore"
 
-python ~pi/git/distance-tracking/distance_server.py --did 00FEBA85 --baud 115200 &> ~pi/git/FRC-2017/logs/distance_server.out &
+python ~pi/git/distance-tracking/distance_server.py --did 00FEBABC --baud 115200 &> ~pi/git/FRC-2017/logs/distance_server.out &
