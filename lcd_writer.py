@@ -71,19 +71,19 @@ lcd.clear()
 def on_connect(mqtt_client, userdata, flags, rc):
     logger.info("Connected with result code: %s", rc)
 
-    dict = userdata[ITEM_DICT]
-    for key in dict.keys():
-        mqtt_client.subscribe(dict[key].topic)
+    item_dict = userdata[ITEM_DICT]
+    for key in item_dict.keys():
+        mqtt_client.subscribe(item_dict[key].topic)
 
 
 def on_message(mqtt_client, userdata, msg):
-    dict = userdata[ITEM_DICT]
+    item_dict = userdata[ITEM_DICT]
 
     # Payload is a string byte array
     val = bytes.decode(msg.payload)
     logger.info("%s : %s", msg.topic, val)
 
-    item = dict[msg.topic]
+    item = item_dict[msg.topic]
     if item is None:
         logger.warn("Invalid topic: %s", msg.topic)
         return
@@ -160,13 +160,13 @@ def assign_selected_sensor():
 
 
 @nav.on(nav.UP)
-def handle_button(ch, evt):
+def handle_up_button(ch, evt):
     item_deque.rotate(1)
     assign_selected_sensor()
 
 
 @nav.on(nav.DOWN)
-def handle_button(ch, evt):
+def handle_down_button(ch, evt):
     item_deque.rotate(-1)
     assign_selected_sensor()
 
