@@ -1,4 +1,5 @@
 [![Code Health](https://landscape.io/github/athenian-robotics/FRC-2017/master/landscape.svg?style=flat)](https://landscape.io/github/athenian-robotics/FRC-2017/master)
+[![Code Climate](https://codeclimate.com/github/athenian-robotics/FRC-2017/badges/gpa.svg)](https://codeclimate.com/github/athenian-robotics/FRC-2017)
 
 # FRC-2017 Notes
 
